@@ -1,0 +1,16 @@
+[
+{
+  "modid": "gokostats",
+  "name": "gokoStats",
+  "description": "A mod provides player some RPG abilities",
+  "version": "beta 0.1",
+  "mcversion": "1.8",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["gokiStats, CI010"],
+  "credits": "gokiStats",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

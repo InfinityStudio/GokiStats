@@ -1,0 +1,35 @@
+{
+    "critical" : {
+        "category": "master",
+        "sounds": [
+            "critical1",
+            "critical2",
+			"critical3",
+			"critical4"
+        ]
+    },
+	"magician" : {
+        "category": "master",
+        "sounds": [
+            "magician1",
+            "magician2",
+			"magician3"
+        ]
+    },
+	"reaper" : {
+        "category": "master",
+        "sounds": [
+            "reaper1",
+            "reaper2",
+			"reaper3"
+        ]
+    },
+	"treasure" : {
+        "category": "master",
+        "sounds": [
+            "treasure1",
+            "treasure2",
+			"treasure3"
+        ]
+    }
+}
