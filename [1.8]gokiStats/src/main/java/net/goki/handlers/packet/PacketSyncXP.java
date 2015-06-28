@@ -21,7 +21,7 @@ public class PacketSyncXP extends AbstractPacket
 		this.experienceTotal = player.experienceTotal;
 	}
 
-	public PacketSyncXP(float experience, int experienceLevel, int experienceTotal) 
+	public PacketSyncXP(float experience, int experienceLevel, int experienceTotal)
 	{
 		this.experience = experience;
 		this.experienceLevel = experienceLevel;

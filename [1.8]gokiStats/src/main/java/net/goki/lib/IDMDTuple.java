@@ -13,14 +13,14 @@ public class IDMDTuple
 		this.id = bID;
 		this.md = bMD;
 	}
-	
-	public IDMDTuple(Block block, int bMD) 
+
+	public IDMDTuple(Block block, int bMD)
 	{
 		this.id = Block.getIdFromBlock(block);
 		this.md = bMD;
 	}
 
-	public IDMDTuple(Item item, int bMD) 
+	public IDMDTuple(Item item, int bMD)
 	{
 		this.id = Item.getIdFromItem(item);
 		this.md = bMD;
@@ -40,7 +40,7 @@ public class IDMDTuple
 			this.id = Integer.parseInt(values[0]);
 			this.md = Integer.parseInt(values[1]);
 		}
-		catch (Exception e) 
+		catch (Exception e)
 		{
 			successful = false;
 		}
@@ -51,7 +51,7 @@ public class IDMDTuple
 	{
 		if ((object instanceof IDMDTuple))
 		{
-			IDMDTuple entry = (IDMDTuple)object;
+			IDMDTuple entry = (IDMDTuple) object;
 			if ((entry.id == this.id) && (entry.md == this.md))
 			{
 				return true;

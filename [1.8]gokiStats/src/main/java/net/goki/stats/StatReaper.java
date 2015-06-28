@@ -26,10 +26,7 @@ public class StatReaper extends Stat
 	public float[] getAppliedDescriptionVar(EntityPlayer player)
 	{// TODO special
 		return new float[]
-		{
-				DataHelper.trimDecimals(
-						getBonus(getPlayerStatLevel(player)) * 100, 1),
-				healthLimit };
+		{ DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), healthLimit };
 		// return Helper.trimDecimals(getBonus(getPlayerStatLevel(player)) *
 		// 100, 1) + "% chance to instantly kill enemies with less than " +
 		// healthLimit + " health.";
@@ -38,9 +35,9 @@ public class StatReaper extends Stat
 	@Override
 	public String getLocalizedDes(EntityPlayer player)
 	{
-		return StatCollector.translateToLocalFormatted(this.key + ".des",
-				this.getAppliedDescriptionVar(player)[0],
-				this.getAppliedDescriptionVar(player)[1]);
+		return StatCollector.translateToLocalFormatted(	this.key + ".des",
+														this.getAppliedDescriptionVar(player)[0],
+														this.getAppliedDescriptionVar(player)[1]);
 	}
 
 	@Override
@@ -64,15 +61,15 @@ public class StatReaper extends Stat
 	@Override
 	public void loadFromConfigurationFile(Configuration config)
 	{
-		healthLimit = (float) Reference.configuration.get("Support",
-				"Reaper Limit", healthLimit).getDouble(20.0D);
+		healthLimit = (float) Reference.configuration.get(	"Support",
+															"Reaper Limit",
+															healthLimit).getDouble(20.0D);
 	}
 
 	@Override
 	public void saveToConfigurationFile(Configuration config)
 	{
-		Reference.configuration.get("Support", "Reaper Limit", healthLimit)
-				.set(healthLimit);
+		Reference.configuration.get("Support", "Reaper Limit", healthLimit).set(healthLimit);
 	}
 
 	@Override

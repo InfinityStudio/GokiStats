@@ -28,7 +28,8 @@ public abstract class StatLeaper extends Stat
 	{
 		// TODO speical
 		return new float[]
-		{ DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), DataHelper.trimDecimals(getSecondaryBonus(getPlayerStatLevel(player)) * 100, 1) };
+		{ DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), DataHelper.trimDecimals(	getSecondaryBonus(getPlayerStatLevel(player)) * 100,
+																											1) };
 		// return "Jump " +
 		// Helper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1) +
 		// "% higher and " +
@@ -39,6 +40,8 @@ public abstract class StatLeaper extends Stat
 	@Override
 	public String getLocalizedDes(EntityPlayer player)
 	{
-		return StatCollector.translateToLocalFormatted(this.key + ".des", this.getAppliedDescriptionVar(player)[0], this.getAppliedDescriptionVar(player)[1]);
+		return StatCollector.translateToLocalFormatted(	this.key + ".des",
+														this.getAppliedDescriptionVar(player)[0],
+														this.getAppliedDescriptionVar(player)[1]);
 	}
 }

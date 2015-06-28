@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.ModMetadata;
 
 import com.google.common.eventbus.EventBus;
 
-public class ModContainer extends DummyModContainer 
+public class ModContainer extends DummyModContainer
 {
 	public ModContainer()
 	{
@@ -17,7 +17,7 @@ public class ModContainer extends DummyModContainer
 		meta.description = "GokiStat-coremode";
 		meta.version = "1.0";
 	}
-	
+
 	@Override
 	public boolean registerBus(EventBus bus, LoadController controller)
 	{

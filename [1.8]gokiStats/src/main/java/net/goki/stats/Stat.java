@@ -49,19 +49,21 @@ public abstract class Stat implements IStat
 	public static final Stat STAT_SWIMMING = new StatSwimming(10, "grpg_Swimming", 10);
 	public static final Stat STAT_CLIMBING = new StatClimbing(11, "grpg_Climbing", 10);
 	public static final Stat STAT_PUGILISM = new StatPugilism(12, "grpg_Pugilism", 10);
-	public static final Stat STAT_REAPER = new StatReaper(15, "grpg_Reaper", 10);
+	
+	public static final Stat STAT_REAPER = new StatReaper(16, "grpg_Reaper", 10);
+	
 	public static final Stat STAT_FURNACE_FINESSE = new StatFurnaceFinesse(17, "grpg_Furnace_Finesse", 10);
 	public static final Stat STAT_STEADY_GUARD = new StatSteadyGuard(18, "grpg_Steady_Guard", 10);
 	public static final Stat STAT_STEALTH = new StatStealth(19, "grpg_Stealth", 10);
 	
-	public static final StatTreasureFinder STAT_TREASURE_FINDER = new StatTreasureFinder(16, "grpg_Treasure_Finder", 3);
+	public static final StatTreasureFinder STAT_TREASURE_FINDER = new StatTreasureFinder(19, "grpg_Treasure_Finder", 3);
 	public static final StatMiningMagician STAT_MINING_MAGICIAN = new StatMiningMagician(20, "grpg_Mining_Magician", 10);
 //	 public static final Stat STAT_FOCUS = new StatFocus(14, "grpg_Focus",
 //	 "Focus", 25);
 	public int imageID;
 	private int limit;
 	public String key;
-	String name, des, id;
+	String name, des;
 	public float costMultiplier = 1.0F;
 	public float limitMultiplier = 1.0F;
 	public float bonusMultiplier = 1.0F;

@@ -13,7 +13,7 @@ public class StatClimbing extends Stat
 
 	public float getBonus(int level)
 	{
-		return getFinalBonus((float)Math.pow(level, 1.1D) * 0.029F);
+		return getFinalBonus((float) Math.pow(level, 1.1D) * 0.029F);
 	}
 
 	@Override
@@ -21,8 +21,9 @@ public class StatClimbing extends Stat
 	{
 		if (Reference.isPlayerAPILoaded)
 		{
-		  return StatCollector.translateToLocal(this.key+".des1");
+			return StatCollector.translateToLocal(this.key + ".des1");
 		}
-		return StatCollector.translateToLocalFormatted(this.key+".des0", this.getAppliedDescriptionVar(player)[0]);
+		return StatCollector.translateToLocalFormatted(	this.key + ".des0",
+														this.getAppliedDescriptionVar(player)[0]);
 	}
 }

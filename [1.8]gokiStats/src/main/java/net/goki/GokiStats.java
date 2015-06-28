@@ -1,6 +1,5 @@
 package net.goki;
 
-
 import net.goki.handlers.packet.PacketPipeline;
 import net.goki.handlers.packet.PacketStatAlter;
 import net.goki.handlers.packet.PacketStatSync;
@@ -16,7 +15,7 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
 
-@Mod(modid="gokiStats", name="gokiStats", version="1.0.5")
+@Mod(modid = "gokiStats", name = "gokiStats", version = "1.0.5")
 public class GokiStats
 {
 	public static final PacketPipeline packetPipeline = new PacketPipeline();
@@ -24,17 +23,17 @@ public class GokiStats
 	@Mod.Instance("gokiStats")
 	public static GokiStats instance;
 
-	@SidedProxy(clientSide="net.goki.client.ClientProxy", serverSide="net.goki.CommonProxy")
+	@SidedProxy(clientSide = "net.goki.client.ClientProxy", serverSide = "net.goki.CommonProxy")
 	public static CommonProxy proxy;
 
 	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) 
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		instance = this;
-		
+
 		proxy.iniConfig(event);
-	
-	    proxy.registerKeybinding();
+
+		proxy.registerKeybinding();
 	}
 
 	@Mod.EventHandler
@@ -45,9 +44,9 @@ public class GokiStats
 		packetPipeline.registerPacket(PacketStatAlter.class);
 		packetPipeline.registerPacket(PacketSyncXP.class);
 		packetPipeline.registerPacket(PacketSyncStatConfig.class);
-	
-	    proxy.registerHandlers();
-	    
+
+		proxy.registerHandlers();
+
 	}
 
 	@Mod.EventHandler
@@ -63,8 +62,8 @@ public class GokiStats
 	{
 		MinecraftServer server = MinecraftServer.getServer();
 		ICommandManager command = server.getCommandManager();
-		ServerCommandManager serverCommand = (ServerCommandManager)command;
+		ServerCommandManager serverCommand = (ServerCommandManager) command;
 		serverCommand.registerCommand(new StatsCommand());
-		//TODO notice it's a reversion
+		// TODO notice it's a reversion
 	}
 }

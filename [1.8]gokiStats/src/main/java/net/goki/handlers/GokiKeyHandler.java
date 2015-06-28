@@ -21,16 +21,26 @@ public class GokiKeyHandler
 	}
 
 	@SubscribeEvent
-	public void keyDown(InputEvent.KeyInputEvent event) 
+	public void keyDown(InputEvent.KeyInputEvent event)
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		if (statsMenu.isPressed())
 		{
-			player.openGui(GokiStats.instance, 0, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
-		} 
+			player.openGui(	GokiStats.instance,
+							0,
+							player.worldObj,
+							(int) player.posX,
+							(int) player.posY,
+							(int) player.posZ);
+		}
 		else if (compatibilityMenu.isPressed())
 		{
-			player.openGui(GokiStats.instance, 1, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+			player.openGui(	GokiStats.instance,
+							1,
+							player.worldObj,
+							(int) player.posX,
+							(int) player.posY,
+							(int) player.posZ);
 		}
 	}
 }

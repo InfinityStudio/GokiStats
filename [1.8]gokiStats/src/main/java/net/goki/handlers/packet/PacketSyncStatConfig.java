@@ -26,9 +26,8 @@ public class PacketSyncStatConfig extends AbstractPacket
 		this.newLimit = 1.0F;
 		this.statConfigStrings = new String[Stat.stats.size()];
 	}
-	
 
-	public PacketSyncStatConfig(boolean deathLoss, float newBonus, float newCost, float newLimit) 
+	public PacketSyncStatConfig(boolean deathLoss, float newBonus, float newCost, float newLimit)
 	{
 		this.deathLoss = deathLoss;
 		this.newBonus = newBonus;
@@ -37,7 +36,7 @@ public class PacketSyncStatConfig extends AbstractPacket
 		this.statConfigStrings = new String[Stat.stats.size()];
 		for (int i = 0; i < Stat.stats.size(); i++)
 		{
-			this.statConfigStrings[i] = ((Stat)Stat.stats.get(i)).toConfigurationString();
+			this.statConfigStrings[i] = ((Stat) Stat.stats.get(i)).toConfigurationString();
 		}
 	}
 
@@ -45,30 +44,31 @@ public class PacketSyncStatConfig extends AbstractPacket
 	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
 	{
 		ByteBufOutputStream bbos = new ByteBufOutputStream(buffer);
-    	try {
-    		bbos.writeBoolean(this.deathLoss);
-    		bbos.writeFloat(this.newBonus);
-    		bbos.writeFloat(this.newCost);
-    		bbos.writeFloat(this.newLimit);
-    		for (int i = 0; i < this.statConfigStrings.length; i++)
-    		{
-    			if (this.statConfigStrings[i] != "")
-    			{
-    				bbos.writeUTF(this.statConfigStrings[i]);
-    			}
-    		}
-    	}
-    	catch (IOException e) 
-    	{
-    		e.printStackTrace();
-    	}
+		try
+		{
+			bbos.writeBoolean(this.deathLoss);
+			bbos.writeFloat(this.newBonus);
+			bbos.writeFloat(this.newCost);
+			bbos.writeFloat(this.newLimit);
+			for (int i = 0; i < this.statConfigStrings.length; i++)
+			{
+				if (this.statConfigStrings[i] != "")
+				{
+					bbos.writeUTF(this.statConfigStrings[i]);
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
 	{
 		ByteBufInputStream bbis = new ByteBufInputStream(buffer);
-		try 
+		try
 		{
 			this.deathLoss = bbis.readBoolean();
 			this.newBonus = bbis.readFloat();
@@ -79,12 +79,12 @@ public class PacketSyncStatConfig extends AbstractPacket
 				this.statConfigStrings[i] = bbis.readUTF();
 			}
 		}
-		catch (IOException e) 
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void handleClientSide(EntityPlayer player)
 	{
@@ -94,13 +94,13 @@ public class PacketSyncStatConfig extends AbstractPacket
 		Stat.globalLimitMultiplier = this.newLimit;
 		for (int i = 0; i < this.statConfigStrings.length; i++)
 		{
-			((Stat)Stat.stats.get(i)).fromConfigurationString(this.statConfigStrings[i]);
+			((Stat) Stat.stats.get(i)).fromConfigurationString(this.statConfigStrings[i]);
 		}
 	}
 
 	@Override
 	public void handleServerSide(EntityPlayer player)
 	{
-		
+
 	}
 }

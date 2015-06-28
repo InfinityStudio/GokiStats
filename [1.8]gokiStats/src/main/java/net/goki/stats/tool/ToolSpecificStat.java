@@ -51,7 +51,7 @@ public abstract class ToolSpecificStat extends Stat
 	public void removeSupportForItem(ItemStack item)
 	{
 		if (item != null)
-    	{
+		{
 			ItemIdMetadataTupleComparator iimtc = new ItemIdMetadataTupleComparator();
 			loadFromConfigurationFile(Reference.configuration);
 
@@ -62,7 +62,7 @@ public abstract class ToolSpecificStat extends Stat
 			}
 			for (int i = 0; i < this.supportedItems.size(); i++)
 			{
-				ItemIdMetadataTuple ii = (ItemIdMetadataTuple)this.supportedItems.get(i);
+				ItemIdMetadataTuple ii = (ItemIdMetadataTuple) this.supportedItems.get(i);
 				if (iimtc.compare(iimt, ii) == 1)
 				{
 					this.supportedItems.remove(ii);
@@ -71,27 +71,29 @@ public abstract class ToolSpecificStat extends Stat
 			}
 
 			saveToConfigurationFile(Reference.configuration);
-    	}
+		}
 	}
 
 	@Override
 	public void loadFromConfigurationFile(Configuration config)
 	{
 		this.supportedItems.clear();
-		String[] configStrings = Reference.configuration.get("Support", getConfigurationKey(), getDefaultSupportedItems()).getStringList();
+		String[] configStrings = Reference.configuration.get(	"Support",
+																getConfigurationKey(),
+																getDefaultSupportedItems()).getStringList();
 		for (int i = 0; i < configStrings.length; i++)
 		{
 			this.supportedItems.add(new ItemIdMetadataTuple(configStrings[i]));
 		}
 	}
-	
+
 	@Override
 	public String toConfigurationString()
 	{
 		String configString = "";
 		for (int i = 0; i < this.supportedItems.size(); i++)
 		{
-			configString = configString + "," + ((ItemIdMetadataTuple)this.supportedItems.get(i)).toConfigString();
+			configString = configString + "," + ((ItemIdMetadataTuple) this.supportedItems.get(i)).toConfigString();
 		}
 		return configString.substring(1);
 	}
@@ -102,9 +104,11 @@ public abstract class ToolSpecificStat extends Stat
 		String[] toolIDs = new String[this.supportedItems.size()];
 		for (int i = 0; i < toolIDs.length; i++)
 		{
-			toolIDs[i] = ((ItemIdMetadataTuple)this.supportedItems.get(i)).toConfigString();
+			toolIDs[i] = ((ItemIdMetadataTuple) this.supportedItems.get(i)).toConfigString();
 		}
-		Reference.configuration.get("Support", getConfigurationKey(), getDefaultSupportedItems()).set(toolIDs);
+		Reference.configuration.get("Support",
+									getConfigurationKey(),
+									getDefaultSupportedItems()).set(toolIDs);
 	}
 
 	@Override
@@ -113,16 +117,16 @@ public abstract class ToolSpecificStat extends Stat
 		this.supportedItems.clear();
 		String[] configStringSplit = configString.split(",");
 		for (int i = 0; i < configStringSplit.length; i++)
-    	{
+		{
 			this.supportedItems.add(new ItemIdMetadataTuple(configStringSplit[i]));
-    	}
+		}
 	}
 
 	public boolean isItemSupported(ItemStack item)
 	{
 		for (int i = 0; i < this.supportedItems.size(); i++)
 		{
-			ItemIdMetadataTuple iimt = (ItemIdMetadataTuple)this.supportedItems.get(i);
+			ItemIdMetadataTuple iimt = (ItemIdMetadataTuple) this.supportedItems.get(i);
 			if (Item.getIdFromItem(item.getItem()) == iimt.id)
 			{
 				if ((item.getHasSubtypes()) && (item.getItemDamage() == iimt.metadata))
@@ -139,11 +143,11 @@ public abstract class ToolSpecificStat extends Stat
 	}
 
 	@Override
-	public boolean needAffectedByStat(Object ... obj)
+	public boolean needAffectedByStat(Object... obj)
 	{
 		if ((obj[0] != null) && ((obj[0] instanceof ItemStack)))
 		{
-			ItemStack item = (ItemStack)obj[0];
+			ItemStack item = (ItemStack) obj[0];
 			return isItemSupported(item);
 		}
 		return false;
@@ -152,9 +156,9 @@ public abstract class ToolSpecificStat extends Stat
 	@Override
 	public float getAppliedBonus(EntityPlayer player, Object object)
 	{
-		if(needAffectedByStat(object))
+		if (needAffectedByStat(object))
 			return getBonus(player);
-		else 
+		else
 			return 0;
 	}
 }
