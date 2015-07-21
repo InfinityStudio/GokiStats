@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.goki.lib.Reference;
+import net.goki.stats.IConfigeratable;
 import net.goki.stats.Stat;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
 
-public abstract class DamageSourceProtectionStat extends Stat
+public abstract class DamageSourceProtectionStat extends Stat implements IConfigeratable
 {
 	public List<String> damageSources = new ArrayList<String>();
 
@@ -37,6 +38,7 @@ public abstract class DamageSourceProtectionStat extends Stat
 		return false;
 	}
 
+	@Override
 	public void loadFromConfigurationFile(Configuration config)
 	{
 		this.damageSources.clear();
@@ -49,6 +51,7 @@ public abstract class DamageSourceProtectionStat extends Stat
 		}
 	}
 
+	@Override
 	public String toConfigurationString()
 	{
 		String configString = "";
@@ -59,6 +62,7 @@ public abstract class DamageSourceProtectionStat extends Stat
 		return configString.substring(1);
 	}
 
+	@Override
 	public void saveToConfigurationFile(Configuration config)
 	{
 		String[] sources = new String[this.damageSources.size()];
@@ -71,6 +75,7 @@ public abstract class DamageSourceProtectionStat extends Stat
 									getDefaultDamageSources()).set(sources);
 	}
 
+	@Override
 	public void fromConfigurationString(String configString)
 	{
 		this.damageSources.clear();

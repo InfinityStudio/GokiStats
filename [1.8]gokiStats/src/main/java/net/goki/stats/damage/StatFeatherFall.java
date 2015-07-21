@@ -11,13 +11,7 @@ public class StatFeatherFall extends DamageSourceProtectionStat
 		super(id, key, limit);
 	}
 
-	@Override
-	public float getBonus(int level)
-	{
-		return getFinalBonus(level * 0.026F);
-	}
-
-	@Override
+//	@Override
 	public float getSecondaryBonus(int level)
 	{
 		return getFinalBonus(level * 0.1F);
@@ -51,4 +45,13 @@ public class StatFeatherFall extends DamageSourceProtectionStat
 		return new String[]
 		{ "fall" };
 	}
+
+	@Override
+	protected float getBonus(int level)
+	{
+		// TODO 自动生成的方法存根
+		return 0;
+	}
+
+	
 }

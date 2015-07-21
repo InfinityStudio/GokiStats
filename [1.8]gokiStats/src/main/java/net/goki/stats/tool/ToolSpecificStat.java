@@ -6,13 +6,14 @@ import java.util.List;
 import net.goki.ItemIdMetadataTuple;
 import net.goki.ItemIdMetadataTupleComparator;
 import net.goki.lib.Reference;
+import net.goki.stats.IConfigeratable;
 import net.goki.stats.Stat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 
-public abstract class ToolSpecificStat extends Stat
+public abstract class ToolSpecificStat extends Stat implements IConfigeratable
 {
 	public List<ItemIdMetadataTuple> supportedItems = new ArrayList<ItemIdMetadataTuple>();
 
