@@ -5,6 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import net.goki.GokiStats;
 import net.goki.lib.DataHelper;
 import net.goki.stats.Stat;
+import net.goki.stats.StatMaxHealth;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -67,6 +69,11 @@ public class PacketStatAlter extends AbstractPacket
 						DataHelper.setPlayerStatLevel(	player,
 														stat,
 														level + this.amount);
+						if(stat instanceof StatMaxHealth)
+						{
+							player.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20+level + this.amount);
+						}
+						
 						if (this.amount > 0)
 						{
 							DataHelper.setPlayersExpTo(player, currentXP - cost);
@@ -74,8 +81,9 @@ public class PacketStatAlter extends AbstractPacket
 					}
 				}
 			}
-			else if (this.amount >= 0)
-				;
+//			else if (this.amount >= 0)
+//				;
+			
 			GokiStats.packetPipeline.sendTo(new PacketStatSync(player),
 											(EntityPlayerMP) player);
 			GokiStats.packetPipeline.sendTo(new PacketSyncXP(player),
