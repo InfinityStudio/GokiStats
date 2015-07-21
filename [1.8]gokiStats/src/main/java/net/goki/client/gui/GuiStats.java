@@ -1,9 +1,14 @@
 package net.goki.client.gui;
 
+import java.io.IOException;
+
 import net.goki.GokiStats;
+import net.goki.handlers.GokiKeyHandler;
 import net.goki.handlers.packet.PacketStatAlter;
 import net.goki.lib.DataHelper;
 import net.goki.stats.Stat;
+import net.goki.stats.StatFurnaceFinesse;
+import net.goki.stats.StatMaxHealth;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -22,7 +27,8 @@ public class GuiStats extends GuiScreen
 	// private static final int HORIZONTAL_SPACING = 8;
 	// private static final int VERTICAL_SPACING = 12;
 	public static final int IMAGE_ROWS = 10;
-	private static final int[] COLUMNS = { 4, 3, 5, 3, 5 };
+	private static final int[] COLUMNS =
+	{ 4, 4, 5, 4, 5 };
 
 	private int currentColumn = 0;
 	private int currentRow = 0;
@@ -113,9 +119,7 @@ public class GuiStats extends GuiScreen
 			{
 				GuiStatButton statButton = (GuiStatButton) button;
 				if (!GuiScreen.isCtrlKeyDown())
-				{
 					GokiStats.packetPipeline.sendToServer(new PacketStatAlter(Stat.stats.indexOf(statButton.stat), 1));
-				}
 				else
 					GokiStats.packetPipeline.sendToServer(new PacketStatAlter(Stat.stats.indexOf(statButton.stat), -1));
 			}
@@ -126,5 +130,17 @@ public class GuiStats extends GuiScreen
 	public boolean doesGuiPauseGame()
 	{
 		return false;
+	}
+
+	@Override
+	protected void keyTyped(char c, int keyCode) throws IOException
+	{
+		super.keyTyped(c, keyCode);
+		// 1 is the Esc key, and we made our keybinding array public and static
+		// so we can access it here
+		if (c == 1 || keyCode == GokiKeyHandler.statsMenu.getKeyCode())
+		{
+			mc.thePlayer.closeScreen();
+		}
 	}
 }
