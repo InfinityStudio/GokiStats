@@ -1,6 +1,7 @@
 package net.goki.handlers;
 
 import net.goki.lib.DataHelper;
+import net.goki.stats.IStatSpecial;
 import net.goki.stats.Stat;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -69,9 +70,11 @@ public class TickHandler
 		{
 			float multiplier = Math.max(0.0F,
 										Stat.STAT_SWIMMING.getBonus(player));
-			player.moveEntity(	player.motionX * multiplier,
-								player.motionY * multiplier,
-								player.motionZ * multiplier);
+//			player.moveEntity(	player.motionX * multiplier,
+//								player.motionY * multiplier,
+//								player.motionZ * multiplier);
+
+			player.moveFlying(player.moveStrafing * multiplier, player.moveForward * multiplier, 0.02f);
 		}
 
 		if ((player.isOnLadder()) && (!player.isSneaking()) && (player.isCollidedHorizontally))
@@ -80,6 +83,7 @@ public class TickHandler
 			player.moveEntity(	player.motionX,
 								player.motionY * multiplier,
 								player.motionZ);
+			
 		}
 	}
 
@@ -90,7 +94,7 @@ public class TickHandler
 		if (DataHelper.getPlayerStatLevel(player, Stat.STAT_FURNACE_FINESSE) > 0)
 		{
 			tickBonus = (int) Stat.STAT_FURNACE_FINESSE.getBonus(player);
-			timeBonus = (int) Stat.STAT_FURNACE_FINESSE.getSecondaryBonus(player);
+			timeBonus = (int) ((IStatSpecial)Stat.STAT_FURNACE_FINESSE).getSecondaryBonus(player);
 
 			ArrayList<TileEntityFurnace> furnacesAroundPlayer = new ArrayList<TileEntityFurnace>();
 
