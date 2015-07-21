@@ -5,6 +5,7 @@ import net.goki.handlers.CommonHandler;
 import net.goki.handlers.TickHandler;
 import net.goki.lib.DataHelper;
 import net.goki.lib.Reference;
+import net.goki.lib.StatHelper;
 import net.goki.stats.Stat;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -43,7 +44,7 @@ public class CommonProxy
 		}
 
 		DataHelper.loadOptions(Reference.configuration);
-		Stat.loadAllStatsFromConfiguration(Reference.configuration);
+		StatHelper.loadAllStatsFromConfiguration(Reference.configuration);
 	}
 
 	public void saveConfig()
@@ -54,7 +55,7 @@ public class CommonProxy
 			Stat.STAT_SWIMMING.enabled = false;
 			Stat.STAT_CLIMBING.enabled = false;
 		}
-		Stat.saveAllStatsToConfiguration(Reference.configuration);
+		StatHelper.saveAllStatsToConfiguration(Reference.configuration);
 		DataHelper.saveGlobalMultipliers(Reference.configuration);
 		Reference.configuration.save();
 	}

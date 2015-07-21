@@ -188,7 +188,7 @@ public class DataHelper
 														"A flat multiplier on the bonus all stats gives.").getDouble(1.0D);
 		Stat.loseStatsOnDeath = config.get(	"Options",
 											"Death Loss",
-											true,
+											false,
 											"Lose stats on death?").getBoolean(true);
 	}
 

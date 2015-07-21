@@ -5,6 +5,7 @@ import net.goki.handlers.packet.PacketStatAlter;
 import net.goki.handlers.packet.PacketSyncStatConfig;
 import net.goki.lib.DataHelper;
 import net.goki.lib.IDMDTuple;
+import net.goki.stats.IStatSpecial;
 import net.goki.stats.Stat;
 import net.goki.stats.StatMiningMagician;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -252,7 +253,7 @@ public class CommonHandler
 
 		Entity src = source.getEntity();
 
-		if ((src instanceof EntityPlayer))
+		if (src instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer) src;
 			ItemStack heldItem = player.getHeldItem();
@@ -268,16 +269,17 @@ public class CommonHandler
 			}
 			else
 			{
-				bonus = Math.round(damage + (Stat.STAT_PUGILISM.getBonus(DataHelper.getPlayerStatLevel(	player,
-																										Stat.STAT_PUGILISM))));
+//				bonus = Math.round(damage + (Stat.STAT_PUGILISM.getBonus(DataHelper.getPlayerStatLevel(	player, Stat.STAT_PUGILISM))));
+				bonus = Math.round(damage+Stat.STAT_PUGILISM.getBonus(player));
 			}
 			event.ammount = (bonus + damage);
+			
 			if (Stat.STAT_REAPER.needAffectedByStat(target))
 			{
 				float reap = Stat.STAT_REAPER.getBonus(player);
 				float reapBonus = 0;
 				if (Stat.STAT_STEALTH.needAffectedByStat(player))
-					reapBonus = reap * Stat.STAT_STEALTH.getSecondaryBonus(player) / 100.0F;
+					reapBonus = reap * ((IStatSpecial)Stat.STAT_STEALTH).getSecondaryBonus(player) / 100.0F;
 				float reapChance = reap + reapBonus;
 				if (player.getRNG().nextFloat() <= reapChance)
 				{

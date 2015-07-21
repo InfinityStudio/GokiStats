@@ -7,6 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
 
+import net.goki.lib.StatHelper;
 import net.goki.stats.Stat;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -24,7 +25,7 @@ public class PacketSyncStatConfig extends AbstractPacket
 		this.newBonus = 1.0F;
 		this.newCost = 1.0F;
 		this.newLimit = 1.0F;
-		this.statConfigStrings = new String[Stat.stats.size()];
+		this.statConfigStrings = new String[StatHelper.iConfigeratStat.size()];
 	}
 
 	public PacketSyncStatConfig(boolean deathLoss, float newBonus, float newCost, float newLimit)
@@ -33,10 +34,14 @@ public class PacketSyncStatConfig extends AbstractPacket
 		this.newBonus = newBonus;
 		this.newCost = newCost;
 		this.newLimit = newLimit;
-		this.statConfigStrings = new String[Stat.stats.size()];
-		for (int i = 0; i < Stat.stats.size(); i++)
+		this.statConfigStrings = new String[StatHelper.iConfigeratStat.size()];
+//		for (int i = 0; i < Stat.stats.size(); i++)
+//		{
+//			this.statConfigStrings[i] = ((Stat) Stat.stats.get(i)).toConfigurationString();
+//		}
+		for(int i = 0; i < StatHelper.iConfigeratStat.size(); i++)
 		{
-			this.statConfigStrings[i] = ((Stat) Stat.stats.get(i)).toConfigurationString();
+			this.statConfigStrings[i] = StatHelper.iConfigeratStat.get(i).toConfigurationString();
 		}
 	}
 
@@ -92,9 +97,13 @@ public class PacketSyncStatConfig extends AbstractPacket
 		Stat.globalBonusMultiplier = this.newBonus;
 		Stat.globalCostMultiplier = this.newCost;
 		Stat.globalLimitMultiplier = this.newLimit;
-		for (int i = 0; i < this.statConfigStrings.length; i++)
+//		for (int i = 0; i < this.statConfigStrings.length; i++)
+//		{
+//			((Stat) Stat.stats.get(i)).fromConfigurationString(this.statConfigStrings[i]);
+//		}
+		for(int i = 0; i < StatHelper.iConfigeratStat.size(); i++)
 		{
-			((Stat) Stat.stats.get(i)).fromConfigurationString(this.statConfigStrings[i]);
+			StatHelper.iConfigeratStat.get(i).fromConfigurationString(this.statConfigStrings[i]);
 		}
 	}
 

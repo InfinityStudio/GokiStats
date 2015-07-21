@@ -2,7 +2,7 @@ package net.goki;
 
 import net.goki.lib.DataHelper;
 import net.goki.lib.Reference;
-import net.goki.stats.Stat;
+import net.goki.lib.StatHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +22,7 @@ public class StatsCommand extends CommandBase
 	{
 		Reference.configuration.load();
 		DataHelper.loadOptions(Reference.configuration);
-		Stat.loadAllStatsFromConfiguration(Reference.configuration);
+		StatHelper.loadAllStatsFromConfiguration(Reference.configuration);
 		EntityPlayer player;
 		if ((icommandsender instanceof EntityPlayer))
 		{
