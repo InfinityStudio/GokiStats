@@ -3,7 +3,7 @@ package net.goki.stats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
 
-public class StatFurnaceFinesse extends Stat
+public class StatFurnaceFinesse extends StatSpecial implements IStatSpecial
 {
 	public StatFurnaceFinesse(int id, String key, int limit)
 	{

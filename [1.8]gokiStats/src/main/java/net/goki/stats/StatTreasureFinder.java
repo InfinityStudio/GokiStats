@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.Configuration;
 
-public class StatTreasureFinder extends Stat
+public class StatTreasureFinder extends Stat implements IConfigeratable
 {
 	public static List<TreasureFinderEntry> entries = new ArrayList<TreasureFinderEntry>();
 
@@ -131,5 +131,12 @@ public class StatTreasureFinder extends Stat
 	public int getLimit()
 	{
 		return 3;
+	}
+
+	@Override
+	protected float getBonus(int level)
+	{
+		// TODO 自动生成的方法存根
+		return 0;
 	}
 }

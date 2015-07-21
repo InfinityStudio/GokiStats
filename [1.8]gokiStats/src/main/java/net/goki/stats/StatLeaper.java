@@ -4,7 +4,7 @@ import net.goki.lib.DataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
 
-public abstract class StatLeaper extends Stat
+public abstract class StatLeaper extends StatSpecial implements IStatSpecial
 {
 	StatLeaper(int id, String key, int limit)
 	{

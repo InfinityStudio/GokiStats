@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.Configuration;
 
-public class StatReaper extends Stat
+public class StatReaper extends Stat implements IConfigeratable
 {
 	public static float healthLimit = 20.0F;
 
