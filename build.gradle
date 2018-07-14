@@ -22,7 +22,7 @@ compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-version = "1.0.6"
+version = "1.0.7"
 group= "net.infstudio.gokistats" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "gokiStats"
 
