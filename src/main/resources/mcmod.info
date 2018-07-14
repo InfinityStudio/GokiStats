@@ -1,0 +1,16 @@
+[
+{
+  "modid": "gokistats",
+  "name": "gokiStats",
+  "description": "A mod provides player some RPG abilities",
+  "version": "1.0.7",
+  "mcversion": "1.12.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["gokiStats", "Lasm_Gratel", "CI010"],
+  "credits": "gokiStats",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
