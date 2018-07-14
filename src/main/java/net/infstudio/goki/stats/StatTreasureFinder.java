@@ -154,7 +154,6 @@ public class StatTreasureFinder extends Stat implements IConfigeratable {
 
     @Override
     protected float getBonus(int level) {
-        // TODO 自动生成的方法存根
         return 0;
     }
 }

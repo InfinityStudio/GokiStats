@@ -42,7 +42,6 @@ public class StatFeatherFall extends DamageSourceProtectionStat {
 
     @Override
     protected float getBonus(int level) {
-        // TODO 自动生成的方法存根
         return 0;
     }
 
