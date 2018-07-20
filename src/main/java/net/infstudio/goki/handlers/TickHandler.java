@@ -128,12 +128,7 @@ public class TickHandler {
     }
 
     private void handleFurnace(EntityPlayer player) {
-        int tickBonus;
-        float timeBonus;
         if (DataHelper.getPlayerStatLevel(player, Stats.FURNACE_FINESSE) > 0) {
-            tickBonus = (int) Stats.FURNACE_FINESSE.getBonus(player);
-            timeBonus = (int) ((IStatSpecial) Stats.FURNACE_FINESSE).getSecondaryBonus(player);
-
             ArrayList<TileEntityFurnace> furnacesAroundPlayer = new ArrayList<>();
 
             for (@SuppressWarnings("rawtypes")
@@ -150,27 +145,11 @@ public class TickHandler {
                 }
             }
 
-            for (TileEntityFurnace furnace : furnacesAroundPlayer) {
-                // TODO furnace is overwritten, find altner way to do it
-                BlockPos pos = furnace.getPos();
-                if (player.getRNG().nextFloat() < 0.3F) {
-                    player.world.spawnParticle(EnumParticleTypes.REDSTONE,
-                            (double) pos.getX() + 0.5D,
-                            (double) pos.getY() + 1,
-                            (double) pos.getZ() + 0.5D,
-                            1.0D,
-                            1.0D,
-                            0);
-                }
-                if (furnace.isBurning()) {
-                    if (furnace.getField(1) < 200) {
-                        if (player.getRNG().nextInt(100) < timeBonus) {
-                            furnace.setField(2, furnace.getField(2) + tickBonus);
-                        }
-                    } else
-                        furnace.setField(0, (int) (furnace.getField(0) + timeBonus));
-                }
-            }
+            // FIXME Laggy
+            for (TileEntityFurnace furnace : furnacesAroundPlayer)
+                if (furnace.isBurning())
+                    for (int i = 0; i < Stats.FURNACE_FINESSE.getBonus(player); i++) // Intend to "mount" ticks, same as Torcherino.
+                        furnace.update();
         }
 
     }
