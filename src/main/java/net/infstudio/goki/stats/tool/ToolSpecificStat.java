@@ -4,7 +4,7 @@ import net.infstudio.goki.ItemIdMetadataTuple;
 import net.infstudio.goki.ItemIdMetadataTupleComparator;
 import net.infstudio.goki.lib.Reference;
 import net.infstudio.goki.stats.IConfigeratable;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,7 +13,7 @@ import net.minecraftforge.common.config.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ToolSpecificStat extends Stat implements IConfigeratable {
+public abstract class ToolSpecificStat extends StatBase implements IConfigeratable {
     public List<ItemIdMetadataTuple> supportedItems = new ArrayList<>();
 
     public ToolSpecificStat(int id, String key, int limit) {

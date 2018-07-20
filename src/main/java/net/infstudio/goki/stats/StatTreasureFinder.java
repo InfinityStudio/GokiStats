@@ -13,7 +13,7 @@ import net.minecraftforge.common.config.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatTreasureFinder extends Stat implements IConfigeratable {
+public class StatTreasureFinder extends StatBase implements IConfigeratable {
     public static List<TreasureFinderEntry> entries = new ArrayList<>();
 
     public static String[] defaultEntries =
@@ -153,7 +153,7 @@ public class StatTreasureFinder extends Stat implements IConfigeratable {
     }
 
     @Override
-    protected float getBonus(int level) {
+    public float getBonus(int level) {
         return 0;
     }
 }

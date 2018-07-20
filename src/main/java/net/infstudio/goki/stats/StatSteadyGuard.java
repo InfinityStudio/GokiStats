@@ -3,7 +3,7 @@ package net.infstudio.goki.stats;
 import net.infstudio.goki.lib.DataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class StatSteadyGuard extends Stat {
+public class StatSteadyGuard extends StatBase {
     public StatSteadyGuard(int id, String key, int limit) {
         super(id, key, limit);
     }

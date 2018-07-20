@@ -4,7 +4,7 @@ import net.infstudio.goki.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.translation.I18n;
 
-public class StatClimbing extends Stat {
+public class StatClimbing extends StatBase {
     public StatClimbing(int id, String key, int limit) {
         super(id, key, limit);
     }

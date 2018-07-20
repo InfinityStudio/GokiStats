@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.infstudio.goki.GokiStats;
 import net.infstudio.goki.lib.DataHelper;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.infstudio.goki.stats.StatMaxHealth;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,7 +42,7 @@ public class PacketStatAlter implements GokiPacket {
     public void handleServerSide(EntityPlayer player) {
         if (player != null) {
             if (this.amount > 0) {
-                Stat stat = Stat.stats.get(this.stat);
+                StatBase stat = StatBase.stats.get(this.stat);
                 int level = DataHelper.getPlayerStatLevel(player, stat);
                 int cost = stat.getCost(level + this.amount - 1);
                 int currentXP = DataHelper.getXPTotal(player.experienceLevel,

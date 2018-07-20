@@ -3,7 +3,7 @@ package net.infstudio.goki.handlers.packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.infstudio.goki.lib.DataHelper;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class PacketStatSync implements GokiPacket {
@@ -13,11 +13,11 @@ public class PacketStatSync implements GokiPacket {
     }
 
     public PacketStatSync(EntityPlayer player) {
-        this.statLevels = new int[Stat.stats.size()];
+        this.statLevels = new int[StatBase.stats.size()];
         for (int i = 0; i < this.statLevels.length; i++) {
-            if (Stat.stats.get(i) != null) {
+            if (StatBase.stats.get(i) != null) {
                 this.statLevels[i] = DataHelper.getPlayerStatLevel(player,
-                        Stat.stats.get(i));
+                        StatBase.stats.get(i));
             }
         }
     }
@@ -29,7 +29,7 @@ public class PacketStatSync implements GokiPacket {
     }
 
     public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
-        this.statLevels = new int[Stat.stats.size()];
+        this.statLevels = new int[StatBase.stats.size()];
         for (int i = 0; i < this.statLevels.length; i++) {
             this.statLevels[i] = buffer.readInt();
         }
@@ -38,7 +38,7 @@ public class PacketStatSync implements GokiPacket {
     public void handleClientSide(EntityPlayer player) {
         for (int i = 0; i < this.statLevels.length; i++) {
             DataHelper.setPlayerStatLevel(player,
-                    Stat.stats.get(i),
+                    StatBase.stats.get(i),
                     this.statLevels[i]);
         }
     }

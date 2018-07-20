@@ -1,6 +1,6 @@
 package net.infstudio.goki.stats;
 
-public class StatPugilism extends Stat {
+public class StatPugilism extends StatBase {
     public StatPugilism(int id, String key, int limit) {
         super(id, key, limit);
     }

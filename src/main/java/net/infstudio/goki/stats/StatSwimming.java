@@ -4,7 +4,7 @@ import net.infstudio.goki.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.translation.I18n;
 
-public class StatSwimming extends Stat {
+public class StatSwimming extends StatBase {
     public StatSwimming(int id, String key, int limit) {
         super(id, key, limit);
     }

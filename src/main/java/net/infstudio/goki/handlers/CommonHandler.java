@@ -6,7 +6,7 @@ import net.infstudio.goki.handlers.packet.PacketSyncStatConfig;
 import net.infstudio.goki.lib.DataHelper;
 import net.infstudio.goki.lib.IDMDTuple;
 import net.infstudio.goki.stats.IStatSpecial;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.infstudio.goki.stats.StatMiningMagician;
 import net.infstudio.goki.stats.Stats;
 import net.minecraft.block.Block;
@@ -128,7 +128,7 @@ public class CommonHandler {
         if ((event.getEntity() instanceof EntityPlayer)) {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             if (!player.world.isRemote) {
-                GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(Stat.loseStatsOnDeath, Stat.globalBonusMultiplier, Stat.globalCostMultiplier, Stat.globalLimitMultiplier),
+                GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(StatBase.loseStatsOnDeath, StatBase.globalBonusMultiplier, StatBase.globalCostMultiplier, StatBase.globalLimitMultiplier),
                         (EntityPlayerMP) player);
             } else {
                 GokiStats.packetPipeline.sendToServer(new PacketStatAlter(0, 0));
@@ -140,7 +140,7 @@ public class CommonHandler {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         EntityPlayer player = event.player;
         if (!player.world.isRemote) {
-            GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(Stat.loseStatsOnDeath, Stat.globalBonusMultiplier, Stat.globalCostMultiplier, Stat.globalLimitMultiplier),
+            GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(StatBase.loseStatsOnDeath, StatBase.globalBonusMultiplier, StatBase.globalCostMultiplier, StatBase.globalLimitMultiplier),
                     (EntityPlayerMP) player);
         } else {
             GokiStats.packetPipeline.sendToServer(new PacketStatAlter(0, 0));
@@ -163,10 +163,10 @@ public class CommonHandler {
     public void playerDead(LivingDeathEvent event) {
         if ((event.getEntityLiving() instanceof EntityPlayer)) {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            if (Stat.loseStatsOnDeath) {
-                for (int stat = 0; stat < Stat.totalStats; stat++) {
+            if (StatBase.loseStatsOnDeath) {
+                for (int stat = 0; stat < StatBase.totalStats; stat++) {
                     DataHelper.setPlayerStatLevel(player,
-                            Stat.stats.get(stat),
+                            StatBase.stats.get(stat),
                             0);
                 }
             }
@@ -246,7 +246,7 @@ public class CommonHandler {
                 bonus = Math.round(damage * (Stats.SWORDSMANSHIP.getAppliedBonus(player,
                         heldItem) + Stats.BOWMANSHIP.getAppliedBonus(player, heldItem)));
             } else {
-//				bonus = Math.round(damage + (Stat.PUGILISM.getBonus(DataHelper.getPlayerStatLevel(	player, Stat.PUGILISM))));
+//				bonus = Math.round(damage + (StatBase.PUGILISM.getBonus(DataHelper.getPlayerStatLevel(	player, StatBase.PUGILISM))));
                 bonus = Math.round(damage + Stats.PUGILISM.getBonus(player));
             }
             event.setAmount(bonus + damage);

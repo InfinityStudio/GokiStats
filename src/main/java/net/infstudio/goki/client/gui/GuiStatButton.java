@@ -2,7 +2,7 @@ package net.infstudio.goki.client.gui;
 
 import net.infstudio.goki.lib.DataHelper;
 import net.infstudio.goki.lib.Reference;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -10,10 +10,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 
 public class GuiStatButton extends GuiButton {
-    public Stat stat;
+    public StatBase stat;
     public EntityPlayer player;
 
-    public GuiStatButton(int id, int x, int y, int width, int height, Stat stat, EntityPlayer player) {
+    public GuiStatButton(int id, int x, int y, int width, int height, StatBase stat, EntityPlayer player) {
         super(id, x, y, width, height, "");
         this.stat = stat;
         this.player = player;

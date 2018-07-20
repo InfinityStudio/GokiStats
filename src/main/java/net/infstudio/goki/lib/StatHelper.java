@@ -1,7 +1,7 @@
 package net.infstudio.goki.lib;
 
 import net.infstudio.goki.stats.IConfigeratable;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ public class StatHelper {
     public static List<IConfigeratable> iConfigeratStat = new ArrayList<>();
 
     static {
-        for (Stat stat : Stat.stats) {
+        for (StatBase stat : StatBase.stats) {
             if (stat instanceof IConfigeratable) {
                 iConfigeratStat.add((IConfigeratable) stat);
             }

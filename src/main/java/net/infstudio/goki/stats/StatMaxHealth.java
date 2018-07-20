@@ -3,14 +3,14 @@ package net.infstudio.goki.stats;
 import net.infstudio.goki.lib.DataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class StatMaxHealth extends Stat {
+public class StatMaxHealth extends StatBase {
 
     public StatMaxHealth(int id, String key, int limit) {
         super(id, key, limit);
     }
 
     @Override
-    protected float getBonus(int level) {
+    public float getBonus(int level) {
         return getFinalBonus(level);
     }
 

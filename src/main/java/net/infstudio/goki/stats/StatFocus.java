@@ -1,6 +1,6 @@
 package net.infstudio.goki.stats;
 
-public class StatFocus extends Stat {
+public class StatFocus extends StatBase {
     public StatFocus(int id, String key, int limit) {
         super(id, key, limit);
     }

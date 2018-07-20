@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandlerContext;
 import net.infstudio.goki.lib.StatHelper;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.IOException;
@@ -31,9 +31,9 @@ public class PacketSyncStatConfig implements GokiPacket {
         this.newCost = newCost;
         this.newLimit = newLimit;
         this.statConfigStrings = new String[StatHelper.iConfigeratStat.size()];
-//		for (int i = 0; i < Stat.stats.size(); i++)
+//		for (int i = 0; i < StatBase.stats.size(); i++)
 //		{
-//			this.statConfigStrings[i] = ((Stat) Stat.stats.get(i)).toConfigurationString();
+//			this.statConfigStrings[i] = ((StatBase) StatBase.stats.get(i)).toConfigurationString();
 //		}
         for (int i = 0; i < StatHelper.iConfigeratStat.size(); i++) {
             this.statConfigStrings[i] = StatHelper.iConfigeratStat.get(i).toConfigurationString();
@@ -76,13 +76,13 @@ public class PacketSyncStatConfig implements GokiPacket {
 
     @Override
     public void handleClientSide(EntityPlayer player) {
-        Stat.loseStatsOnDeath = this.deathLoss;
-        Stat.globalBonusMultiplier = this.newBonus;
-        Stat.globalCostMultiplier = this.newCost;
-        Stat.globalLimitMultiplier = this.newLimit;
+        StatBase.loseStatsOnDeath = this.deathLoss;
+        StatBase.globalBonusMultiplier = this.newBonus;
+        StatBase.globalCostMultiplier = this.newCost;
+        StatBase.globalLimitMultiplier = this.newLimit;
 //		for (int i = 0; i < this.statConfigStrings.length; i++)
 //		{
-//			((Stat) Stat.stats.get(i)).fromConfigurationString(this.statConfigStrings[i]);
+//			((StatBase) StatBase.stats.get(i)).fromConfigurationString(this.statConfigStrings[i]);
 //		}
         for (int i = 0; i < StatHelper.iConfigeratStat.size(); i++) {
             StatHelper.iConfigeratStat.get(i).fromConfigurationString(this.statConfigStrings[i]);

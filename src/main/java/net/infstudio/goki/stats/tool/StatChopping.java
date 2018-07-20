@@ -1,6 +1,6 @@
 package net.infstudio.goki.stats.tool;
 
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
@@ -16,7 +16,7 @@ public class StatChopping extends ToolSpecificStat {
 
     @Override
     public float getBonus(int level) {
-        return Stat.getFinalBonus((float) Math.pow(level, 1.3D) * 0.01523F);
+        return StatBase.getFinalBonus((float) Math.pow(level, 1.3D) * 0.01523F);
     }
 
     @Override

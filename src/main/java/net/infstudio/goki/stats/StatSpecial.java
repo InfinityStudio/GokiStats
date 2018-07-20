@@ -3,7 +3,7 @@ package net.infstudio.goki.stats;
 import net.infstudio.goki.lib.DataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 
-public abstract class StatSpecial extends Stat implements IStatSpecial {
+public abstract class StatSpecial extends StatBase implements IStatSpecial {
     public StatSpecial(int id, String key, int limit) {
         super(id, key, limit);
     }
@@ -17,5 +17,5 @@ public abstract class StatSpecial extends Stat implements IStatSpecial {
     public abstract float getSecondaryBonus(int paramInt);
 
     @Override
-    protected abstract float getBonus(int level);
+    public abstract float getBonus(int level);
 }

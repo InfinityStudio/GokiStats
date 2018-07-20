@@ -4,7 +4,7 @@ import net.infstudio.goki.GokiStats;
 import net.infstudio.goki.handlers.GokiKeyHandler;
 import net.infstudio.goki.handlers.packet.PacketStatAlter;
 import net.infstudio.goki.lib.DataHelper;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -46,7 +46,7 @@ public class GuiStats extends GuiScreen {
             if ((this.buttonList.get(i) instanceof GuiStatButton)) {
                 GuiStatButton button = (GuiStatButton) this.buttonList.get(i);
                 if (button.isUnderMouse(mouseX, mouseY)) {
-                    this.toolTip = new GuiStatTooltip(Stat.stats.get(i), this.player);
+                    this.toolTip = new GuiStatTooltip(StatBase.stats.get(i), this.player);
                     ttx = button.x + 12;
                     tty = button.y - 1;
                     break;
@@ -67,9 +67,9 @@ public class GuiStats extends GuiScreen {
     @SuppressWarnings("unchecked")
     @Override
     public void initGui() {
-        for (int stat = 0; stat < Stat.totalStats; stat++) {
+        for (int stat = 0; stat < StatBase.totalStats; stat++) {
             Vector2f pos = getButton(stat);
-            this.buttonList.add(new GuiStatButton(stat, (int) pos.x, (int) pos.y, 24, 24, Stat.stats.get(stat), this.player));
+            this.buttonList.add(new GuiStatButton(stat, (int) pos.x, (int) pos.y, 24, 24, StatBase.stats.get(stat), this.player));
             this.currentColumn += 1;
             if (this.currentColumn >= COLUMNS[this.currentRow]) {
                 this.currentRow += 1;
@@ -96,13 +96,13 @@ public class GuiStats extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if ((button.id >= 0) && (button.id <= Stat.totalStats)) {
+        if ((button.id >= 0) && (button.id <= StatBase.totalStats)) {
             if ((button instanceof GuiStatButton)) {
                 GuiStatButton statButton = (GuiStatButton) button;
                 if (!GuiScreen.isCtrlKeyDown())
-                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter(Stat.stats.indexOf(statButton.stat), 1));
+                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter(StatBase.stats.indexOf(statButton.stat), 1));
                 else
-                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter(Stat.stats.indexOf(statButton.stat), -1));
+                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter(StatBase.stats.indexOf(statButton.stat), -1));
             }
         }
     }

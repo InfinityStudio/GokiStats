@@ -1,6 +1,6 @@
 package net.infstudio.goki.lib;
 
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.config.Configuration;
 
 public class DataHelper {
@@ -23,7 +24,7 @@ public class DataHelper {
         return nbt;
     }
 
-    public static int getPlayerStatLevel(EntityPlayer player, Stat stat) {
+    public static int getPlayerStatLevel(EntityPlayer player, StatBase stat) {
         NBTTagCompound nbt = getPlayerPersistentNBT(player);
         if (nbt.hasKey("gokistats_Stats")) {
             return ((NBTTagCompound) nbt.getTag("gokistats_Stats")).getInteger(stat.key);
@@ -31,7 +32,7 @@ public class DataHelper {
         return 0;
     }
 
-    public static void setPlayerStatLevel(EntityPlayer player, Stat stat, int level) {
+    public static void setPlayerStatLevel(EntityPlayer player, StatBase stat, int level) {
         NBTTagCompound nbt = getPlayerPersistentNBT(player);
         if (nbt.hasKey("gokistats_Stats")) {
             ((NBTTagCompound) nbt.getTag("gokistats_Stats")).setInteger(stat.key,
@@ -46,8 +47,10 @@ public class DataHelper {
     }
 
     public static void setPlayersExpTo(EntityPlayer player, int total) {
-        player.experienceLevel = getLevelFromXPValue(total);
-        player.experience = getCurrentFromXPValue(total);
+        player.experience = 0;
+        player.experienceLevel = 0;
+        player.experienceTotal = 0;
+        player.addExperience(total);
     }
 
     public static int getXPTotal(int xpLevel, float current) {
@@ -58,50 +61,26 @@ public class DataHelper {
         return (int) (getXPValueFromLevel(player.experienceLevel) + getXPValueToNextLevel(player.experienceLevel) * player.experience);
     }
 
-    public static int getLevelFromXPValue(int value) {
-        int level = 0;
-        if (value >= getXPValueFromLevel(30)) {
-            level = (int) (0.07142857142857143D * (Math.sqrt(56.0D * value - 32511.0D) + 303.0D));
-        } else if (value >= getXPValueFromLevel(15)) {
-            level = (int) (0.1666666666666667D * (Math.sqrt(24.0D * value - 5159.0D) + 59.0D));
-        } else {
-            level = (int) (value / 17.0D);
-        }
-        return level;
-    }
-
-    public static float getCurrentFromXPValue(int value) {
-        if (value == 0) {
-            return 0.0F;
-        }
-        int level = getLevelFromXPValue(value);
-        int needed = getXPValueFromLevel(level);
-        int next = getXPValueToNextLevel(level);
-        int difference = value - needed;
-        float current = difference / next;
-        return current;
-    }
-
     public static int getXPValueFromLevel(int xpLevel) {
-        int val = 0;
-        if (xpLevel >= 30) {
-            val = (int) (3.5D * Math.pow(xpLevel, 2.0D) - 151.5D * xpLevel + 2220.0D);
-        } else if (xpLevel >= 15) {
-            val = (int) (1.5D * Math.pow(xpLevel, 2.0D) - 29.5D * xpLevel + 360.0D);
+        int val;
+        if (xpLevel > 31) {
+            val = (int) (4.5d * Math.pow(xpLevel, 2d) - 162.5d * xpLevel + 2220d);
+        } else if (xpLevel > 16) {
+            val = (int) (2.5d * Math.pow(xpLevel, 2d) - 40.5d * xpLevel + 360d);
         } else {
-            val = 17 * xpLevel;
+            val = (int) (Math.pow(xpLevel, 2d) + 6d * xpLevel);
         }
         return val;
     }
 
     public static int getXPValueToNextLevel(int xpLevel) {
-        int val = 0;
-        if (xpLevel >= 30) {
-            val = 7 * xpLevel - 148;
-        } else if (xpLevel >= 15) {
-            val = 3 * xpLevel - 28;
+        int val;
+        if (xpLevel > 30) {
+            val = 9 * xpLevel - 158;
+        } else if (xpLevel > 15) {
+            val = 5 * xpLevel - 38;
         } else {
-            val = 17;
+            val = 2 * xpLevel + 7;
         }
 
         return val;
@@ -111,7 +90,7 @@ public class DataHelper {
         float damage = (float) player.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
         float bonusDamage = 0.0F;
         boolean targetIsLiving = target instanceof EntityLivingBase;
-        boolean critical = false;
+        boolean critical;
         ItemStack stack = player.getHeldItemMainhand();
         if (targetIsLiving) {
             bonusDamage = EnchantmentHelper.getModifierForCreature(stack, ((EntityLivingBase) target).getCreatureAttribute());
@@ -136,19 +115,19 @@ public class DataHelper {
     }
 
     public static void loadOptions(Configuration config) {
-        Stat.globalCostMultiplier = (float) config.get("Global Modifiers",
+        StatBase.globalCostMultiplier = (float) config.get("Global Modifiers",
                 "Cost Muliplier",
                 1.0D,
                 "A flat multiplier on the cost to upgrade all stats.").getDouble(1.0D);
-        Stat.globalLimitMultiplier = (float) config.get("Global Modifiers",
+        StatBase.globalLimitMultiplier = (float) config.get("Global Modifiers",
                 "Limit Muliplier",
                 2.5D,
                 "A flat multiplier on the level limit of all stats.").getDouble(1.0D);
-        Stat.globalBonusMultiplier = (float) config.get("Global Modifiers",
+        StatBase.globalBonusMultiplier = (float) config.get("Global Modifiers",
                 "Bonus Muliplier",
                 1.0D,
                 "A flat multiplier on the bonus all stats gives.").getDouble(1.0D);
-        Stat.loseStatsOnDeath = config.get("Options",
+        StatBase.loseStatsOnDeath = config.get("Options",
                 "Death Loss",
                 false,
                 "Lose stats on death?").getBoolean(true);
@@ -158,15 +137,15 @@ public class DataHelper {
         config.get("Global Modifiers",
                 "Cost Muliplier",
                 1.0D,
-                "A flat multiplier on the cost to upgrade all stats.").set(Stat.globalCostMultiplier);
+                "A flat multiplier on the cost to upgrade all stats.").set(StatBase.globalCostMultiplier);
         config.get("Global Modifiers",
                 "Limit Muliplier",
                 2.5D,
-                "A flat multiplier on the level limit of all stats.").set(Stat.globalLimitMultiplier);
+                "A flat multiplier on the level limit of all stats.").set(StatBase.globalLimitMultiplier);
         config.get("Global Modifiers",
                 "Bonus Muliplier",
                 1.0D,
-                "A flat multiplier on the bonus all stats gives.").set(Stat.globalBonusMultiplier);
-        config.get("Options", "Death Loss", true, "Lose stats on death?").set(Stat.loseStatsOnDeath);
+                "A flat multiplier on the bonus all stats gives.").set(StatBase.globalBonusMultiplier);
+        config.get("Options", "Death Loss", true, "Lose stats on death?").set(StatBase.loseStatsOnDeath);
     }
 }

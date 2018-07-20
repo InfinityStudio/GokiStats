@@ -2,14 +2,14 @@ package net.infstudio.goki.stats.damage;
 
 import net.infstudio.goki.lib.Reference;
 import net.infstudio.goki.stats.IConfigeratable;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DamageSourceProtectionStat extends Stat implements IConfigeratable {
+public abstract class DamageSourceProtectionStat extends StatBase implements IConfigeratable {
     public List<String> damageSources = new ArrayList<>();
 
     public DamageSourceProtectionStat(int id, String key, int limit) {

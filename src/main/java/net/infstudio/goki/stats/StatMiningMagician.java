@@ -9,7 +9,7 @@ import net.minecraft.init.Items;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatMiningMagician extends Stat {
+public class StatMiningMagician extends StatBase {
     public static List<IDMDTuple> blockEntries = new ArrayList<>();
     public static List<IDMDTuple> itemEntries = new ArrayList<>();
     private static IDMDTuple[] defaultBlockEntries =

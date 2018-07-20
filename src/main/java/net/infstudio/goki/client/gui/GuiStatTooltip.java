@@ -1,19 +1,19 @@
 package net.infstudio.goki.client.gui;
 
 import net.infstudio.goki.lib.DataHelper;
-import net.infstudio.goki.stats.Stat;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.translation.I18n;
 
 public class GuiStatTooltip extends Gui {
-    private Stat stat;
+    private StatBase stat;
     private EntityPlayer player;
     private Minecraft mc = Minecraft.getMinecraft();
     private int padding = 4;
 
-    public GuiStatTooltip(Stat stat, EntityPlayer player) {
+    public GuiStatTooltip(StatBase stat, EntityPlayer player) {
         this.stat = stat;
         this.player = player;
     }
