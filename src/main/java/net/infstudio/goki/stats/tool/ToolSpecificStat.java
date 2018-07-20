@@ -105,13 +105,11 @@ public abstract class ToolSpecificStat extends StatBase implements IConfigeratab
     }
 
     public boolean isItemSupported(ItemStack item) {
-        for (int i = 0; i < this.supportedItems.size(); i++) {
-            ItemIdMetadataTuple iimt = this.supportedItems.get(i);
+        for (ItemIdMetadataTuple iimt : this.supportedItems) {
             if (Item.getIdFromItem(item.getItem()) == iimt.id) {
-                if ((item.getHasSubtypes()) && (item.getItemDamage() == iimt.metadata)) {
+                if (item.getHasSubtypes() && item.getItemDamage() == iimt.metadata) {
                     return true;
-                }
-                if (!item.getHasSubtypes()) {
+                } else if (!item.getHasSubtypes()) {
                     return true;
                 }
             }
@@ -121,7 +119,7 @@ public abstract class ToolSpecificStat extends StatBase implements IConfigeratab
 
     @Override
     public boolean needAffectedByStat(Object... obj) {
-        if ((obj[0] != null) && ((obj[0] instanceof ItemStack))) {
+        if (obj[0] != null && obj[0] instanceof ItemStack) {
             ItemStack item = (ItemStack) obj[0];
             return isItemSupported(item);
         }

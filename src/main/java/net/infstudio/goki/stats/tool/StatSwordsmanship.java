@@ -2,6 +2,8 @@ package net.infstudio.goki.stats.tool;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 
 public class StatSwordsmanship extends ToolSpecificStat {
     public StatSwordsmanship(int id, String key, int limit) {
@@ -11,6 +13,11 @@ public class StatSwordsmanship extends ToolSpecificStat {
     @Override
     public String getConfigurationKey() {
         return "Swordsmanship Tools";
+    }
+
+    @Override
+    public boolean isItemSupported(ItemStack item) {
+        return super.isItemSupported(item) || item.getItem() instanceof ItemSword;
     }
 
     @Override

@@ -26,7 +26,6 @@ public class GokiStats {
     public void preInit(FMLPreInitializationEvent event) {
         instance = this;
         proxy.initConfig(event);
-        proxy.registerKeybinding();
     }
 
     @Mod.EventHandler
@@ -38,6 +37,7 @@ public class GokiStats {
         packetPipeline.registerPacket(PacketSyncStatConfig.class);
 
         proxy.registerHandlers();
+        proxy.registerKeybinding();
     }
 
     @Mod.EventHandler

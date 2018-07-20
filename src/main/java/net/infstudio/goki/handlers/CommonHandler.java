@@ -240,11 +240,14 @@ public class CommonHandler {
             EntityPlayer player = (EntityPlayer) src;
             ItemStack heldItem = player.getHeldItemMainhand();
             float damage = event.getAmount();
-            float bonus;
+            float bonus = 0f;
 
             if (!heldItem.isEmpty()) {
-                bonus = Math.round(damage * (Stats.SWORDSMANSHIP.getAppliedBonus(player,
-                        heldItem) + Stats.BOWMANSHIP.getAppliedBonus(player, heldItem)));
+                if (Stats.SWORDSMANSHIP.isItemSupported(heldItem)) {
+                    bonus = Math.round(damage * Stats.SWORDSMANSHIP.getAppliedBonus(player, heldItem));
+                } else if (Stats.BOWMANSHIP.isItemSupported(heldItem)) {
+                    bonus = Math.round(damage * Stats.BOWMANSHIP.getAppliedBonus(player, heldItem));
+                }
             } else {
 //				bonus = Math.round(damage + (StatBase.PUGILISM.getBonus(DataHelper.getPlayerStatLevel(	player, StatBase.PUGILISM))));
                 bonus = Math.round(damage + Stats.PUGILISM.getBonus(player));
