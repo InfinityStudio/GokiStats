@@ -7,6 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class StatMiningMagician extends StatBase {
@@ -19,12 +20,8 @@ public class StatMiningMagician extends StatBase {
 
     public StatMiningMagician(int id, String key, int limit) {
         super(id, key, limit);
-        for (IDMDTuple mme : defaultBlockEntries) {
-            blockEntries.add(mme);
-        }
-        for (IDMDTuple mme : defaultItemEntries) {
-            itemEntries.add(mme);
-        }
+        Collections.addAll(blockEntries, defaultBlockEntries);
+        Collections.addAll(itemEntries, defaultItemEntries);
     }
 
     @Override

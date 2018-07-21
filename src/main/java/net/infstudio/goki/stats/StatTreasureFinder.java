@@ -81,8 +81,8 @@ public class StatTreasureFinder extends StatBase implements IConfigeratable {
         String[] entryStrings = config.get("Treasure Finder",
                 "Entries",
                 defaultEntries).getStringList();
-        for (int i = 0; i < entryStrings.length; i++) {
-            entries.add(new TreasureFinderEntry(entryStrings[i]));
+        for (String entryString : entryStrings) {
+            entries.add(new TreasureFinderEntry(entryString));
         }
     }
 
@@ -112,7 +112,7 @@ public class StatTreasureFinder extends StatBase implements IConfigeratable {
         for (TreasureFinderEntry tfe : entries) {
             if (tfe.miniumLevel <= level) {
                 if (((tfe.block == null) && ((block == Blocks.DIRT) || (block == Blocks.GRASS))) || ((tfe.block == block) && (tfe.blockMD == blockMD))) {
-                    chance.add(Integer.valueOf(tfe.chance));
+                    chance.add(tfe.chance);
                 }
             }
         }
@@ -122,8 +122,8 @@ public class StatTreasureFinder extends StatBase implements IConfigeratable {
     @Override
     public String toConfigurationString() {
         String configString = "";
-        for (int i = 0; i < entries.size(); i++) {
-            configString = configString + "," + entries.get(i).toConfigurationString();
+        for (TreasureFinderEntry entry : entries) {
+            configString = configString + "," + entry.toConfigurationString();
         }
         return configString;
     }
@@ -132,8 +132,8 @@ public class StatTreasureFinder extends StatBase implements IConfigeratable {
     public void fromConfigurationString(String configString) {
         entries.clear();
         String[] configStringSplit = configString.split(",");
-        for (int i = 0; i < configStringSplit.length; i++) {
-            entries.add(new TreasureFinderEntry(configStringSplit[i]));
+        for (String aConfigStringSplit : configStringSplit) {
+            entries.add(new TreasureFinderEntry(aConfigStringSplit));
         }
     }
 

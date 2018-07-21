@@ -5,7 +5,7 @@ import net.infstudio.goki.handlers.packet.PacketStatAlter;
 import net.infstudio.goki.handlers.packet.PacketSyncStatConfig;
 import net.infstudio.goki.lib.DataHelper;
 import net.infstudio.goki.lib.IDMDTuple;
-import net.infstudio.goki.stats.IStatSpecial;
+import net.infstudio.goki.stats.StatSpecial;
 import net.infstudio.goki.stats.StatBase;
 import net.infstudio.goki.stats.StatMiningMagician;
 import net.infstudio.goki.stats.Stats;
@@ -282,7 +282,7 @@ public class CommonHandler {
                 float reap = Stats.REAPER.getBonus(player);
                 float reapBonus = 0;
                 if (Stats.STEALTH.needAffectedByStat(player))
-                    reapBonus = reap * ((IStatSpecial) Stats.STEALTH).getSecondaryBonus(player) / 100.0F;
+                    reapBonus = reap * ((StatSpecial) Stats.STEALTH).getSecondaryBonus(player) / 100.0F;
                 float reapChance = reap + reapBonus;
                 if (player.getRNG().nextFloat() <= reapChance) {
                     player.onEnchantmentCritical(victim);

@@ -11,8 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class PacketStatAlter implements GokiPacket {
-    int stat;
-    int amount;
+    private int stat;
+    private int amount;
 
     public PacketStatAlter() {
     }

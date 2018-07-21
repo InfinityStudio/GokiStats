@@ -22,7 +22,7 @@ public class ItemIdMetadataTuple {
         try {
             this.id = Integer.parseInt(configStringSplit[0]);
             this.metadata = Integer.parseInt(configStringSplit[1]);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 }

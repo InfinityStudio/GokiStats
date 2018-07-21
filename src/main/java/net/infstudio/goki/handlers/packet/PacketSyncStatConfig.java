@@ -11,11 +11,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.io.IOException;
 
 public class PacketSyncStatConfig implements GokiPacket {
-    boolean deathLoss;
-    float newBonus;
-    float newCost;
-    float newLimit;
-    String[] statConfigStrings;
+    private boolean deathLoss;
+    private float newBonus;
+    private float newCost;
+    private float newLimit;
+    private String[] statConfigStrings;
 
     public PacketSyncStatConfig() {
         this.deathLoss = true;
@@ -48,9 +48,9 @@ public class PacketSyncStatConfig implements GokiPacket {
             bbos.writeFloat(this.newBonus);
             bbos.writeFloat(this.newCost);
             bbos.writeFloat(this.newLimit);
-            for (int i = 0; i < this.statConfigStrings.length; i++) {
-                if (this.statConfigStrings[i] != "") {
-                    bbos.writeUTF(this.statConfigStrings[i]);
+            for (String statConfigString : this.statConfigStrings) {
+                if (!statConfigString.isEmpty()) {
+                    bbos.writeUTF(statConfigString);
                 }
             }
         } catch (IOException e) {

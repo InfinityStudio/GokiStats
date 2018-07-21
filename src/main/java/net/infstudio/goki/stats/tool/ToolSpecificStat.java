@@ -70,16 +70,16 @@ public abstract class ToolSpecificStat extends StatBase implements IConfigeratab
         String[] configStrings = Reference.configuration.get("Support",
                 getConfigurationKey(),
                 getDefaultSupportedItems()).getStringList();
-        for (int i = 0; i < configStrings.length; i++) {
-            this.supportedItems.add(new ItemIdMetadataTuple(configStrings[i]));
+        for (String configString : configStrings) {
+            this.supportedItems.add(new ItemIdMetadataTuple(configString));
         }
     }
 
     @Override
     public String toConfigurationString() {
         String configString = "";
-        for (int i = 0; i < this.supportedItems.size(); i++) {
-            configString = configString + "," + this.supportedItems.get(i).toConfigString();
+        for (ItemIdMetadataTuple supportedItem : this.supportedItems) {
+            configString = configString + "," + supportedItem.toConfigString();
         }
         return configString.substring(1);
     }
@@ -99,8 +99,8 @@ public abstract class ToolSpecificStat extends StatBase implements IConfigeratab
     public void fromConfigurationString(String configString) {
         this.supportedItems.clear();
         String[] configStringSplit = configString.split(",");
-        for (int i = 0; i < configStringSplit.length; i++) {
-            this.supportedItems.add(new ItemIdMetadataTuple(configStringSplit[i]));
+        for (String aConfigStringSplit : configStringSplit) {
+            this.supportedItems.add(new ItemIdMetadataTuple(aConfigStringSplit));
         }
     }
 

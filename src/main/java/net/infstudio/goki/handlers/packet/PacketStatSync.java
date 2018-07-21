@@ -7,7 +7,7 @@ import net.infstudio.goki.stats.StatBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class PacketStatSync implements GokiPacket {
-    int[] statLevels;
+    private int[] statLevels;
 
     public PacketStatSync() {
     }

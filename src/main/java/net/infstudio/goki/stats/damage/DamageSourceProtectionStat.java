@@ -8,6 +8,7 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class DamageSourceProtectionStat extends StatBase implements IConfigeratable {
@@ -22,8 +23,8 @@ public abstract class DamageSourceProtectionStat extends StatBase implements ICo
         if (obj != null) {
             if ((obj[0] instanceof DamageSource)) {
                 DamageSource source = (DamageSource) obj[0];
-                for (int i = 0; i < this.damageSources.size(); i++) {
-                    if (source.damageType.equals(this.damageSources.get(i))) {
+                for (String damageSource : this.damageSources) {
+                    if (source.damageType.equals(damageSource)) {
                         return true;
                     }
                 }
@@ -38,16 +39,14 @@ public abstract class DamageSourceProtectionStat extends StatBase implements ICo
         String[] sources = Reference.configuration.get("Support",
                 key + " Sources",
                 getDefaultDamageSources()).getStringList();
-        for (int i = 0; i < sources.length; i++) {
-            this.damageSources.add(sources[i]);
-        }
+        Collections.addAll(this.damageSources, sources);
     }
 
     @Override
     public String toConfigurationString() {
-        String configString = "";
+        StringBuilder configString = new StringBuilder();
         for (String s : this.damageSources) {
-            configString = configString + "," + s;
+            configString.append(",").append(s);
         }
         return configString.substring(1);
     }

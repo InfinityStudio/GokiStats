@@ -70,7 +70,7 @@ public class StatReaper extends StatBase implements IConfigeratable {
     public void fromConfigurationString(String configString) {
         try {
             healthLimit = Float.parseFloat(configString);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 }

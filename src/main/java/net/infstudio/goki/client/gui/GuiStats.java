@@ -24,7 +24,7 @@ public class GuiStats extends GuiScreen {
     private static final int[] COLUMNS =
             {4, 4, 5, 4, 5, 4};
     public static float SCALE = 1.0F;
-    private EntityPlayer player = null;
+    private EntityPlayer player;
     private int currentColumn = 0;
     private int currentRow = 0;
     private GuiStatTooltip toolTip = null;

@@ -3,7 +3,7 @@ package net.infstudio.goki.stats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.client.resources.I18n;
 
-public class StatFurnaceFinesse extends StatSpecial implements IStatSpecial {
+public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
     public StatFurnaceFinesse(int id, String key, int limit) {
         super(id, key, limit);
     }

@@ -5,14 +5,14 @@ import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class PacketSyncXP implements GokiPacket {
-    float experience;
-    int experienceLevel;
-    int experienceTotal;
+    private float experience;
+    private int experienceLevel;
+    private int experienceTotal;
 
     public PacketSyncXP() {
     }
 
-    public PacketSyncXP(EntityPlayer player) {
+    PacketSyncXP(EntityPlayer player) {
         this.experience = player.experience;
         this.experienceLevel = player.experienceLevel;
         this.experienceTotal = player.experienceTotal;

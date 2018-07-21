@@ -12,7 +12,7 @@ public class GuiCompatibilityHelper extends GuiScreen {
     private final int BUTTON_HEIGHT = 15;
     private final ToolSpecificStat[] compatibleStats =
             {Stats.MINING, Stats.DIGGING, Stats.CHOPPING, Stats.TRIMMING, Stats.SWORDSMANSHIP, Stats.BOWMANSHIP};
-    private EntityPlayer player = null;
+    private EntityPlayer player;
 
     public GuiCompatibilityHelper(EntityPlayer player) {
         this.player = player;

@@ -4,7 +4,7 @@ import net.infstudio.goki.lib.DataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.client.resources.I18n;
 
-public abstract class StatLeaper extends StatSpecial implements IStatSpecial {
+public abstract class StatLeaper extends StatSpecialBase implements StatSpecial {
     StatLeaper(int id, String key, int limit) {
         super(id, key, limit);
     }

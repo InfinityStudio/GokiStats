@@ -1,7 +1,6 @@
 package net.infstudio.goki.handlers;
 
 import net.infstudio.goki.lib.DataHelper;
-import net.infstudio.goki.stats.IStatSpecial;
 import net.infstudio.goki.stats.Stats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -11,7 +10,6 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -19,7 +17,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.UUID;
 
 public class TickHandler {
@@ -131,10 +128,7 @@ public class TickHandler {
         if (DataHelper.getPlayerStatLevel(player, Stats.FURNACE_FINESSE) > 0) {
             ArrayList<TileEntityFurnace> furnacesAroundPlayer = new ArrayList<>();
 
-            for (@SuppressWarnings("rawtypes")
-                 Iterator i$ = player.world.loadedTileEntityList.iterator(); i$.hasNext(); ) {
-                Object listEntity = i$.next();
-
+            for (TileEntity listEntity : player.world.loadedTileEntityList) {
                 if (listEntity instanceof TileEntity) {
                     TileEntity tileEntity = (TileEntity) listEntity;
                     BlockPos pos = tileEntity.getPos();

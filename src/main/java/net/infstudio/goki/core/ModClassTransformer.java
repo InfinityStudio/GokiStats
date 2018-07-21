@@ -68,7 +68,6 @@ public class ModClassTransformer implements IClassTransformer {
             for (AbstractInsnNode instr : method.instructions.toArray()) {
                 if (instr.getOpcode() == ALOAD && ((VarInsnNode) instr).var == 0) {
                     if (instr.getNext().getOpcode() == ALOAD && ((VarInsnNode) instr.getNext()).var == 2) {
-                        target = instr;
                     }
                 }
             }

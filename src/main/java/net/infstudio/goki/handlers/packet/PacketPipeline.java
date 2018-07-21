@@ -74,7 +74,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, GokiPa
         pkt.decodeInto(ctx, payload.slice());
         EntityPlayer player;
         boolean isClient = net.minecraftforge.fml.common.FMLCommonHandler.instance().getEffectiveSide().equals(Side.CLIENT);
-        player = getClientPlayer(isClient, ctx);
+        player = getPlayer(isClient, ctx);
         if (isClient) {
             pkt.handleClientSide(player);
         } else if (!isClient) {
@@ -102,7 +102,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, GokiPa
     }
 
     @SideOnly(Side.CLIENT)
-    private EntityPlayer getClientPlayer(boolean isClient, ChannelHandlerContext ctx) {
+    private EntityPlayer getPlayer(boolean isClient, ChannelHandlerContext ctx) {
         return isClient ? Minecraft.getMinecraft().player : ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).player;
     }
 
