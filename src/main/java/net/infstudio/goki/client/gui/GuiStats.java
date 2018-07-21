@@ -22,7 +22,7 @@ public class GuiStats extends GuiScreen {
     // private static final int VERTICAL_SPACING = 12;
     public static final int IMAGE_ROWS = 10;
     private static final int[] COLUMNS =
-            {4, 4, 5, 4, 5};
+            {4, 4, 5, 4, 5, 4};
     public static float SCALE = 1.0F;
     private EntityPlayer player = null;
     private int currentColumn = 0;

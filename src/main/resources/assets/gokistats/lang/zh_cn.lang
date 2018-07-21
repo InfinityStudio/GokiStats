@@ -20,6 +20,7 @@ grpg_Steady_Guard.name=不动
 grpg_Stealth.name=潜行
 grpg_Mining_Magician.name=挖掘魔术
 grpg_Health.name=生命强化
+grpg_Roll.name=翻滚
 
 grpg_Mining.des=增加%f%%的开采速度
 grpg_Digging.des=增加%f%%的挖掘速度
@@ -46,6 +47,10 @@ grpg_Steady_Guard.des=减缓%f%%的击退
 grpg_Stealth.des=增加潜行时%1$f%%的移动速度和%2$f%%的开采速度(%3$f%%);
 grpg_Mining_Magician.des=挖掘魔术
 grpg_Health.des=增加玩家%f的生命值
+grpg_Roll.des=有%f%%的几率闪避伤害并反击敌人
+
+grpg_Roll.message=*闪避*
+grpg_Roll.message=*击退*
 
 ui.cost.name=消耗 
 ui.max.name=已达到最高级!

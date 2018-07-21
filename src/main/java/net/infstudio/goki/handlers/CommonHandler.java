@@ -17,16 +17,16 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -79,7 +79,7 @@ public class CommonHandler {
                     }
                 }
                 if (treasureFound) {
-                    player.world.playSound(player, event.getPos(), TREASURE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    player.world.playSound(player, event.getPos(), TREASURE, SoundCategory.MASTER, 1.0F, 1.0F);
                 }
             }
 
@@ -116,7 +116,7 @@ public class CommonHandler {
                         }
                     }
                     if (magicHappened) {
-                        player.world.playSound(player, event.getPos(), MAGICIAN, SoundCategory.PLAYERS, 0.3f, 1.0f);
+                        player.world.playSound(player, event.getPos(), MAGICIAN, SoundCategory.MASTER, 0.3f, 1.0f);
                     }
                 }
             }
@@ -219,6 +219,15 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
+    public void entityKnockback(LivingKnockBackEvent event) {
+        if (event.getOriginalAttacker().getTags().contains("knockback")) {
+            event.getOriginalAttacker().removeTag("knockback");
+            event.setStrength(event.getStrength() * 2f);
+            event.getOriginalAttacker().sendMessage(new TextComponentTranslation("grpg_Roll.knockback"));
+        }
+    }
+
+    @SubscribeEvent
     public void entityHurt(LivingHurtEvent event) {
         DamageSource source = event.getSource();
 
@@ -226,6 +235,21 @@ public class CommonHandler {
 
         if ((victim instanceof EntityPlayer)) {
             EntityPlayer player = (EntityPlayer) victim;
+
+            if (player.getEntityWorld().rand.nextFloat() <= Stats.ROLL.getBonus(player)) {
+                // Avoid damage
+                event.setCanceled(true);
+
+                player.addPotionEffect(
+                        new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:strength"), 20, 2)
+                );
+
+                victim.addTag("knockback");
+                player.sendMessage(new TextComponentTranslation("grpg_Roll.message"));
+
+                return;
+            }
+
             float damageMultiplier = 1.0F - (Stats.PROTECTION.getAppliedBonus(player,
                     source) + Stats.TOUGH_SKIN.getAppliedBonus(player,
                     source) + Stats.STAT_FEATHER_FALL.getAppliedBonus(player,
@@ -262,7 +286,7 @@ public class CommonHandler {
                 float reapChance = reap + reapBonus;
                 if (player.getRNG().nextFloat() <= reapChance) {
                     player.onEnchantmentCritical(victim);
-                    player.world.playSound(player, event.getEntity().getPosition(), REAPER, SoundCategory.PLAYERS, 1.0f, 1.0f);
+                    player.world.playSound(player, event.getEntity().getPosition(), REAPER, SoundCategory.MASTER, 1.0f, 1.0f);
                     event.setAmount(100000.0F);
                 }
             }

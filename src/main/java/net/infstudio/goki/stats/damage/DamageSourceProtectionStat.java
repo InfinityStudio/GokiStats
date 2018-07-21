@@ -7,6 +7,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class DamageSourceProtectionStat extends StatBase implements IConfigeratable {
@@ -66,9 +67,7 @@ public abstract class DamageSourceProtectionStat extends StatBase implements ICo
     public void fromConfigurationString(String configString) {
         this.damageSources.clear();
         String[] configStringSplit = configString.split(",");
-        for (String s : configStringSplit) {
-            this.damageSources.add(s);
-        }
+        this.damageSources.addAll(Arrays.asList(configStringSplit));
     }
 
     public abstract String[] getDefaultDamageSources();

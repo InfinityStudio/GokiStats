@@ -15,7 +15,7 @@ public abstract class StatBase implements Stat {
     public static float globalCostMultiplier = 1.0F;
     public static float globalLimitMultiplier = 2.5F;
     public static float globalBonusMultiplier = 1.0F;
-    public static ArrayList<StatBase> stats = new ArrayList<>(32);
+    public static final ArrayList<StatBase> stats = new ArrayList<>(32);
     public static int totalStats = 0;
     //	 public static final StatBase STAT_FOCUS = new StatFocus(14, "grpg_Focus",
 //	 "Focus", 25);
