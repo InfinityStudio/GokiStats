@@ -41,29 +41,39 @@ public class PacketStatAlter implements GokiPacket {
     @Override
     public void handleServerSide(EntityPlayer player) {
         if (player != null) {
-            if (this.amount > 0) {
-                StatBase stat = StatBase.stats.get(this.stat);
+            StatBase stat = StatBase.stats.get(this.stat);
+            if (stat.enabled) {
                 int level = DataHelper.getPlayerStatLevel(player, stat);
-                int cost = stat.getCost(level + this.amount - 1);
-                int currentXP = DataHelper.getXPTotal(player.experienceLevel,
-                        player.experience);
+                if (this.amount > 0) {
+                    int cost = stat.getCost(level + this.amount - 1);
+                    int currentXP = DataHelper.getXPTotal(player.experienceLevel,
+                            player.experience);
 
-                if (stat.enabled) {
-                    if (level + this.amount > stat.getLimit()) {
-                        this.amount = 0;
+                    if (stat.enabled) {
+                        if (level + this.amount > stat.getLimit()) {
+                            this.amount = 0;
+                        }
+
+                        if ((currentXP >= cost) && (this.amount != 0)) {
+                            DataHelper.setPlayerStatLevel(player,
+                                    stat,
+                                    level + this.amount);
+                            if (stat instanceof StatMaxHealth) {
+                                player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + level + this.amount);
+                            }
+
+                            if (this.amount > 0) {
+                                DataHelper.setPlayersExpTo(player, currentXP - cost);
+                            }
+                        }
                     }
-
-                    if ((currentXP >= cost) && (this.amount != 0)) {
-                        DataHelper.setPlayerStatLevel(player,
-                                stat,
-                                level + this.amount);
-                        if (stat instanceof StatMaxHealth) {
-                            player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + level + this.amount);
-                        }
-
-                        if (this.amount > 0) {
-                            DataHelper.setPlayersExpTo(player, currentXP - cost);
-                        }
+                } else {
+                    player.addExperience((int) (stat.getCost(level + this.amount - 2) * 0.8)); // TODO Configure 0.8
+                    DataHelper.setPlayerStatLevel(player,
+                            stat,
+                            level + this.amount);
+                    if (stat instanceof StatMaxHealth) {
+                        player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + level + this.amount);
                     }
                 }
             }

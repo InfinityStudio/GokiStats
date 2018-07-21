@@ -55,3 +55,4 @@ ui.max.name=Max!
 ui.currentxp.name=Current xp: 
 ui.opmenu.name=Open Stats Menu
 ui.openhelper.name=Open Stats Compatibility Helper
+ui.hover.name=Click to upgrade, or Ctrl+Click to downgrade

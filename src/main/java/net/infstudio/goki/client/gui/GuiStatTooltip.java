@@ -7,6 +7,10 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.translation.I18n;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class GuiStatTooltip extends Gui {
     private StatBase stat;
     private EntityPlayer player;
@@ -19,18 +23,29 @@ public class GuiStatTooltip extends Gui {
     }
 
     public void draw(int drawX, int drawY, int mouseButton) {
+        Map<String, Integer> messageColorMap = new LinkedHashMap<>();
+
+        AtomicInteger widthAtomic = new AtomicInteger(), heightAtomic = new AtomicInteger();
+
         int level = DataHelper.getPlayerStatLevel(this.player, this.stat);
-        String header = (this.stat.getLocalizedName()) + " L" + level;
-        String message = this.stat.getLocalizedDes(this.player);
-        String cost = I18n.translateToLocal("ui.cost.name") + this.stat.getCost(level) + "xp";
+
+        messageColorMap.put(this.stat.getLocalizedName() + " L" + level, -13312); // Header
+        messageColorMap.put(this.stat.getLocalizedDes(this.player), -1); // Message
         if (level >= this.stat.getLimit())
-            cost = I18n.translateToLocal("ui.max.name");
-        int width = Math.max(this.mc.fontRenderer.getStringWidth(message),
-                this.mc.fontRenderer.getStringWidth(header)) + this.padding * 2;
-        int height = this.mc.fontRenderer.FONT_HEIGHT * 3 + this.padding * 2;
-        int h = height / 3;
+            messageColorMap.put(I18n.translateToLocal("ui.max.name"), -16724737);
+        else
+            messageColorMap.put(I18n.translateToLocal("ui.cost.name") + this.stat.getCost(level) + "xp", -16724737); // Cost
+        messageColorMap.put(I18n.translateToLocal("ui.hover.name"), 0xffffffff-0x98fb9800);
+
+        messageColorMap.forEach((text, color) -> {
+            widthAtomic.set(Math.max(widthAtomic.get(), this.mc.fontRenderer.getStringWidth(text)));
+            heightAtomic.addAndGet(this.mc.fontRenderer.FONT_HEIGHT);
+        });
+
+        int width = widthAtomic.get() + this.padding * 2;
+        int height = heightAtomic.get() + this.padding * 2;
+        int h = height / messageColorMap.size();
         int x = drawX - width / 2;
-        int y = drawY;
         int leftEdge = 0;
         int left = x;
         if (left < leftEdge) {
@@ -41,23 +56,18 @@ public class GuiStatTooltip extends Gui {
         if (right > rightEdge) {
             x += rightEdge - right - 1;
         }
-        drawRect(x, y, x + width, y - height, -872415232);
-        drawString(this.mc.fontRenderer,
-                header,
-                x + this.padding / 2,
-                y - h * 3 + this.padding / 2,
-                -13312);
-        drawString(this.mc.fontRenderer,
-                message,
-                x + this.padding / 2,
-                y - h * 2 + this.padding / 2,
-                -1);
-        drawString(this.mc.fontRenderer,
-                cost,
-                x + this.padding / 2,
-                y - h + this.padding / 2,
-                -16724737);
-        drawBorder(x, y, width, height, -1);
+        drawRect(x, drawY, x + width, drawY - height, -872415232);
+
+        for (int i = messageColorMap.size(); i >= 1; i--) {
+            Map.Entry<String, Integer> entry = messageColorMap.entrySet().toArray(new Map.Entry[0])[messageColorMap.size() - i];
+            drawString(this.mc.fontRenderer,
+                    entry.getKey(),
+                    x + this.padding / 2,
+                    drawY - h * i + this.padding / 2,
+                    entry.getValue());
+        }
+
+        drawBorder(x, drawY, width, height, -1);
     }
 
     private void drawBorder(int x, int y, int width, int height, int borderColor) {
