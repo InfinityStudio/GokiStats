@@ -36,7 +36,7 @@ public abstract class DamageSourceProtectionStat extends StatBase implements ICo
     public void loadFromConfigurationFile(Configuration config) {
         this.damageSources.clear();
         String[] sources = Reference.configuration.get("Support",
-                getLocalizedName() + " Sources",
+                key + " Sources",
                 getDefaultDamageSources()).getStringList();
         for (int i = 0; i < sources.length; i++) {
             this.damageSources.add(sources[i]);
@@ -59,7 +59,7 @@ public abstract class DamageSourceProtectionStat extends StatBase implements ICo
             sources[i] = this.damageSources.get(i);
         }
         Reference.configuration.get("Support",
-                getLocalizedName() + " Sources",
+                key + " Sources",
                 getDefaultDamageSources()).set(sources);
     }
 

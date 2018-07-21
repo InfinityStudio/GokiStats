@@ -10,7 +10,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class GuiStats extends GuiScreen {
             }
         }
         drawCenteredString(fontRenderer,
-                I18n.translateToLocal("ui.currentxp.name") + DataHelper.getXPTotal(player.experienceLevel,
+                I18n.format("ui.currentxp.name") + DataHelper.getXPTotal(player.experienceLevel,
                         player.experience) + "xp",
                 width / 2,
                 this.height - 16,

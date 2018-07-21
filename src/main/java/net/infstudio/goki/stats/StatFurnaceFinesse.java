@@ -1,7 +1,7 @@
 package net.infstudio.goki.stats;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 
 public class StatFurnaceFinesse extends StatSpecial implements IStatSpecial {
     public StatFurnaceFinesse(int id, String key, int limit) {
@@ -30,7 +30,7 @@ public class StatFurnaceFinesse extends StatSpecial implements IStatSpecial {
 
     @Override
     public String getLocalizedDes(EntityPlayer player) {
-        return I18n.translateToLocalFormatted(this.key + ".des",
+        return I18n.format(this.key + ".des",
                 this.getAppliedDescriptionVar(player)[0],
                 this.getAppliedDescriptionVar(player)[1]);
     }

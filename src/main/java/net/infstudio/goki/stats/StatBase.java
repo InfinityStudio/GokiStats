@@ -4,9 +4,11 @@ import net.infstudio.goki.lib.DataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
@@ -107,12 +109,14 @@ public abstract class StatBase implements Stat {
         return needAffectedByStat(object1);
     }
 
+    @SideOnly(Side.CLIENT)
     public String getLocalizedName() {
-        return I18n.translateToLocal(this.key + ".name");
+        return I18n.format(this.key + ".name");
     }
 
+    @SideOnly(Side.CLIENT)
     public String getLocalizedDes(EntityPlayer player) {
-        return I18n.translateToLocalFormatted(this.key + ".des",
+        return I18n.format(this.key + ".des",
                 this.getAppliedDescriptionVar(player)[0]);
     }
 

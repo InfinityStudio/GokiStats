@@ -4,7 +4,7 @@ import net.infstudio.goki.lib.DataHelper;
 import net.infstudio.goki.lib.Reference;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 
 public class StatReaper extends StatBase implements IConfigeratable {
@@ -30,7 +30,7 @@ public class StatReaper extends StatBase implements IConfigeratable {
 
     @Override
     public String getLocalizedDes(EntityPlayer player) {
-        return I18n.translateToLocalFormatted(this.key + ".des",
+        return I18n.format(this.key + ".des",
                 this.getAppliedDescriptionVar(player)[0],
                 this.getAppliedDescriptionVar(player)[1]);
     }

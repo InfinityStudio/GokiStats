@@ -4,7 +4,7 @@ import net.infstudio.goki.GokiStats;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -14,8 +14,8 @@ public class GokiKeyHandler {
     public static KeyBinding compatibilityMenu;
 
     public GokiKeyHandler() {
-        statsMenu = new KeyBinding(I18n.translateToLocal("ui.opmenu.name"), 21, "Goki Stats");
-        compatibilityMenu = new KeyBinding(I18n.translateToLocal("ui.openhelper.name"), 35, "Goki Stats");
+        statsMenu = new KeyBinding(I18n.format("ui.opmenu.name"), 21, "Goki Stats");
+        compatibilityMenu = new KeyBinding(I18n.format("ui.openhelper.name"), 35, "Goki Stats");
         ClientRegistry.registerKeyBinding(statsMenu);
         ClientRegistry.registerKeyBinding(compatibilityMenu);
     }

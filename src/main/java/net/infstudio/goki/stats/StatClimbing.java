@@ -2,7 +2,7 @@ package net.infstudio.goki.stats;
 
 import net.infstudio.goki.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 
 public class StatClimbing extends StatBase {
     public StatClimbing(int id, String key, int limit) {
@@ -16,9 +16,9 @@ public class StatClimbing extends StatBase {
     @Override
     public String getLocalizedDes(EntityPlayer player) {
         if (Reference.isPlayerAPILoaded) {
-            return I18n.translateToLocal(this.key + ".des1");
+            return I18n.format(this.key + ".des1");
         }
-        return I18n.translateToLocalFormatted(this.key + ".des0",
+        return I18n.format(this.key + ".des0",
                 this.getAppliedDescriptionVar(player)[0]);
     }
 }

@@ -5,7 +5,7 @@ import net.infstudio.goki.stats.StatBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,10 +32,10 @@ public class GuiStatTooltip extends Gui {
         messageColorMap.put(this.stat.getLocalizedName() + " L" + level, -13312); // Header
         messageColorMap.put(this.stat.getLocalizedDes(this.player), -1); // Message
         if (level >= this.stat.getLimit())
-            messageColorMap.put(I18n.translateToLocal("ui.max.name"), -16724737);
+            messageColorMap.put(I18n.format("ui.max.name"), -16724737);
         else
-            messageColorMap.put(I18n.translateToLocal("ui.cost.name") + this.stat.getCost(level) + "xp", -16724737); // Cost
-        messageColorMap.put(I18n.translateToLocal("ui.hover.name"), 0xffffffff-0x98fb9800);
+            messageColorMap.put(I18n.format("ui.cost.name") + this.stat.getCost(level) + "xp", -16724737); // Cost
+        messageColorMap.put(I18n.format("ui.hover.name"), 0xffffffff-0x98fb9800);
 
         messageColorMap.forEach((text, color) -> {
             widthAtomic.set(Math.max(widthAtomic.get(), this.mc.fontRenderer.getStringWidth(text)));

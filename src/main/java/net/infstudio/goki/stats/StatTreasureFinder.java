@@ -7,7 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
@@ -70,9 +70,9 @@ public class StatTreasureFinder extends StatBase implements IConfigeratable {
     @Override
     public String getLocalizedDes(EntityPlayer player) {
         if (getPlayerStatLevel(player) == 0) {
-            return I18n.translateToLocal(this.key + ".des0");
+            return I18n.format(this.key + ".des0");
         }
-        return I18n.translateToLocal(this.key + ".des1");
+        return I18n.format(this.key + ".des1");
     }
 
     @Override
