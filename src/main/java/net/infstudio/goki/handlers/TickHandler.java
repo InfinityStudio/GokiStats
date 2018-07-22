@@ -83,7 +83,7 @@ public class TickHandler {
                         Stats.SWIMMING.getBonus(player));
                 if (isJumping(player)) {
                     player.jumpMovementFactor += multiplier;
-                } else {
+                } else if (multiplier > 0) {
                     //			player.moveEntity(	player.motionX * multiplier,
                     //								player.motionY * multiplier,
                     //								player.motionZ * multiplier);

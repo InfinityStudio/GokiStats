@@ -9,20 +9,28 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name = "gradle"
+            url = "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'co.riiid:gradle-github-plugin:0.4.2'
+        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.11'
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: 'co.riiid.gradle'
+apply plugin: "com.matthewprenger.cursegradle"
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-version = "1.1.0"
+version = "1.1.1"
 group= "net.infstudio.gokistats" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "gokiStats"
 
@@ -52,6 +60,29 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+}
+
+github {
+    owner = 'InfinityStudio'
+    repo = 'GokiStats'
+    token = githubToken
+    tagName = version
+    targetCommitish = 'master'
+    name = 'gokiStats ' + version
+    assets = [
+        'build/libs'
+    ]
+}
+
+curseforge {
+    apiKey = curseForgeApiKey // This should really be in a gradle.properties file
+    project {
+        id = '298141'
+        releaseType = 'beta'
+        mainArtifact(jar) {
+            displayName = "gokiStats $project.version"
+        }
+    }
 }
 
 processResources

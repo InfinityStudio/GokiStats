@@ -44,7 +44,7 @@ grpg_Treasure_Finder.des1=Chance to find more rare additional items when harvest
 grpg_Furnace_Finesse.des=Smelt %1$f ticks faster %2$f%% of the time while using a furnace.
 grpg_Steady_Guard.des=%f%% less knockback when blocking.
 grpg_Stealth.des=Move %1$f%% faster and reap %2$f%%more often (%3$f%%) when sneaking.;
-grpg_Mining_Magician.des=
+grpg_Mining_Magician.des=Chance to find additional materials when harvesting ores.
 grpg_Roll.des=%f%% chance to avoid damage and counterattack enemy.
 
 grpg_Roll.message=*Avoided*
