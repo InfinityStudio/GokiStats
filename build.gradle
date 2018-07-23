@@ -65,17 +65,18 @@ dependencies {
 github {
     owner = 'InfinityStudio'
     repo = 'GokiStats'
-    token = githubToken
+    token = project.hasProperty('githubToken') ? githubToken : ""
     tagName = version
     targetCommitish = 'master'
     name = 'gokiStats ' + version
     assets = [
-        'build/libs'
+        'build/libs/' + archivesBaseName + '-' + version + '.jar',
+        'build/libs/' + archivesBaseName + '-' + version + '-sources.jar'
     ]
 }
 
 curseforge {
-    apiKey = curseForgeApiKey // This should really be in a gradle.properties file
+    apiKey = project.hasProperty('curseForgeApiKey') ? curseForgeApiKey : ""
     project {
         id = '298141'
         releaseType = 'release'
