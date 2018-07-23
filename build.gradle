@@ -65,7 +65,7 @@ dependencies {
 github {
     owner = 'InfinityStudio'
     repo = 'GokiStats'
-    token = project.hasProperty('githubToken') ? githubToken : ""
+    token = project.hasProperty('githubToken') ? githubToken : "test123123"
     tagName = version
     targetCommitish = 'master'
     name = 'gokiStats ' + version
@@ -76,7 +76,7 @@ github {
 }
 
 curseforge {
-    apiKey = project.hasProperty('curseForgeApiKey') ? curseForgeApiKey : ""
+    apiKey = project.hasProperty('curseForgeApiKey') ? curseForgeApiKey : "test123123"
     project {
         id = '298141'
         releaseType = 'release'
