@@ -30,7 +30,7 @@ compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-version = "1.1.1"
+version = "1.1.2"
 group= "net.infstudio.gokistats" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "gokiStats"
 
@@ -78,7 +78,7 @@ curseforge {
     apiKey = curseForgeApiKey // This should really be in a gradle.properties file
     project {
         id = '298141'
-        releaseType = 'beta'
+        releaseType = 'release'
         mainArtifact(jar) {
             displayName = "gokiStats $project.version"
         }
