@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandlerContext;
+import net.infstudio.goki.config.GokiConfig;
 import net.infstudio.goki.lib.StatHelper;
-import net.infstudio.goki.stats.StatBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class PacketSyncStatConfig implements GokiPacket {
         this.newBonus = 1.0F;
         this.newCost = 1.0F;
         this.newLimit = 1.0F;
-        this.statConfigStrings = new String[StatHelper.iConfigeratStat.size()];
+        this.statConfigStrings = new String[StatHelper.configurables.size()];
     }
 
     public PacketSyncStatConfig(boolean deathLoss, float newBonus, float newCost, float newLimit) {
@@ -30,13 +30,13 @@ public class PacketSyncStatConfig implements GokiPacket {
         this.newBonus = newBonus;
         this.newCost = newCost;
         this.newLimit = newLimit;
-        this.statConfigStrings = new String[StatHelper.iConfigeratStat.size()];
+        this.statConfigStrings = new String[StatHelper.configurables.size()];
 //		for (int i = 0; i < StatBase.stats.size(); i++)
 //		{
 //			this.statConfigStrings[i] = ((StatBase) StatBase.stats.get(i)).toConfigurationString();
 //		}
-        for (int i = 0; i < StatHelper.iConfigeratStat.size(); i++) {
-            this.statConfigStrings[i] = StatHelper.iConfigeratStat.get(i).toConfigurationString();
+        for (int i = 0; i < StatHelper.configurables.size(); i++) {
+            this.statConfigStrings[i] = StatHelper.configurables.get(i).toConfigurationString();
         }
     }
 
@@ -76,16 +76,16 @@ public class PacketSyncStatConfig implements GokiPacket {
 
     @Override
     public void handleClientSide(EntityPlayer player) {
-        StatBase.loseStatsOnDeath = this.deathLoss;
-        StatBase.globalBonusMultiplier = this.newBonus;
-        StatBase.globalCostMultiplier = this.newCost;
-        StatBase.globalLimitMultiplier = this.newLimit;
+        GokiConfig.globalModifiers.loseStatsOnDeath = this.deathLoss;
+        GokiConfig.globalModifiers.globalBonusMultiplier = this.newBonus;
+        GokiConfig.globalModifiers.globalCostMultiplier = this.newCost;
+        GokiConfig.globalModifiers.globalLimitMultiplier = this.newLimit;
 //		for (int i = 0; i < this.statConfigStrings.length; i++)
 //		{
 //			((StatBase) StatBase.stats.get(i)).fromConfigurationString(this.statConfigStrings[i]);
 //		}
-        for (int i = 0; i < StatHelper.iConfigeratStat.size(); i++) {
-            StatHelper.iConfigeratStat.get(i).fromConfigurationString(this.statConfigStrings[i]);
+        for (int i = 0; i < StatHelper.configurables.size(); i++) {
+            StatHelper.configurables.get(i).fromConfigurationString(this.statConfigStrings[i]);
         }
     }
 

@@ -3,7 +3,6 @@ package net.infstudio.goki;
 import net.infstudio.goki.client.gui.GuiHandler;
 import net.infstudio.goki.handlers.CommonHandler;
 import net.infstudio.goki.handlers.TickHandler;
-import net.infstudio.goki.lib.DataHelper;
 import net.infstudio.goki.lib.Reference;
 import net.infstudio.goki.lib.StatHelper;
 import net.infstudio.goki.stats.Stats;
@@ -36,7 +35,7 @@ public class CommonProxy {
             System.err.println("gokistats configuration file has changed! May cause errors! Delete the configuration file and relaunch.");
         }
 
-        DataHelper.loadOptions(Reference.configuration);
+//        DataHelper.loadOptions(Reference.configuration);
         StatHelper.loadAllStatsFromConfiguration(Reference.configuration);
     }
 
@@ -47,7 +46,7 @@ public class CommonProxy {
             Stats.CLIMBING.enabled = false;
         }
         StatHelper.saveAllStatsToConfiguration(Reference.configuration);
-        DataHelper.saveGlobalMultipliers(Reference.configuration);
+//        DataHelper.saveGlobalMultipliers(Reference.configuration);
         Reference.configuration.save();
     }
 }

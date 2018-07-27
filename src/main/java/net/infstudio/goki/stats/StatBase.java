@@ -1,5 +1,8 @@
 package net.infstudio.goki.stats;
 
+import net.infstudio.goki.config.ConfigurableV2;
+import net.infstudio.goki.config.GokiConfig;
+import net.infstudio.goki.config.stats.StatConfig;
 import net.infstudio.goki.lib.DataHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,11 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
-public abstract class StatBase implements Stat {
-    public static boolean loseStatsOnDeath = true;
-    public static float globalCostMultiplier = 1.0F;
-    public static float globalLimitMultiplier = 2.5F;
-    public static float globalBonusMultiplier = 1.0F;
+public abstract class StatBase implements Stat, ConfigurableV2<StatConfig> {
     public static final ArrayList<StatBase> stats = new ArrayList<>(32);
     public static int totalStats = 0;
     //	 public static final StatBase STAT_FOCUS = new StatFocus(14, "grpg_Focus",
@@ -35,6 +34,7 @@ public abstract class StatBase implements Stat {
         this.limit = 0;
         this.key = "Dummy";
         this.name = "Dummy StatBase";
+        stats.add(this);
     }
 
     public StatBase(int imgId, String key, int limit) {
@@ -42,16 +42,31 @@ public abstract class StatBase implements Stat {
         this.limit = limit;
         this.key = key;
         stats.add(this);
-        totalStats += 1;
+        totalStats ++;
     }
 
     protected static float getFinalBonus(float currentBonus) {
-        return currentBonus * globalBonusMultiplier;
+        return currentBonus * GokiConfig.globalModifiers.globalBonusMultiplier;
+    }
+
+    @Override
+    public StatConfig createConfig() {
+        return new StatConfig();
+    }
+
+    @Override
+    public String getKey() {
+        return key;
+    }
+
+    @Override
+    public void reload() {
+        bonusMultiplier = getConfig().bonusMultiplier;
     }
 
     @Override
     public float getBonus(EntityPlayer player) {
-        return getBonus(DataHelper.getPlayerStatLevel(player, this));
+        return getBonus(DataHelper.getPlayerStatLevel(player, this)) * bonusMultiplier;
     }
 
     @Override
@@ -62,7 +77,7 @@ public abstract class StatBase implements Stat {
 
     @Override
     public int getCost(int level) {
-        return (int) ((Math.pow(level, 1.6D) + 6.0D + level) * globalCostMultiplier);
+        return (int) ((Math.pow(level, 1.6D) + 6.0D + level) * GokiConfig.globalModifiers.globalCostMultiplier);
     }
 
     @Override
@@ -79,10 +94,10 @@ public abstract class StatBase implements Stat {
 
     @Override
     public int getLimit() {
-        if (globalLimitMultiplier <= 0.0F) {
+        if (GokiConfig.globalModifiers.globalLimitMultiplier <= 0.0F) {
             return 127;
         }
-        return (int) (this.limit * globalLimitMultiplier);
+        return (int) (this.limit * GokiConfig.globalModifiers.globalLimitMultiplier);
     }
 
     @Override

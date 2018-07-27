@@ -1,5 +1,6 @@
 package net.infstudio.goki.lib;
 
+import net.infstudio.goki.config.GokiConfig;
 import net.infstudio.goki.stats.StatBase;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -114,19 +115,19 @@ public class DataHelper {
     }
 
     public static void loadOptions(Configuration config) {
-        StatBase.globalCostMultiplier = (float) config.get("Global Modifiers",
+        GokiConfig.globalModifiers.globalCostMultiplier = (float) config.get("Global Modifiers",
                 "Cost Muliplier",
                 1.0D,
                 "A flat multiplier on the cost to upgrade all stats.").getDouble(1.0D);
-        StatBase.globalLimitMultiplier = (float) config.get("Global Modifiers",
+        GokiConfig.globalModifiers.globalLimitMultiplier = (float) config.get("Global Modifiers",
                 "Limit Muliplier",
                 2.5D,
                 "A flat multiplier on the level limit of all stats.").getDouble(1.0D);
-        StatBase.globalBonusMultiplier = (float) config.get("Global Modifiers",
+        GokiConfig.globalModifiers.globalBonusMultiplier = (float) config.get("Global Modifiers",
                 "Bonus Muliplier",
                 1.0D,
                 "A flat multiplier on the bonus all stats gives.").getDouble(1.0D);
-        StatBase.loseStatsOnDeath = config.get("Options",
+        GokiConfig.globalModifiers.loseStatsOnDeath = config.get("Options",
                 "Death Loss",
                 false,
                 "Lose stats on death?").getBoolean(true);
@@ -136,15 +137,15 @@ public class DataHelper {
         config.get("Global Modifiers",
                 "Cost Muliplier",
                 1.0D,
-                "A flat multiplier on the cost to upgrade all stats.").set(StatBase.globalCostMultiplier);
+                "A flat multiplier on the cost to upgrade all stats.").set(GokiConfig.globalModifiers.globalCostMultiplier);
         config.get("Global Modifiers",
                 "Limit Muliplier",
                 2.5D,
-                "A flat multiplier on the level limit of all stats.").set(StatBase.globalLimitMultiplier);
+                "A flat multiplier on the level limit of all stats.").set(GokiConfig.globalModifiers.globalLimitMultiplier);
         config.get("Global Modifiers",
                 "Bonus Muliplier",
                 1.0D,
-                "A flat multiplier on the bonus all stats gives.").set(StatBase.globalBonusMultiplier);
-        config.get("Options", "Death Loss", true, "Lose stats on death?").set(StatBase.loseStatsOnDeath);
+                "A flat multiplier on the bonus all stats gives.").set(GokiConfig.globalModifiers.globalBonusMultiplier);
+        config.get("Options", "Death Loss", true, "Lose stats on death?").set(GokiConfig.globalModifiers.loseStatsOnDeath);
     }
 }

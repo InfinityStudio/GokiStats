@@ -1,8 +1,10 @@
 package net.infstudio.goki;
 
-import net.infstudio.goki.lib.DataHelper;
+import net.infstudio.goki.config.ConfigManager;
+import net.infstudio.goki.config.ConfigurableV2;
 import net.infstudio.goki.lib.Reference;
 import net.infstudio.goki.lib.StatHelper;
+import net.infstudio.goki.stats.StatBase;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,8 +29,10 @@ public class StatsCommand extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender icommandsender, String[] astring) {
         Reference.configuration.load();
-        DataHelper.loadOptions(Reference.configuration);
+//        DataHelper.loadOptions(Reference.configuration);
         StatHelper.loadAllStatsFromConfiguration(Reference.configuration);
+        StatBase.stats.forEach(ConfigurableV2::reloadConfig);
+        ConfigManager.INSTANCE.reloadConfig();
         EntityPlayer player;
         if ((icommandsender instanceof EntityPlayer)) {
             player = (EntityPlayer) icommandsender;

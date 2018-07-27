@@ -1,6 +1,7 @@
 package net.infstudio.goki.handlers;
 
 import net.infstudio.goki.GokiStats;
+import net.infstudio.goki.config.GokiConfig;
 import net.infstudio.goki.handlers.packet.PacketStatAlter;
 import net.infstudio.goki.handlers.packet.PacketSyncStatConfig;
 import net.infstudio.goki.lib.DataHelper;
@@ -131,7 +132,7 @@ public class CommonHandler {
         if ((event.getEntity() instanceof EntityPlayer)) {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             if (!player.world.isRemote) {
-                GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(StatBase.loseStatsOnDeath, StatBase.globalBonusMultiplier, StatBase.globalCostMultiplier, StatBase.globalLimitMultiplier),
+                GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(GokiConfig.globalModifiers.loseStatsOnDeath, GokiConfig.globalModifiers.globalBonusMultiplier, GokiConfig.globalModifiers.globalCostMultiplier, GokiConfig.globalModifiers.globalLimitMultiplier),
                         (EntityPlayerMP) player);
             } else {
                 GokiStats.packetPipeline.sendToServer(new PacketStatAlter(0, 0));
@@ -143,7 +144,7 @@ public class CommonHandler {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         EntityPlayer player = event.player;
         if (!player.world.isRemote) {
-            GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(StatBase.loseStatsOnDeath, StatBase.globalBonusMultiplier, StatBase.globalCostMultiplier, StatBase.globalLimitMultiplier),
+            GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(GokiConfig.globalModifiers.loseStatsOnDeath, GokiConfig.globalModifiers.globalBonusMultiplier, GokiConfig.globalModifiers.globalCostMultiplier, GokiConfig.globalModifiers.globalLimitMultiplier),
                     (EntityPlayerMP) player);
         } else {
             GokiStats.packetPipeline.sendToServer(new PacketStatAlter(0, 0));
@@ -166,7 +167,7 @@ public class CommonHandler {
     public void playerDead(LivingDeathEvent event) {
         if ((event.getEntityLiving() instanceof EntityPlayer)) {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            if (StatBase.loseStatsOnDeath) {
+            if (GokiConfig.globalModifiers.loseStatsOnDeath) {
                 for (int stat = 0; stat < StatBase.totalStats; stat++) {
                     DataHelper.setPlayerStatLevel(player,
                             StatBase.stats.get(stat),

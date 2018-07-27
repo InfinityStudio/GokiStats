@@ -13,7 +13,7 @@ import net.minecraftforge.common.config.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatTreasureFinder extends StatBase implements IConfigeratable {
+public class StatTreasureFinder extends StatBase implements IConfigurable {
     public static List<TreasureFinderEntry> entries = new ArrayList<>();
 
     public static String[] defaultEntries =

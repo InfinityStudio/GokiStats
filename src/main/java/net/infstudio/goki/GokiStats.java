@@ -1,22 +1,24 @@
 package net.infstudio.goki;
 
+import net.infstudio.goki.config.ConfigManager;
+import net.infstudio.goki.config.ConfigurableV2;
 import net.infstudio.goki.handlers.packet.*;
+import net.infstudio.goki.lib.Reference;
+import net.infstudio.goki.stats.StatBase;
+import net.infstudio.goki.stats.Stats;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 
-@Mod(modid = "gokistats", useMetadata = true)
+@Mod(modid = Reference.MODID, useMetadata = true)
 public class GokiStats {
     public static final PacketPipeline packetPipeline = new PacketPipeline();
 
-    @Mod.Instance("gokistats")
+    @Mod.Instance(Reference.MODID)
     public static GokiStats instance;
 
     @SidedProxy(clientSide = "net.infstudio.goki.client.ClientProxy", serverSide = "net.infstudio.goki.CommonProxy")
@@ -24,8 +26,16 @@ public class GokiStats {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        // Initialize stats
+        try {
+            Class.forName(Stats.class.getName(), true, getClass().getClassLoader());
+        } catch (ClassNotFoundException ignored) {
+        }
         instance = this;
         proxy.initConfig(event);
+        new ConfigManager(event.getModConfigurationDirectory().toPath().resolve(Reference.MODID));
+        System.out.println(StatBase.totalStats);
+        StatBase.stats.forEach(ConfigurableV2::reloadConfig);
     }
 
     @Mod.EventHandler
@@ -44,6 +54,12 @@ public class GokiStats {
     public void postInit(FMLPostInitializationEvent event) {
         packetPipeline.postInitialise();
         proxy.saveConfig();
+    }
+
+    @Mod.EventHandler
+    public void loadComplete(FMLLoadCompleteEvent event) {
+        StatBase.stats.forEach(StatBase::reloadConfig);
+        ConfigManager.INSTANCE.reloadConfig();
     }
 
     @Mod.EventHandler
