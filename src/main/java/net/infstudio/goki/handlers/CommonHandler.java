@@ -56,9 +56,10 @@ public class CommonHandler {
         EntityPlayer player = event.getHarvester();
         Block block = event.getState().getBlock();
         if (player != null) {
-            if (DataHelper.getPlayerStatLevel(player, Stats.TREASURE_FINDER) > 0) {
-                boolean treasureFound = false;
+            if (DataHelper.getPlayerStatLevel(player, Stats.TREASURE_FINDER) > 0) { // Player has treasure finder
+                boolean treasureFound = false; // Make a temp variable here to play sound
                 Random random = player.getRNG();
+                // Note: Items and chances are in pairs
                 List<ItemStack> items = Stats.TREASURE_FINDER.getApplicableItemStackList(block,
                         block.getMetaFromState(event.getState()),
                         DataHelper.getPlayerStatLevel(player,
@@ -67,11 +68,12 @@ public class CommonHandler {
                         block.getMetaFromState(event.getState()),
                         DataHelper.getPlayerStatLevel(player,
                                 Stats.TREASURE_FINDER));
+
                 for (int i = 0; i < items.size(); i++) {
                     Integer roll = random.nextInt(10000);
                     if (roll <= chances.get(i)) {
                         if (items.get(i) != null) {
-                            event.getDrops().add(items.get(i));
+                            event.getDrops().add(items.get(i)); // Add treasure to player
                             treasureFound = true;
                         } else {
                             System.out.println("Tried to add an item from Treasure Finder, but it failed!");
@@ -79,14 +81,15 @@ public class CommonHandler {
                     }
                 }
                 if (treasureFound) {
-                    player.world.playSound(player, event.getPos(), TREASURE, SoundCategory.MASTER, 1.0F, 1.0F);
+                    player.world.playSound(player, event.getPos(), TREASURE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 }
             }
 
-            if (DataHelper.getPlayerStatLevel(player, Stats.MINING_MAGICIAN) > 0) {
+            if (DataHelper.getPlayerStatLevel(player, Stats.MINING_MAGICIAN) > 0) { // Player has mining magician
                 boolean magicHappened = false;
+                // TODO Rewrite to NBT in 1.13
                 IDMDTuple mme = new IDMDTuple(block, block.getMetaFromState(event.getState()));
-                if (Stats.MINING_MAGICIAN.needAffectedByStat(mme)) {
+                if (Stats.MINING_MAGICIAN.needAffectedByStat(mme)) { // This block can be affected by magic
                     for (int i = 0; i < event.getDrops().size(); i++) {
                         if (player.getRNG().nextDouble() * 100.0D <= Stats.MINING_MAGICIAN.getBonus(player)) {
                             ItemStack item = event.getDrops().get(i);
@@ -96,7 +99,7 @@ public class CommonHandler {
                                     IDMDTuple entry = StatMiningMagician.blockEntries.get(randomEntry);
                                     ItemStack stack = new ItemStack(Item.getItemById(entry.id), 1, entry.md);
                                     stack.setCount(event.getDrops().get(i).getCount());
-                                    event.getDrops().set(i, stack);
+                                    event.getDrops().add(stack);
                                     magicHappened = true;
                                 }
                             } else {
@@ -107,7 +110,7 @@ public class CommonHandler {
                                         IDMDTuple chosenEntry = StatMiningMagician.itemEntries.get(randomEntry);
                                         ItemStack stack = new ItemStack(Item.getItemById(chosenEntry.id), 1, chosenEntry.md);
                                         stack.setCount(event.getDrops().get(i).getCount());
-                                        event.getDrops().set(i, stack);
+                                        event.getDrops().add(stack);
                                         magicHappened = true;
                                         break;
                                     }
@@ -116,7 +119,7 @@ public class CommonHandler {
                         }
                     }
                     if (magicHappened) {
-                        player.world.playSound(player, event.getPos(), MAGICIAN, SoundCategory.MASTER, 0.3f, 1.0f);
+                        player.world.playSound(player, event.getPos(), MAGICIAN, SoundCategory.BLOCKS, 0.3f, 1.0f);
                     }
                 }
             }
@@ -233,28 +236,31 @@ public class CommonHandler {
 
         EntityLivingBase victim = event.getEntityLiving();
 
-        if ((victim instanceof EntityPlayer)) {
+        if (victim instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) victim;
 
-            if (player.getEntityWorld().rand.nextFloat() <= Stats.ROLL.getBonus(player)) {
-                // Avoid damage
-                event.setCanceled(true);
+            if (!source.isFireDamage() && !source.isDamageAbsolute()) {
+                if (player.getEntityWorld().rand.nextFloat() <= Stats.ROLL.getBonus(player)) {
+                    // Avoid damage
+                    event.setCanceled(true);
 
-                player.addPotionEffect(
-                        new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:strength"), 20, 2)
-                );
+                    player.addPotionEffect(
+                            new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:strength"), 20, 2)
+                    );
 
-                victim.addTag("knockback");
-                player.sendMessage(new TextComponentTranslation("grpg_Roll.message"));
+                    victim.addTag("knockback");
+                    player.sendMessage(new TextComponentTranslation("grpg_Roll.message"));
 
-                return;
+                    return;
+                }
             }
 
-            float damageMultiplier = 1.0F - (Stats.PROTECTION.getAppliedBonus(player,
+            float damageMultiplier = Stats.PROTECTION.getAppliedBonus(player,
                     source) + Stats.TOUGH_SKIN.getAppliedBonus(player,
                     source) + Stats.STAT_FEATHER_FALL.getAppliedBonus(player,
                     source) + Stats.TEMPERING.getAppliedBonus(player,
-                    source));
+                    source);
+
             event.setAmount(event.getAmount() * damageMultiplier);
         }
 

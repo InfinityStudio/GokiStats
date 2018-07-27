@@ -30,7 +30,7 @@ compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-version = "1.1.2"
+version = "1.1.3"
 group= "net.infstudio.gokistats" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "gokiStats"
 
@@ -65,7 +65,7 @@ dependencies {
 github {
     owner = 'InfinityStudio'
     repo = 'GokiStats'
-    token = project.hasProperty('githubToken') ? githubToken : "test123123"
+    token = project.hasProperty('githubToken') ? githubToken : "haha+1s"
     tagName = version
     targetCommitish = 'master'
     name = 'gokiStats ' + version

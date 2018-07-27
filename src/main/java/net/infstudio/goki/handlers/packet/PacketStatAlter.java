@@ -67,7 +67,7 @@ public class PacketStatAlter implements GokiPacket {
                             }
                         }
                     }
-                } else {
+                } else if (DataHelper.getPlayerStatLevel(player, stat) > 0) {
                     player.addExperience((int) (stat.getCost(level + this.amount - 2) * 0.8)); // TODO Configure 0.8
                     DataHelper.setPlayerStatLevel(player,
                             stat,

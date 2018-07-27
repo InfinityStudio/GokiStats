@@ -9,7 +9,7 @@
         ]
     },
 	"gokistats:magician" : {
-        "category": "master",
+        "category": "blocks",
         "sounds": [
             "gokistats:magician1",
             "gokistats:magician2",
@@ -25,7 +25,7 @@
         ]
     },
 	"gokistats:treasure" : {
-        "category": "master",
+        "category": "blocks",
         "sounds": [
             "gokistats:treasure1",
             "gokistats:treasure2",
