@@ -1,10 +1,10 @@
 package net.infstudio.goki.client.gui;
 
 import net.infstudio.goki.GokiStats;
-import net.infstudio.goki.handlers.GokiKeyHandler;
-import net.infstudio.goki.handlers.packet.PacketStatAlter;
-import net.infstudio.goki.lib.DataHelper;
-import net.infstudio.goki.stats.StatBase;
+import net.infstudio.goki.common.handlers.GokiKeyHandler;
+import net.infstudio.goki.common.network.packet.PacketStatAlter;
+import net.infstudio.goki.common.utils.DataHelper;
+import net.infstudio.goki.common.stats.StatBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;

@@ -1,8 +1,8 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.lib.DataHelper;
-import net.infstudio.goki.lib.Reference;
-import net.infstudio.goki.stats.StatBase;
+import net.infstudio.goki.common.utils.DataHelper;
+import net.infstudio.goki.common.utils.Reference;
+import net.infstudio.goki.common.stats.StatBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;

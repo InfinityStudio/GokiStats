@@ -1,7 +1,7 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.lib.DataHelper;
-import net.infstudio.goki.stats.StatBase;
+import net.infstudio.goki.common.utils.DataHelper;
+import net.infstudio.goki.common.stats.StatBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;

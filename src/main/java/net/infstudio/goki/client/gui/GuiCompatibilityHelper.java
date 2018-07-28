@@ -1,8 +1,8 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.stats.StatBase;
-import net.infstudio.goki.stats.Stats;
-import net.infstudio.goki.stats.tool.ToolSpecificStat;
+import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.common.stats.Stats;
+import net.infstudio.goki.common.stats.tool.ToolSpecificStat;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;

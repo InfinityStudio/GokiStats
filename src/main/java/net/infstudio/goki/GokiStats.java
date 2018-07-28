@@ -1,12 +1,14 @@
 package net.infstudio.goki;
 
-import net.infstudio.goki.config.ConfigManager;
-import net.infstudio.goki.config.ConfigurableV2;
-import net.infstudio.goki.config.GokiConfig;
-import net.infstudio.goki.handlers.packet.*;
-import net.infstudio.goki.lib.Reference;
-import net.infstudio.goki.stats.StatBase;
-import net.infstudio.goki.stats.Stats;
+import net.infstudio.goki.common.CommonProxy;
+import net.infstudio.goki.common.StatsCommand;
+import net.infstudio.goki.common.config.ConfigManager;
+import net.infstudio.goki.common.config.Configurable;
+import net.infstudio.goki.common.config.GokiConfig;
+import net.infstudio.goki.common.network.packet.*;
+import net.infstudio.goki.common.utils.Reference;
+import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.common.stats.Stats;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
@@ -26,7 +28,7 @@ public class GokiStats {
     @Mod.Instance(Reference.MODID)
     public static GokiStats instance;
 
-    @SidedProxy(clientSide = "net.infstudio.goki.client.ClientProxy", serverSide = "net.infstudio.goki.CommonProxy")
+    @SidedProxy(clientSide = "net.infstudio.goki.client.ClientProxy", serverSide = "net.infstudio.goki.common.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.EventHandler
@@ -37,7 +39,6 @@ public class GokiStats {
         } catch (ClassNotFoundException ignored) {
         }
         instance = this;
-        proxy.initConfig(event);
 
         if (GokiConfig.version.equals("v2")) { // Skip v2
             try {
@@ -58,7 +59,7 @@ public class GokiStats {
 
         new ConfigManager(event.getModConfigurationDirectory().toPath().resolve(Reference.MODID));
         System.out.println(StatBase.totalStats);
-        StatBase.stats.forEach(ConfigurableV2::reloadConfig);
+        StatBase.stats.forEach(Configurable::reloadConfig);
     }
 
     @Mod.EventHandler
