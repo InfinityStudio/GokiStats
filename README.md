@@ -20,6 +20,10 @@ Also, the interface provides is pretty and eazy-to-use.
 
 ![2018-07-14_19.43.42.png](https://i.loli.net/2018/07/14/5b49e762d2305.png)
 
+## License
+
+Source code are under MIT License, and resources are under CC-BY-NC-SA 4.0 License.
+
 ## Disclaimer
 
 I, Lasm_Gratel is not the original author of this Mod, since the mod forum was gone and deleted, source code was then released to Public Domain.
