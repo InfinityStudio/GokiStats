@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.event.*;
 import java.io.IOException;
 import java.nio.file.Files;
 
-@Mod(modid = Reference.MODID, useMetadata = true)
+@Mod(modid = Reference.MODID, useMetadata = true, updateJSON = "https://infinitystudio.github.io/Updates/gokistats.json")
 public class GokiStats {
     public static final PacketPipeline packetPipeline = new PacketPipeline();
 
