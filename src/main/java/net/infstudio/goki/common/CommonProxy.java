@@ -8,7 +8,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class CommonProxy {
-
     public void registerKeybinding() {
     }
 
@@ -18,5 +17,6 @@ public class CommonProxy {
 
         NetworkRegistry.INSTANCE.registerGuiHandler(GokiStats.instance,
                 new GuiHandler());
+        registerKeybinding();
     }
 }

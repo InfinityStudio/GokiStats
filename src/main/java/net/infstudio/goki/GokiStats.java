@@ -5,10 +5,13 @@ import net.infstudio.goki.common.StatsCommand;
 import net.infstudio.goki.common.config.ConfigManager;
 import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
+import net.infstudio.goki.common.handlers.CommonHandler;
+import net.infstudio.goki.common.handlers.GokiKeyHandler;
+import net.infstudio.goki.common.handlers.TickHandler;
 import net.infstudio.goki.common.network.packet.*;
-import net.infstudio.goki.common.utils.Reference;
 import net.infstudio.goki.common.stats.StatBase;
 import net.infstudio.goki.common.stats.Stats;
+import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
@@ -31,13 +34,21 @@ public class GokiStats {
     @SidedProxy(clientSide = "net.infstudio.goki.client.ClientProxy", serverSide = "net.infstudio.goki.common.CommonProxy")
     public static CommonProxy proxy;
 
+    private static Class<?>[] loadClasses = {
+            Stats.class, CommonHandler.class, GokiKeyHandler.class, TickHandler.class
+    };
+
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        // Initialize stats
+    public void construct(FMLConstructionEvent event) {
         try {
-            Class.forName(Stats.class.getName(), true, getClass().getClassLoader());
+            for (Class<?> clz : loadClasses)
+                Class.forName(clz.getName());
         } catch (ClassNotFoundException ignored) {
         }
+    }
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
         instance = this;
 
         if (GokiConfig.version.equals("v2")) { // Skip v2
@@ -71,7 +82,6 @@ public class GokiStats {
         packetPipeline.registerPacket(PacketSyncStatConfig.class);
 
         proxy.registerHandlers();
-        proxy.registerKeybinding();
     }
 
     @Mod.EventHandler

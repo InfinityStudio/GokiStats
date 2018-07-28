@@ -1,6 +1,8 @@
 package net.infstudio.goki.common.network.packet;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,10 +19,14 @@ import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 @ChannelHandler.Sharable
 public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, GokiPacket> {
@@ -56,14 +62,40 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, GokiPa
         byte discriminator = (byte) this.packets.indexOf(clazz);
         buffer.writeByte(discriminator);
         msg.encodeInto(ctx, buffer);
-        FMLProxyPacket proxyPacket = new FMLProxyPacket(new PacketBuffer(buffer.copy()), ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get());
-        out.add(proxyPacket);
+
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            GZIPOutputStream outputStream = new GZIPOutputStream(byteArrayOutputStream, true);
+            outputStream.write(buffer.array());
+            outputStream.close();
+            byteArrayOutputStream.close();
+
+            FMLProxyPacket proxyPacket = new FMLProxyPacket(new PacketBuffer(Unpooled.wrappedBuffer(byteArrayOutputStream.toByteArray())), ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get());
+            out.add(proxyPacket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out)
             throws Exception {
         ByteBuf payload = msg.payload();
+
+        try {
+            GZIPInputStream inputStream = new GZIPInputStream(new ByteBufInputStream(payload));
+            ByteBuf tempBuf = Unpooled.buffer();
+            ByteBufOutputStream outputStream = new ByteBufOutputStream(tempBuf);
+            while (inputStream.available() != 0) {
+                outputStream.write(inputStream.read());
+            }
+            outputStream.close();
+            payload = outputStream.buffer();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         byte discriminator = payload.readByte();
         Class<? extends GokiPacket> clazz = this.packets.get(discriminator);
         if (clazz == null) {
