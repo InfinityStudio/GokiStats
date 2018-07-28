@@ -2,19 +2,19 @@ package net.infstudio.goki.stats.tool;
 
 import net.infstudio.goki.ItemIdMetadataTuple;
 import net.infstudio.goki.ItemIdMetadataTupleComparator;
-import net.infstudio.goki.lib.Reference;
-import net.infstudio.goki.stats.IConfigurable;
+import net.infstudio.goki.config.stats.ToolSpecificConfig;
 import net.infstudio.goki.stats.StatBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-public abstract class ToolSpecificStat extends StatBase implements IConfigurable {
-    public List<ItemIdMetadataTuple> supportedItems = new ArrayList<>();
+public abstract class ToolSpecificStat extends StatBase<ToolSpecificConfig> {
+    public List<ItemIdMetadataTuple> supports = new ArrayList<>();
 
     public ToolSpecificStat(int id, String key, int limit) {
         super(id, key, limit);
@@ -24,8 +24,33 @@ public abstract class ToolSpecificStat extends StatBase implements IConfigurable
 
     public abstract String[] getDefaultSupportedItems();
 
+    public ToolSpecificStat() {
+        Arrays.stream(getDefaultSupportedItems()).map(ItemIdMetadataTuple::new).forEach(supports::add);
+    }
+
+    @Override
+    public ToolSpecificConfig createConfig() {
+        ToolSpecificConfig config = new ToolSpecificConfig();
+        Arrays.stream(getDefaultSupportedItems()).map(ItemIdMetadataTuple::new).forEach(config.supports::add);
+        return config;
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        getConfig().supports.clear();
+        getConfig().supports.addAll(supports);
+    }
+
+    @Override
+    public void reload() {
+        super.reload();
+        supports.clear();
+        supports.addAll(getConfig().supports);
+    }
+
     public void addSupportForItem(ItemStack item) {
-        loadFromConfigurationFile(Reference.configuration);
+        reloadConfig();
         if (item == null) {
             return;
         }
@@ -36,77 +61,37 @@ public abstract class ToolSpecificStat extends StatBase implements IConfigurable
         if (hasSubtypes) {
             meta = item.getItemDamage();
         }
-        ItemIdMetadataTuple iimt = new ItemIdMetadataTuple(id, meta);
-        if (!this.supportedItems.contains(iimt)) {
-            this.supportedItems.add(iimt);
+        ItemIdMetadataTuple iimt = new ItemIdMetadataTuple(item.getItem().getRegistryName().toString(), meta);
+        if (!this.supports.contains(iimt)) {
+            this.supports.add(iimt);
         }
-        saveToConfigurationFile(Reference.configuration);
+        saveConfig();
     }
 
     public void removeSupportForItem(ItemStack item) {
         if (item != null) {
             ItemIdMetadataTupleComparator iimtc = new ItemIdMetadataTupleComparator();
-            loadFromConfigurationFile(Reference.configuration);
+            reloadConfig();
 
-            ItemIdMetadataTuple iimt = new ItemIdMetadataTuple(Item.getIdFromItem(item.getItem()), 0);
+            ItemIdMetadataTuple iimt = new ItemIdMetadataTuple(item.getItem().getRegistryName().toString(), 0);
             if (item.getHasSubtypes()) {
                 iimt.metadata = item.getItemDamage();
             }
-            for (int i = 0; i < this.supportedItems.size(); i++) {
-                ItemIdMetadataTuple ii = this.supportedItems.get(i);
+            for (int i = 0; i < this.supports.size(); i++) {
+                ItemIdMetadataTuple ii = this.supports.get(i);
                 if (iimtc.compare(iimt, ii) == 1) {
-                    this.supportedItems.remove(ii);
+                    this.supports.remove(ii);
                     i--;
                 }
             }
 
-            saveToConfigurationFile(Reference.configuration);
-        }
-    }
-
-    @Override
-    public void loadFromConfigurationFile(Configuration config) {
-        this.supportedItems.clear();
-        String[] configStrings = Reference.configuration.get("Support",
-                getConfigurationKey(),
-                getDefaultSupportedItems()).getStringList();
-        for (String configString : configStrings) {
-            this.supportedItems.add(new ItemIdMetadataTuple(configString));
-        }
-    }
-
-    @Override
-    public String toConfigurationString() {
-        String configString = "";
-        for (ItemIdMetadataTuple supportedItem : this.supportedItems) {
-            configString = configString + "," + supportedItem.toConfigString();
-        }
-        return configString.substring(1);
-    }
-
-    @Override
-    public void saveToConfigurationFile(Configuration config) {
-        String[] toolIDs = new String[this.supportedItems.size()];
-        for (int i = 0; i < toolIDs.length; i++) {
-            toolIDs[i] = this.supportedItems.get(i).toConfigString();
-        }
-        Reference.configuration.get("Support",
-                getConfigurationKey(),
-                getDefaultSupportedItems()).set(toolIDs);
-    }
-
-    @Override
-    public void fromConfigurationString(String configString) {
-        this.supportedItems.clear();
-        String[] configStringSplit = configString.split(",");
-        for (String aConfigStringSplit : configStringSplit) {
-            this.supportedItems.add(new ItemIdMetadataTuple(aConfigStringSplit));
+            saveConfig();
         }
     }
 
     public boolean isItemSupported(ItemStack item) {
-        for (ItemIdMetadataTuple iimt : this.supportedItems) {
-            if (Item.getIdFromItem(item.getItem()) == iimt.id) {
+        for (ItemIdMetadataTuple iimt : this.supports) {
+            if (Objects.equals(item.getItem().getRegistryName().toString(), iimt.id)) {
                 if (item.getHasSubtypes() && item.getItemDamage() == iimt.metadata) {
                     return true;
                 } else if (!item.getHasSubtypes()) {

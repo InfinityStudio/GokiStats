@@ -1,6 +1,6 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.lib.Reference;
+import net.infstudio.goki.stats.StatBase;
 import net.infstudio.goki.stats.Stats;
 import net.infstudio.goki.stats.tool.ToolSpecificStat;
 import net.minecraft.client.gui.GuiButton;
@@ -50,12 +50,12 @@ public class GuiCompatibilityHelper extends GuiScreen {
         } else {
             this.compatibleStats[button.id].addSupportForItem(this.player.getHeldItemMainhand());
         }
-        Reference.configuration.save();
+        StatBase.stats.forEach(StatBase::saveConfig);
         checkStatus();
     }
 
     public void checkStatus() {
-        Reference.configuration.load();
+        StatBase.stats.forEach(StatBase::reloadConfig);
         for (int i = 0; i < this.compatibleStats.length; i++) {
             if (this.compatibleStats[i].needAffectedByStat(this.player.getHeldItemMainhand())) {
                 ((GuiExtendedButton) this.buttonList.get(i)).displayString = ("Remove item from " + this.compatibleStats[i].getLocalizedName() + " list.");
@@ -69,6 +69,6 @@ public class GuiCompatibilityHelper extends GuiScreen {
 
     @Override
     public void onGuiClosed() {
-        Reference.configuration.save();
+        StatBase.stats.forEach(StatBase::saveConfig);
     }
 }

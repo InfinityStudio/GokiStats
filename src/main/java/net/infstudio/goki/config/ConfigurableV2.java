@@ -6,6 +6,8 @@ public interface ConfigurableV2<T> {
     T createConfig();
 
     default void saveConfig() {
+        save();
+        ConfigManager.INSTANCE.getConfigMap().put(getKey(), getConfig());
         ConfigManager.INSTANCE.saveConfig(getKey());
     }
 
@@ -20,6 +22,8 @@ public interface ConfigurableV2<T> {
         ConfigManager.INSTANCE.reloadConfig(getKey());
         reload();
     }
+
+    void save();
 
     void reload();
 

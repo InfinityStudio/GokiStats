@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
-public abstract class StatBase implements Stat, ConfigurableV2<StatConfig> {
+public abstract class StatBase<T extends StatConfig> implements Stat, ConfigurableV2<T> {
     public static final ArrayList<StatBase> stats = new ArrayList<>(32);
     public static int totalStats = 0;
     //	 public static final StatBase STAT_FOCUS = new StatFocus(14, "grpg_Focus",
@@ -50,13 +50,18 @@ public abstract class StatBase implements Stat, ConfigurableV2<StatConfig> {
     }
 
     @Override
-    public StatConfig createConfig() {
-        return new StatConfig();
+    public T createConfig() {
+        return (T) new StatConfig();
     }
 
     @Override
     public String getKey() {
         return key;
+    }
+
+    @Override
+    public void save() {
+        getConfig().bonusMultiplier = bonusMultiplier;
     }
 
     @Override

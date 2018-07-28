@@ -3,45 +3,26 @@ package net.infstudio.goki.lib;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
-public class IDMDTuple {
-    public int id;
-    public int md;
+import java.util.Objects;
 
-    public IDMDTuple(int bID, int bMD) {
-        this.id = bID;
-        this.md = bMD;
-    }
+public class IDMDTuple {
+    public String id;
+    public int metadata;
 
     public IDMDTuple(Block block, int bMD) {
-        this.id = Block.getIdFromBlock(block);
-        this.md = bMD;
+        this.id = block.getRegistryName().toString();
+        this.metadata = bMD;
     }
 
     public IDMDTuple(Item item, int bMD) {
-        this.id = Item.getIdFromItem(item);
-        this.md = bMD;
-    }
-
-    public String toConfigurationString() {
-        return this.id + "_" + this.md;
-    }
-
-    public boolean fromConfigurationString(String configString) {
-        boolean successful = false;
-        try {
-            String[] values = configString.split("_");
-            this.id = Integer.parseInt(values[0]);
-            this.md = Integer.parseInt(values[1]);
-        } catch (Exception e) {
-            successful = false;
-        }
-        return successful;
+        this.id = item.getRegistryName().toString();
+        this.metadata = bMD;
     }
 
     public boolean equals(Object object) {
         if ((object instanceof IDMDTuple)) {
             IDMDTuple entry = (IDMDTuple) object;
-            if ((entry.id == this.id) && (entry.md == this.md)) {
+            if ((Objects.equals(entry.id, this.id)) && (entry.metadata == this.metadata)) {
                 return true;
             }
         }

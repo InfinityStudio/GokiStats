@@ -6,10 +6,18 @@ import net.minecraftforge.common.config.Config;
 @Config(modid = Reference.MODID, name = "gokistats_v2")
 public class GokiConfig {
     @Config.Name("Configuration Version")
-    public static String version = "v2";
+    public static String version = "v3";
 
     @Config.Name("Global Modifiers")
     public static GlobalModifiers globalModifiers = new GlobalModifiers();
+
+    @Config.Name("Support")
+    public static Support support = new Support();
+
+    public static class Support {
+        @Config.Name("Reaper Limit")
+        public float reaperLimit = 20;
+    }
 
     public static class GlobalModifiers {
         @Config.Name("Cost Multiplier")

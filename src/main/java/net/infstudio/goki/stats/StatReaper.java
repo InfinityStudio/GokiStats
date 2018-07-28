@@ -1,15 +1,12 @@
 package net.infstudio.goki.stats;
 
+import net.infstudio.goki.config.GokiConfig;
 import net.infstudio.goki.lib.DataHelper;
-import net.infstudio.goki.lib.Reference;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.config.Configuration;
 
-public class StatReaper extends StatBase implements IConfigurable {
-    public static float healthLimit = 20.0F;
-
+public class StatReaper extends StatBase {
     public StatReaper(int id, String key, int limit) {
         super(id, key, limit);
     }
@@ -22,7 +19,7 @@ public class StatReaper extends StatBase implements IConfigurable {
     @Override
     public float[] getAppliedDescriptionVar(EntityPlayer player) {// TODO special
         return new float[]
-                {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), healthLimit};
+                {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), GokiConfig.support.reaperLimit};
         // return Helper.trimDecimals(getBonus(getPlayerStatLevel(player)) *
         // 100, 1) + "% chance to instantly kill enemies with less than " +
         // healthLimit + " health.";
@@ -42,35 +39,10 @@ public class StatReaper extends StatBase implements IConfigurable {
                 if ((obj[0] instanceof EntityLivingBase)) {
                     EntityLivingBase target = (EntityLivingBase) obj[0];
 
-                    return target.getMaxHealth() <= healthLimit;
+                    return target.getMaxHealth() <= GokiConfig.support.reaperLimit;
                 }
             }
         }
         return false;
-    }
-
-    @Override
-    public void loadFromConfigurationFile(Configuration config) {
-        healthLimit = (float) Reference.configuration.get("Support",
-                "Reaper Limit",
-                healthLimit).getDouble(20.0D);
-    }
-
-    @Override
-    public void saveToConfigurationFile(Configuration config) {
-        Reference.configuration.get("Support", "Reaper Limit", healthLimit).set(healthLimit);
-    }
-
-    @Override
-    public String toConfigurationString() {
-        return "" + healthLimit;
-    }
-
-    @Override
-    public void fromConfigurationString(String configString) {
-        try {
-            healthLimit = Float.parseFloat(configString);
-        } catch (Exception ignored) {
-        }
     }
 }

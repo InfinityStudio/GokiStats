@@ -2,6 +2,7 @@ package net.infstudio.goki;
 
 import net.infstudio.goki.config.ConfigManager;
 import net.infstudio.goki.config.ConfigurableV2;
+import net.infstudio.goki.config.GokiConfig;
 import net.infstudio.goki.handlers.packet.*;
 import net.infstudio.goki.lib.Reference;
 import net.infstudio.goki.stats.StatBase;
@@ -9,10 +10,14 @@ import net.infstudio.goki.stats.Stats;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Mod(modid = Reference.MODID, useMetadata = true)
 public class GokiStats {
@@ -33,6 +38,24 @@ public class GokiStats {
         }
         instance = this;
         proxy.initConfig(event);
+
+        if (GokiConfig.version.equals("v2")) { // Skip v2
+            try {
+                Files.deleteIfExists(event.getModConfigurationDirectory().toPath().resolve(Reference.MODID + "_v2.cfg"));
+                Files.list(event.getModConfigurationDirectory().toPath().resolve(Reference.MODID)).forEach(path -> {
+                    try {
+                        Files.deleteIfExists(path);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                Files.deleteIfExists(event.getModConfigurationDirectory().toPath().resolve(Reference.MODID));
+                net.minecraftforge.common.config.ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         new ConfigManager(event.getModConfigurationDirectory().toPath().resolve(Reference.MODID));
         System.out.println(StatBase.totalStats);
         StatBase.stats.forEach(ConfigurableV2::reloadConfig);
@@ -53,7 +76,6 @@ public class GokiStats {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         packetPipeline.postInitialise();
-        proxy.saveConfig();
     }
 
     @Mod.EventHandler

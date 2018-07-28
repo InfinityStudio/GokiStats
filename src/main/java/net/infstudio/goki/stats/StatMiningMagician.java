@@ -1,5 +1,6 @@
 package net.infstudio.goki.stats;
 
+import net.infstudio.goki.config.stats.MiningMagicianConfig;
 import net.infstudio.goki.lib.DataHelper;
 import net.infstudio.goki.lib.IDMDTuple;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class StatMiningMagician extends StatBase {
+public class StatMiningMagician extends StatBase<MiningMagicianConfig> {
     public static List<IDMDTuple> blockEntries = new ArrayList<>();
     public static List<IDMDTuple> itemEntries = new ArrayList<>();
     private static IDMDTuple[] defaultBlockEntries =
@@ -22,6 +23,32 @@ public class StatMiningMagician extends StatBase {
         super(id, key, limit);
         Collections.addAll(blockEntries, defaultBlockEntries);
         Collections.addAll(itemEntries, defaultItemEntries);
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        getConfig().blockEntries.clear();
+        getConfig().blockEntries.addAll(blockEntries);
+        getConfig().itemEntries.clear();
+        getConfig().itemEntries.addAll(itemEntries);
+    }
+
+    @Override
+    public MiningMagicianConfig createConfig() {
+        MiningMagicianConfig config = new MiningMagicianConfig();
+        Collections.addAll(config.blockEntries, defaultBlockEntries);
+        Collections.addAll(config.itemEntries, defaultItemEntries);
+        return config;
+    }
+
+    @Override
+    public void reload() {
+        super.reload();
+        blockEntries.clear();
+        itemEntries.clear();
+        blockEntries.addAll(getConfig().blockEntries);
+        itemEntries.addAll(getConfig().itemEntries);
     }
 
     @Override

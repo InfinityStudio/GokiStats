@@ -32,6 +32,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.List;
@@ -98,7 +99,7 @@ public class CommonHandler {
                                 if (item.getItemDamage() == block.getMetaFromState(event.getState())) {
                                     int randomEntry = player.getRNG().nextInt(StatMiningMagician.blockEntries.size());
                                     IDMDTuple entry = StatMiningMagician.blockEntries.get(randomEntry);
-                                    ItemStack stack = new ItemStack(Item.getItemById(entry.id), 1, entry.md);
+                                    ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry.id)), 1, entry.metadata);
                                     stack.setCount(event.getDrops().get(i).getCount());
                                     event.getDrops().add(stack);
                                     magicHappened = true;
@@ -106,10 +107,10 @@ public class CommonHandler {
                             } else {
                                 for (int j = 0; j < StatMiningMagician.itemEntries.size(); j++) {
                                     IDMDTuple entry = StatMiningMagician.itemEntries.get(j);
-                                    if ((Item.getIdFromItem(item.getItem()) == entry.id) && (item.getItemDamage() == entry.md)) {
+                                    if ((item.getItem().getRegistryName().toString().equals(entry.id)) && (item.getItemDamage() == entry.metadata)) {
                                         int randomEntry = player.getRNG().nextInt(StatMiningMagician.itemEntries.size());
                                         IDMDTuple chosenEntry = StatMiningMagician.itemEntries.get(randomEntry);
-                                        ItemStack stack = new ItemStack(Item.getItemById(chosenEntry.id), 1, chosenEntry.md);
+                                        ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(chosenEntry.id)), 1, chosenEntry.metadata);
                                         stack.setCount(event.getDrops().get(i).getCount());
                                         event.getDrops().add(stack);
                                         magicHappened = true;
@@ -132,7 +133,7 @@ public class CommonHandler {
         if ((event.getEntity() instanceof EntityPlayer)) {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             if (!player.world.isRemote) {
-                GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(GokiConfig.globalModifiers.loseStatsOnDeath, GokiConfig.globalModifiers.globalBonusMultiplier, GokiConfig.globalModifiers.globalCostMultiplier, GokiConfig.globalModifiers.globalLimitMultiplier),
+                GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(),
                         (EntityPlayerMP) player);
             } else {
                 GokiStats.packetPipeline.sendToServer(new PacketStatAlter(0, 0));
@@ -144,7 +145,7 @@ public class CommonHandler {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         EntityPlayer player = event.player;
         if (!player.world.isRemote) {
-            GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(GokiConfig.globalModifiers.loseStatsOnDeath, GokiConfig.globalModifiers.globalBonusMultiplier, GokiConfig.globalModifiers.globalCostMultiplier, GokiConfig.globalModifiers.globalLimitMultiplier),
+            GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(),
                     (EntityPlayerMP) player);
         } else {
             GokiStats.packetPipeline.sendToServer(new PacketStatAlter(0, 0));

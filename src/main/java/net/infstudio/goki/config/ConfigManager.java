@@ -2,6 +2,7 @@ package net.infstudio.goki.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nullable;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class ConfigManager {
-    public static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).setPrettyPrinting().create();
     public static ConfigManager INSTANCE;
 
     private final Path configPath;
