@@ -133,9 +133,17 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, GokiPa
 
     }
 
-    @SideOnly(Side.CLIENT)
     private EntityPlayer getPlayer(boolean isClient, ChannelHandlerContext ctx) {
-        return isClient ? Minecraft.getMinecraft().player : ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).player;
+        return isClient ? getPlayerClient(ctx) : getPlayerServer(ctx);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private EntityPlayer getPlayerClient(ChannelHandlerContext ctx) {
+        return Minecraft.getMinecraft().player;
+    }
+    
+    private EntityPlayer getPlayerServer(ChannelHandlerContext ctx) {
+        return ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).player;
     }
 
     public void sendToAll(GokiPacket message) {
