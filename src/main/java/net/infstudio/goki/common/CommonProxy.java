@@ -12,6 +12,7 @@ public class CommonProxy {
     }
 
     public void registerHandlers() {
+        MinecraftForge.EVENT_BUS.register(new GokiStats());
         MinecraftForge.EVENT_BUS.register(new CommonHandler());
         MinecraftForge.EVENT_BUS.register(new TickHandler());
 

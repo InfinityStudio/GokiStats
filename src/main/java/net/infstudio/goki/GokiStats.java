@@ -5,9 +5,7 @@ import net.infstudio.goki.common.StatsCommand;
 import net.infstudio.goki.common.config.ConfigManager;
 import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
-import net.infstudio.goki.common.handlers.CommonHandler;
-import net.infstudio.goki.common.handlers.GokiKeyHandler;
-import net.infstudio.goki.common.handlers.TickHandler;
+import net.infstudio.goki.common.init.MinecraftEffects;
 import net.infstudio.goki.common.network.packet.*;
 import net.infstudio.goki.common.stats.StatBase;
 import net.infstudio.goki.common.stats.Stats;
@@ -35,7 +33,7 @@ public class GokiStats {
     public static CommonProxy proxy;
 
     private static Class<?>[] loadClasses = {
-            Stats.class, CommonHandler.class, GokiKeyHandler.class, TickHandler.class
+            Stats.class, MinecraftEffects.class
     };
 
     @Mod.EventHandler

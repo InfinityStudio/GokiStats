@@ -2,15 +2,16 @@ package net.infstudio.goki.common.handlers;
 
 import net.infstudio.goki.GokiStats;
 import net.infstudio.goki.common.config.GokiConfig;
+import net.infstudio.goki.common.init.GokiSounds;
+import net.infstudio.goki.common.init.MinecraftEffects;
 import net.infstudio.goki.common.network.packet.PacketStatAlter;
 import net.infstudio.goki.common.network.packet.PacketSyncStatConfig;
-import net.infstudio.goki.common.utils.DataHelper;
-import net.infstudio.goki.common.stats.tool.IDMDTuple;
-import net.infstudio.goki.common.stats.StatSpecial;
 import net.infstudio.goki.common.stats.StatBase;
-import net.infstudio.goki.common.stats.tool.StatMiningMagician;
+import net.infstudio.goki.common.stats.StatSpecial;
 import net.infstudio.goki.common.stats.Stats;
-import net.infstudio.goki.common.utils.Reference;
+import net.infstudio.goki.common.stats.tool.IDMDTuple;
+import net.infstudio.goki.common.stats.tool.StatMiningMagician;
+import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,19 +19,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -41,19 +38,6 @@ import java.util.Random;
 
 @GameRegistry.ObjectHolder("gokistats")
 public class CommonHandler {
-    public static final SoundEvent TREASURE = null;
-    public static final SoundEvent MAGICIAN = null;
-    public static final SoundEvent REAPER = null;
-
-    @SubscribeEvent
-    public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
-        event.getRegistry().registerAll(
-                new SoundEvent(new ResourceLocation("gokistats:treasure")),
-                new SoundEvent(new ResourceLocation("gokistats:magician")),
-                new SoundEvent(new ResourceLocation("gokistats:reaper"))
-        );
-    }
-
     @SubscribeEvent
     public void harvestBlock(BlockEvent.HarvestDropsEvent event) {
         EntityPlayer player = event.getHarvester();
@@ -84,7 +68,7 @@ public class CommonHandler {
                     }
                 }
                 if (treasureFound) {
-                    player.world.playSound(player, event.getPos(), TREASURE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    player.world.playSound(player, event.getPos(), GokiSounds.TREASURE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 }
             }
 
@@ -122,7 +106,7 @@ public class CommonHandler {
                         }
                     }
                     if (magicHappened) {
-                        player.world.playSound(player, event.getPos(), MAGICIAN, SoundCategory.BLOCKS, 0.3f, 1.0f);
+                        player.world.playSound(player, event.getPos(), GokiSounds.MAGICIAN, SoundCategory.BLOCKS, 0.3f, 1.0f);
                     }
                 }
             }
@@ -243,12 +227,12 @@ public class CommonHandler {
             EntityPlayer player = (EntityPlayer) victim;
 
             if (!source.isFireDamage() && !source.isDamageAbsolute()) {
-                if (player.getEntityWorld().rand.nextFloat() <= Stats.ROLL.getBonus(player)) {
+                if (player.getEntityWorld().rand.nextFloat() >= 1.0f - Stats.ROLL.getBonus(player)) {
                     // Avoid damage
                     event.setCanceled(true);
 
                     player.addPotionEffect(
-                            new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:strength"), 20, 2)
+                            new PotionEffect(MinecraftEffects.STRENGTH, 20, 2)
                     );
 
                     victim.addTag("knockback");
@@ -295,7 +279,7 @@ public class CommonHandler {
                 float reapChance = reap + reapBonus;
                 if (player.getRNG().nextFloat() <= reapChance) {
                     player.onEnchantmentCritical(victim);
-                    player.world.playSound(player, event.getEntity().getPosition(), REAPER, SoundCategory.MASTER, 1.0f, 1.0f);
+                    player.world.playSound(player, event.getEntity().getPosition(), GokiSounds.REAPER, SoundCategory.MASTER, 1.0f, 1.0f);
                     event.setAmount(100000.0F);
                 }
             }
