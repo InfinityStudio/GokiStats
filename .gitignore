@@ -49,3 +49,9 @@ out/
 *.ipr
 *.iws
 gradle.properties
+
+.classpath
+.project
+bin/
+*.prefs
+*.launch
