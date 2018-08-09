@@ -242,11 +242,11 @@ public class CommonHandler {
                 }
             }
 
-            float damageMultiplier = Stats.PROTECTION.getAppliedBonus(player,
+            float damageMultiplier = 1.0F - (Stats.PROTECTION.getAppliedBonus(player,
                     source) + Stats.TOUGH_SKIN.getAppliedBonus(player,
                     source) + Stats.STAT_FEATHER_FALL.getAppliedBonus(player,
                     source) + Stats.TEMPERING.getAppliedBonus(player,
-                    source);
+                    source));
 
             event.setAmount(event.getAmount() * damageMultiplier);
         }
