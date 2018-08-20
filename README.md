@@ -6,15 +6,15 @@
 
 GokiStats is a skill improvement mod for Minecraft, it has been well-known before 1.7.10 but it has stopped developing for years.
 
-Fell free to solve any issue with crash-report in GitHub Issues.
+Feel free to solve any issue with crash-report in GitHub Issues.
 
 Forum thread on [Mcbbs](http://www.mcbbs.net/thread-805910-1-1.html)
 
 ## Why you still port it to recent versions?
 
-Umm... Because lots of players have used to type 'Y' to open the skill menu, and drain their experiences.
+Umm... Because lots of players have used to type 'Y' to open the skill menu and drain their experiences.
 
-Also, the interface provides is pretty and eazy-to-use.
+Also, the interface provides is pretty and easy-to-use.
 
 ## Screenshots
 
@@ -28,7 +28,7 @@ Source code are under MIT License, and resources are under CC-BY-NC-SA 4.0 Licen
 
 I, Lasm_Gratel is not the original author of this Mod, since the mod forum was gone and deleted, source code was then released to Public Domain.
 
-However, I choose to grant permissions with MIT License and you are freely to contribute.
+However, I choose to grant permissions with MIT License and you are free to contribute.
 
 ## Donation
 
