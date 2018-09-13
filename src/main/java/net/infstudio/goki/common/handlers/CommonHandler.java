@@ -12,6 +12,7 @@ import net.infstudio.goki.common.stats.Stats;
 import net.infstudio.goki.common.stats.tool.IDMDTuple;
 import net.infstudio.goki.common.stats.tool.StatMiningMagician;
 import net.infstudio.goki.common.utils.DataHelper;
+import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,10 +25,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -155,9 +159,9 @@ public class CommonHandler {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             if (GokiConfig.globalModifiers.loseStatsOnDeath) {
                 for (int stat = 0; stat < StatBase.totalStats; stat++) {
-                    DataHelper.setPlayerStatLevel(player,
+                    DataHelper.multiplyPlayerStatLevel(player,
                             StatBase.stats.get(stat),
-                            0);
+                            level -> level - (int) GokiConfig.globalModifiers.loseStatsMultiplier * level);
                 }
             }
         }
@@ -285,6 +289,13 @@ public class CommonHandler {
                     event.setAmount(100000.0F);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void configChanged(ConfigChangedEvent event) {
+        if (event.getModID().equals(Reference.MODID)) {
+            ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
         }
     }
 }

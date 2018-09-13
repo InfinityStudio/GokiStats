@@ -77,7 +77,7 @@ public abstract class StatBase<T extends StatConfig> implements Stat, Configurab
     @Override
     public float[] getAppliedDescriptionVar(EntityPlayer player) {
         return new float[]
-                {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1)};
+                {DataHelper.trimDecimals(getBonus(player) * 100, 1)};
     }
 
     @Override

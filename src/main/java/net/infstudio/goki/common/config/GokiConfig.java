@@ -35,5 +35,9 @@ public class GokiConfig {
         @Config.Name("Death Loss")
         @Config.Comment("Lose stats on death?")
         public boolean loseStatsOnDeath = false;
+
+        @Config.Name("Death Loss Multiplier")
+        @Config.Comment("Multiplier of levels you will lose, between 0~1.")
+        public float loseStatsMultiplier = 1;
     }
 }

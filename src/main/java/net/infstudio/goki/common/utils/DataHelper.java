@@ -12,6 +12,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 
+import java.util.function.IntFunction;
+
 public class DataHelper {
     public static NBTTagCompound getPlayerPersistentNBT(EntityPlayer player) {
         NBTTagCompound nbt = player.getEntityData().getCompoundTag("PlayerPersisted");
@@ -36,6 +38,10 @@ public class DataHelper {
             ((NBTTagCompound) nbt.getTag("gokistats_Stats")).setInteger(stat.key,
                     (byte) level);
         }
+    }
+
+    public static void multiplyPlayerStatLevel(EntityPlayer player, StatBase stat, IntFunction<Integer> multiplier) {
+        setPlayerStatLevel(player, stat, multiplier.apply(getPlayerStatLevel(player, stat)));
     }
 
     public static float trimDecimals(float in, int decimals) {
