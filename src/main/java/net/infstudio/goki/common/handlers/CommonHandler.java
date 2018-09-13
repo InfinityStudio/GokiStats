@@ -210,6 +210,7 @@ public class CommonHandler {
 
     @SubscribeEvent
     public void entityKnockback(LivingKnockBackEvent event) {
+        if (event.getOriginalAttacker() == null) return;
         if (event.getOriginalAttacker().getTags().contains("knockback")) {
             event.getOriginalAttacker().removeTag("knockback");
             event.setStrength(event.getStrength() * 2f);
