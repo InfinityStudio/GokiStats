@@ -210,11 +210,12 @@ public class CommonHandler {
 
     @SubscribeEvent
     public void entityKnockback(LivingKnockBackEvent event) {
-        if (event.getOriginalAttacker() == null) return;
-        if (event.getOriginalAttacker().getTags().contains("knockback")) {
-            event.getOriginalAttacker().removeTag("knockback");
+        if (event.getOriginalAttacker() == null && event.getAttacker() == null) return;
+        Entity attacker = event.getOriginalAttacker() != null ? event.getOriginalAttacker() : event.getAttacker();
+        if (attacker.getTags().contains("knockback")) {
+            attacker.removeTag("knockback");
             event.setStrength(event.getStrength() * 2f);
-            event.getOriginalAttacker().sendMessage(new TextComponentTranslation("grpg_Roll.knockback"));
+            attacker.sendMessage(new TextComponentTranslation("grpg_Roll.knockback"));
         }
     }
 
