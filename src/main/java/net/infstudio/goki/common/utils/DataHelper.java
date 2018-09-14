@@ -24,6 +24,23 @@ public class DataHelper {
         return nbt;
     }
 
+    public static int getPlayerRevertStatLevel(EntityPlayer player, StatBase stat) {
+        NBTTagCompound nbt = getPlayerPersistentNBT(player);
+        if (nbt.hasKey("gokistats_Stats")) {
+            return ((NBTTagCompound) nbt.getTag("gokistats_Stats")).getInteger(stat.key + ".revert");
+        }
+        return 0;
+    }
+
+    public static int setPlayerRevertStatLevel(EntityPlayer player, StatBase stat, int level) {
+        NBTTagCompound nbt = getPlayerPersistentNBT(player);
+        if (nbt.hasKey("gokistats_Stats")) {
+            ((NBTTagCompound) nbt.getTag("gokistats_Stats")).setInteger(stat.key + ".revert",
+                    (byte) level);
+        }
+        return 0;
+    }
+
     public static int getPlayerStatLevel(EntityPlayer player, StatBase stat) {
         NBTTagCompound nbt = getPlayerPersistentNBT(player);
         if (nbt.hasKey("gokistats_Stats")) {

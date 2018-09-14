@@ -39,5 +39,13 @@ public class GokiConfig {
         @Config.Name("Death Loss Multiplier")
         @Config.Comment("Multiplier of levels you will lose, between 0~1.")
         public float loseStatsMultiplier = 1;
+
+        @Config.Name("Maximum revertable skill level")
+        @Config.Comment("An integer that constrains the max number of level of the skill can be reverted. -1 for no limit.")
+        public int globalMaxRevertLevel = -1;
+
+        @Config.Name("Revert Factor")
+        @Config.Comment("How much percentage of exp will be given back to player if a player revert a skill.")
+        public float globalRevertFactor = 0.8F;
     }
 }
