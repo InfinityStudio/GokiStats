@@ -6,8 +6,11 @@ import net.infstudio.goki.common.stats.StatBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nonnull;
 
 public class GuiStatButton extends GuiButton {
     public StatBase stat;
@@ -20,40 +23,45 @@ public class GuiStatButton extends GuiButton {
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
-            int iconu = 0;
-            int iconv = 24 * (this.stat.imageID % 10);
+            int iconY = 24 * (this.stat.imageID % 10);
             int level = DataHelper.getPlayerStatLevel(this.player, this.stat);
             int cost = this.stat.getCost(level);
             int playerXP = DataHelper.getXPTotal(this.player);
-            String message = level + "";
-            int messageColor = 16777215;
 
             FontRenderer fontrenderer = mc.fontRenderer;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = isUnderMouse(mouseX, mouseY);
             int which = getHoverState(this.hovered);
 
+            int iconX = 0;
             if (which == 2) {
-                iconu = 24;
+                iconX = 24;
             }
             if (playerXP < cost) {
-                iconu = 48;
+                iconX = 48;
             }
             if (level >= this.stat.getLimit()) {
-                iconu = 72;
+                iconX = 72;
             }
+            if (!DataHelper.canPlayerRevertStat(player, this.stat) && GuiScreen.isCtrlKeyDown()) {
+                iconX = 48;
+            }
+
+            String message = level + "";
             if (!this.stat.enabled) {
-                iconu = 48;
+                iconX = 48;
                 message = "X";
             }
+
+            int messageColor = 16777215;
             if (level >= this.stat.getLimit()) {
                 message = "*" + level + "*";
                 messageColor = 16763904;
             }
 
-            iconu += this.stat.imageID % 20 / 10 * 24 * 4;
+            iconX += this.stat.imageID % 20 / 10 * 24 * 4;
 
             if (this.stat.imageID >= 20) {
                 mc.getTextureManager().bindTexture(Reference.RPG_ICON_2_TEXTURE_LOCATION);
@@ -63,7 +71,7 @@ public class GuiStatButton extends GuiButton {
             GL11.glPushMatrix();
             GL11.glTranslatef(this.x, this.y, 0.0F);
             GL11.glScalef(GuiStats.SCALE, GuiStats.SCALE, 0.0F);
-            drawTexturedModalRect(0, 0, iconu, iconv, this.width, this.height);
+            drawTexturedModalRect(0, 0, iconX, iconY, this.width, this.height);
 
             GL11.glPopMatrix();
             GL11.glPushMatrix();

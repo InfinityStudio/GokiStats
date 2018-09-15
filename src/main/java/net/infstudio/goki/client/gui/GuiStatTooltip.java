@@ -1,11 +1,13 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.common.utils.DataHelper;
+import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,7 +37,18 @@ public class GuiStatTooltip extends Gui {
             messageColorMap.put(I18n.format("ui.max.name"), -16724737);
         else
             messageColorMap.put(I18n.format("ui.cost.name") + this.stat.getCost(level) + "xp", -16724737); // Cost
-        messageColorMap.put(I18n.format("ui.hover.name"), 0xffffffff-0x98fb9800);
+
+        int revertLevel = DataHelper.getPlayerRevertStatLevel(player, stat);
+        if (revertLevel > 0)
+            messageColorMap.put(I18n.format("ui.reverted.name", revertLevel, GokiConfig.globalModifiers.globalMaxRevertLevel), -16724737); // Reverted
+
+        if (GuiScreen.isCtrlKeyDown()) { // Is player reverting?
+            if (DataHelper.canPlayerRevertStat(player, stat))
+                messageColorMap.put(I18n.format("ui.revert.name"), 0xff0467ff);
+            else
+                messageColorMap.put(I18n.format("ui.norevert.name"), 0xfffb1a00);
+        } else
+            messageColorMap.put(I18n.format("ui.hover.name"), 0xff0467ff);
 
         messageColorMap.forEach((text, color) -> {
             widthAtomic.set(Math.max(widthAtomic.get(), this.mc.fontRenderer.getStringWidth(text)));

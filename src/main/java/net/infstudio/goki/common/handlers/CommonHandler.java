@@ -293,7 +293,7 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void configChanged(ConfigChangedEvent event) {
+    public void configChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(Reference.MODID)) {
             ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
         }

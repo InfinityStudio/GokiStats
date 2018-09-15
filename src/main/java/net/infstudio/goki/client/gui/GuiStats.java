@@ -100,9 +100,9 @@ public class GuiStats extends GuiScreen {
             if ((button instanceof GuiStatButton)) {
                 GuiStatButton statButton = (GuiStatButton) button;
                 if (!GuiScreen.isCtrlKeyDown())
-                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter(StatBase.stats.indexOf(statButton.stat), 1));
+                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter.Up(StatBase.stats.indexOf(statButton.stat), 1));
                 else
-                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter(StatBase.stats.indexOf(statButton.stat), -1));
+                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter.Down(StatBase.stats.indexOf(statButton.stat), 1));
             }
         }
     }

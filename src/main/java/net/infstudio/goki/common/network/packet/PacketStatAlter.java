@@ -3,17 +3,19 @@ package net.infstudio.goki.common.network.packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.infstudio.goki.GokiStats;
-import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.stats.StatBase;
 import net.infstudio.goki.common.stats.StatMaxHealth;
+import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import javax.annotation.Nonnegative;
+
 public class PacketStatAlter implements GokiPacket {
-    private int stat;
-    private int amount;
+    protected int stat;
+    protected int amount;
 
     public PacketStatAlter() {
     }
@@ -43,11 +45,23 @@ public class PacketStatAlter implements GokiPacket {
     public void handleServerSide(EntityPlayer player) {
         if (player == null)
             return;
-        StatBase stat = StatBase.stats.get(this.stat);
-        if (!stat.enabled)
-            return;
-        int level = DataHelper.getPlayerStatLevel(player, stat);
-        if (this.amount > 0) {
+    }
+
+    public static class Up extends PacketStatAlter {
+        public Up() {
+        }
+
+        public Up(int stat, @Nonnegative int amount) {
+            super(stat, amount);
+        }
+
+        @Override
+        public void handleServerSide(EntityPlayer player) {
+            super.handleServerSide(player);
+            StatBase stat = StatBase.stats.get(this.stat);
+            if (!stat.enabled)
+                return;
+            int level = DataHelper.getPlayerStatLevel(player, stat);
 
             if (level + this.amount > stat.getLimit()) {
                 this.amount = stat.getLimit() - level;
@@ -72,26 +86,44 @@ public class PacketStatAlter implements GokiPacket {
 
             GokiStats.packetPipeline.sendTo(new PacketStatSync(player), (EntityPlayerMP) player);
             GokiStats.packetPipeline.sendTo(new PacketSyncXP(player), (EntityPlayerMP) player);
-        } else if (DataHelper.getPlayerStatLevel(player, stat) > 0) {
+        }
+    }
 
-            int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
-            int maxRevert = GokiConfig.globalModifiers.globalMaxRevertLevel;
+    public static class Down extends PacketStatAlter {
+        public Down() {
+        }
 
-            if (maxRevert > 0 && reverted + (-this.amount) > maxRevert) { // check if we limit the max revert, and if the revert overflow the value
-                this.amount = -(maxRevert - reverted); // ceil the value for max revert
+        public Down(int stat, @Nonnegative int amount) {
+            super(stat, amount);
+        }
+
+        @Override
+        public void handleServerSide(EntityPlayer player) {
+            super.handleServerSide(player);
+            StatBase stat = StatBase.stats.get(this.stat);
+            if (!stat.enabled)
+                return;
+            int level = DataHelper.getPlayerStatLevel(player, stat);
+            if (DataHelper.getPlayerStatLevel(player, stat) > 0) {
+                int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
+                int maxRevert = GokiConfig.globalModifiers.globalMaxRevertLevel;
+
+                if (maxRevert >= 0 && reverted + this.amount > maxRevert) { // check if we limit the max revert, and if the revert overflow the value
+                    this.amount += maxRevert - reverted; // ceil the value for max revert
+                }
+
+                reverted += this.amount;
+                DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
+
+                player.addExperience((int) (stat.getCost(level - this.amount - 2) * GokiConfig.globalModifiers.globalRevertFactor));
+                DataHelper.setPlayerStatLevel(player, stat, level - this.amount);
+                if (stat instanceof StatMaxHealth) {
+                    player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + level - this.amount);
+                }
+
+                GokiStats.packetPipeline.sendTo(new PacketStatSync(player), (EntityPlayerMP) player);
+                GokiStats.packetPipeline.sendTo(new PacketSyncXP(player), (EntityPlayerMP) player);
             }
-
-            reverted += (-this.amount);
-            DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
-
-            player.addExperience((int) (stat.getCost(level + this.amount - 2) * GokiConfig.globalModifiers.globalRevertFactor)); 
-            DataHelper.setPlayerStatLevel(player, stat, level + this.amount);
-            if (stat instanceof StatMaxHealth) {
-                player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + level + this.amount);
-            }
-
-            GokiStats.packetPipeline.sendTo(new PacketStatSync(player), (EntityPlayerMP) player);
-            GokiStats.packetPipeline.sendTo(new PacketSyncXP(player), (EntityPlayerMP) player);
         }
     }
 }

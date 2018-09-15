@@ -41,7 +41,7 @@ public class GokiConfig {
         public float loseStatsMultiplier = 1;
 
         @Config.Name("Maximum revertable skill level")
-        @Config.Comment("An integer that constrains the max number of level of the skill can be reverted. -1 for no limit.")
+        @Config.Comment("An integer that constrains the max number of level of the skill can be reverted. -1 for no limit. 0 to disable reverting.")
         public int globalMaxRevertLevel = -1;
 
         @Config.Name("Revert Factor")

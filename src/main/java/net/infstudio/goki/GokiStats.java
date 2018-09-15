@@ -75,7 +75,8 @@ public class GokiStats {
     public void init(FMLInitializationEvent event) {
         packetPipeline.initialise();
         packetPipeline.registerPacket(PacketStatSync.class);
-        packetPipeline.registerPacket(PacketStatAlter.class);
+        packetPipeline.registerPacket(PacketStatAlter.Up.class);
+        packetPipeline.registerPacket(PacketStatAlter.Down.class);
         packetPipeline.registerPacket(PacketSyncXP.class);
         packetPipeline.registerPacket(PacketSyncStatConfig.class);
 

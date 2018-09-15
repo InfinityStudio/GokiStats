@@ -1,5 +1,6 @@
 package net.infstudio.goki.common.utils;
 
+import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.stats.StatBase;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -22,6 +23,10 @@ public class DataHelper {
             player.getEntityData().setTag("PlayerPersisted", nbt);
         }
         return nbt;
+    }
+
+    public static boolean canPlayerRevertStat(EntityPlayer player, StatBase stat) {
+        return GokiConfig.globalModifiers.globalMaxRevertLevel >= 0 && getPlayerRevertStatLevel(player, stat) < GokiConfig.globalModifiers.globalMaxRevertLevel && getPlayerStatLevel(player, stat) > 0;
     }
 
     public static int getPlayerRevertStatLevel(EntityPlayer player, StatBase stat) {

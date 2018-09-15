@@ -58,3 +58,6 @@ ui.currentxp.name=当前经验:
 ui.opmenu.name=打开菜单
 ui.openhelper.name=打开兼容性助手
 ui.hover.name=点击升级, Ctrl+点击降级
+ui.revert.name=降级
+ui.reverted.name=降级次数：%d/%d
+ui.norevert.name=你已经达到了降级限制！

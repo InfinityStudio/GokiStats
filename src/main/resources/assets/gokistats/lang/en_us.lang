@@ -56,3 +56,6 @@ ui.currentxp.name=Current xp:
 ui.opmenu.name=Open Stats Menu
 ui.openhelper.name=Open Stats Compatibility Helper
 ui.hover.name=Click to upgrade, or Ctrl+Click to downgrade
+ui.revert.name=Click to downgrade
+ui.reverted.name=Downgraded levels: %d/%d
+ui.norevert.name=You cannot downgrade anymore!
