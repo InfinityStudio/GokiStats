@@ -25,7 +25,7 @@ public class GokiConfig {
         public float globalCostMultiplier = 1;
 
         @Config.Name("Limit Multiplier")
-        @Config.Comment("A flat multiplier on the level limit of all stats.")
+        @Config.Comment("A flat multiplier on the amount limit of all stats.")
         public float globalLimitMultiplier = 2.5f;
 
         @Config.Name("Bonus Multiplier")
@@ -40,8 +40,8 @@ public class GokiConfig {
         @Config.Comment("Multiplier of levels you will lose, between 0~1.")
         public float loseStatsMultiplier = 1;
 
-        @Config.Name("Maximum revertable skill level")
-        @Config.Comment("An integer that constrains the max number of level of the skill can be reverted. -1 for no limit. 0 to disable reverting.")
+        @Config.Name("Maximum revertable skill amount")
+        @Config.Comment("An integer that constrains the max number of amount of the skill can be reverted. -1 for no limit. 0 to disable reverting.")
         public int globalMaxRevertLevel = -1;
 
         @Config.Name("Revert Factor")

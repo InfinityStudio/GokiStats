@@ -141,7 +141,7 @@ public abstract class StatBase<T extends StatConfig> implements Stat, Configurab
     }
 
 
-//	protected float getSecondaryBonus(int level)
+//	protected float getSecondaryBonus(int amount)
 //	{
 //		return 0;
 //	}

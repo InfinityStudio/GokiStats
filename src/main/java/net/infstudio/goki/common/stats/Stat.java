@@ -19,5 +19,7 @@ public interface Stat {
 
     int getLimit();
 
+    String getKey();
+
 //	public String getSimpleDescriptionString();
 }

@@ -6,7 +6,6 @@ import net.infstudio.goki.common.config.ConfigManager;
 import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.MinecraftEffects;
-import net.infstudio.goki.common.network.packet.*;
 import net.infstudio.goki.common.stats.StatBase;
 import net.infstudio.goki.common.stats.Stats;
 import net.infstudio.goki.common.utils.Reference;
@@ -24,8 +23,6 @@ import java.nio.file.Files;
 
 @Mod(modid = Reference.MODID, useMetadata = true, updateJSON = "https://infinitystudio.github.io/Updates/gokistats.json")
 public class GokiStats {
-    public static final PacketPipeline packetPipeline = new PacketPipeline();
-
     @Mod.Instance(Reference.MODID)
     public static GokiStats instance;
 
@@ -73,19 +70,11 @@ public class GokiStats {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        packetPipeline.initialise();
-        packetPipeline.registerPacket(PacketStatSync.class);
-        packetPipeline.registerPacket(PacketStatAlter.Up.class);
-        packetPipeline.registerPacket(PacketStatAlter.Down.class);
-        packetPipeline.registerPacket(PacketSyncXP.class);
-        packetPipeline.registerPacket(PacketSyncStatConfig.class);
-
         proxy.registerHandlers();
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        packetPipeline.postInitialise();
     }
 
     @Mod.EventHandler

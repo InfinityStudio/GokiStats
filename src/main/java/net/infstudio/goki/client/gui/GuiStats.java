@@ -1,16 +1,16 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.GokiStats;
 import net.infstudio.goki.common.handlers.GokiKeyHandler;
-import net.infstudio.goki.common.network.packet.PacketStatAlter;
-import net.infstudio.goki.common.utils.DataHelper;
+import net.infstudio.goki.common.network.GokiPacketHandler;
+import net.infstudio.goki.common.network.message.C2SStatSync;
 import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.io.IOException;
@@ -100,9 +100,9 @@ public class GuiStats extends GuiScreen {
             if ((button instanceof GuiStatButton)) {
                 GuiStatButton statButton = (GuiStatButton) button;
                 if (!GuiScreen.isCtrlKeyDown())
-                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter.Up(StatBase.stats.indexOf(statButton.stat), 1));
+                    GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), 1));
                 else
-                    GokiStats.packetPipeline.sendToServer(new PacketStatAlter.Down(StatBase.stats.indexOf(statButton.stat), 1));
+                    GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), -1));
             }
         }
     }

@@ -9,4 +9,10 @@ public class ClientProxy extends CommonProxy {
         GokiKeyHandler keyHandler = new GokiKeyHandler();
         MinecraftForge.EVENT_BUS.register(keyHandler);
     }
+
+    @Override
+    public void registerHandlers() {
+        super.registerHandlers();
+        registerKeybinding();
+    }
 }

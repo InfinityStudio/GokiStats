@@ -1,8 +1,7 @@
 package net.infstudio.goki.common.handlers;
 
-import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.stats.Stats;
-import net.infstudio.goki.common.utils.Reference;
+import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -13,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -28,31 +26,33 @@ public class TickHandler {
 
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
-        EntityPlayer player = event.player;
+        if (event.phase == TickEvent.Phase.END) { // Due to issue #32
+            EntityPlayer player = event.player;
 
-        handleTaskPlayerAPI(player);
+            handleTaskPlayerAPI(player);
 
-        IAttributeInstance atinst = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-        AttributeModifier mod = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, 1);
-        if (player.isSneaking()) {
-            if (atinst.getModifier(stealthSpeedID) == null) {
-                atinst.applyModifier(mod);
+            IAttributeInstance atinst = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+            AttributeModifier mod = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, 1);
+            if (player.isSneaking()) {
+                if (atinst.getModifier(stealthSpeedID) == null) {
+                    atinst.applyModifier(mod);
+                }
+            } else if (atinst.getModifier(stealthSpeedID) != null) {
+                atinst.removeModifier(mod);
             }
-        } else if (atinst.getModifier(stealthSpeedID) != null) {
-            atinst.removeModifier(mod);
-        }
 
-        atinst = player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
-        mod = new AttributeModifier(knockbackResistanceID, "KnockbackResistance", Stats.STEADY_GUARD.getBonus(player), 0);
-        if (player.isActiveItemStackBlocking()) {
-            if (atinst.getModifier(knockbackResistanceID) == null) {
-                atinst.applyModifier(mod);
+            atinst = player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
+            mod = new AttributeModifier(knockbackResistanceID, "KnockbackResistance", Stats.STEADY_GUARD.getBonus(player), 0);
+            if (player.isActiveItemStackBlocking()) {
+                if (atinst.getModifier(knockbackResistanceID) == null) {
+                    atinst.applyModifier(mod);
+                }
+            } else if (atinst.getModifier(knockbackResistanceID) != null) {
+                atinst.removeModifier(mod);
             }
-        } else if (atinst.getModifier(knockbackResistanceID) != null) {
-            atinst.removeModifier(mod);
-        }
 
-        handleFurnace(player);
+            handleFurnace(player);
+        }
     }
 
     public static boolean isJumping(EntityLivingBase livingBase) {
@@ -131,7 +131,7 @@ public class TickHandler {
             ArrayList<TileEntityFurnace> furnacesAroundPlayer = new ArrayList<>();
 
             for (TileEntity listEntity : player.world.loadedTileEntityList) {
-                if (listEntity instanceof TileEntity) {
+                if (listEntity != null) {
                     TileEntity tileEntity = (TileEntity) listEntity;
                     BlockPos pos = tileEntity.getPos();
                     if (tileEntity instanceof TileEntityFurnace && MathHelper.sqrt(player.getDistanceSq(pos)) < 4.0D) {

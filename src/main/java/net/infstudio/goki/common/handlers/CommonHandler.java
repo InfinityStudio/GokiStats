@@ -1,11 +1,10 @@
 package net.infstudio.goki.common.handlers;
 
-import net.infstudio.goki.GokiStats;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.GokiSounds;
 import net.infstudio.goki.common.init.MinecraftEffects;
-import net.infstudio.goki.common.network.packet.PacketStatAlter;
-import net.infstudio.goki.common.network.packet.PacketSyncStatConfig;
+import net.infstudio.goki.common.network.GokiPacketHandler;
+import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.stats.StatBase;
 import net.infstudio.goki.common.stats.StatSpecial;
 import net.infstudio.goki.common.stats.Stats;
@@ -28,7 +27,10 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -122,11 +124,9 @@ public class CommonHandler {
         if ((event.getEntity() instanceof EntityPlayer)) {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             if (!player.world.isRemote) {
-                GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(),
-                        (EntityPlayerMP) player);
-            } else {
-                GokiStats.packetPipeline.sendToServer(new PacketStatAlter(0, 0));
-            }
+                // Server side
+                GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
+            }  // Client side: Do nothing
         }
     }
 
@@ -134,11 +134,10 @@ public class CommonHandler {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         EntityPlayer player = event.player;
         if (!player.world.isRemote) {
-            GokiStats.packetPipeline.sendTo(new PacketSyncStatConfig(),
-                    (EntityPlayerMP) player);
-        } else {
-            GokiStats.packetPipeline.sendToServer(new PacketStatAlter(0, 0));
-        }
+            // Server side
+            GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
+        }  // Client side: Do nothing
+
     }
 
     @SubscribeEvent
@@ -154,16 +153,15 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void playerDead(LivingDeathEvent event) {
-        if ((event.getEntityLiving() instanceof EntityPlayer)) {
-            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            if (GokiConfig.globalModifiers.loseStatsOnDeath) {
-                for (int stat = 0; stat < StatBase.totalStats; stat++) {
-                    DataHelper.multiplyPlayerStatLevel(player,
-                            StatBase.stats.get(stat),
-                            level -> level - (int) GokiConfig.globalModifiers.loseStatsMultiplier * level);
-                }
+    public void playerRespawn(PlayerRespawnEvent event) {
+        EntityPlayer player = event.player;
+        if (!player.world.isRemote && GokiConfig.globalModifiers.loseStatsOnDeath) {
+            for (int stat = 0; stat < StatBase.totalStats; stat++) {
+                DataHelper.multiplyPlayerStatLevel(player,
+                        StatBase.stats.get(stat),
+                        level -> level - (int) GokiConfig.globalModifiers.loseStatsMultiplier * level);
             }
+            GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
         }
     }
 

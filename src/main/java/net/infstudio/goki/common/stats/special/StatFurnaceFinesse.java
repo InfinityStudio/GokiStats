@@ -26,8 +26,8 @@ public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
         int level = getPlayerStatLevel(player);
         return new float[]
                 {getBonus(level), getSecondaryBonus(level)};
-        // return "Smelt " + getBonus(level) + " ticks faster " +
-        // getSecondaryBonus(level) + "% of the time while using a furnace.";
+        // return "Smelt " + getBonus(amount) + " ticks faster " +
+        // getSecondaryBonus(amount) + "% of the time while using a furnace.";
     }
 
     @Override

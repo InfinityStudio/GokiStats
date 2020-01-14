@@ -1,4 +1,4 @@
-package net.infstudio.goki.common.network.packet;
+package net.infstudio.goki.common.network;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
