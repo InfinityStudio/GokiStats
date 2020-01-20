@@ -51,11 +51,13 @@ grpg_Roll.message=*Avoided*
 grpg_Roll.knockback=*Knockback*
 
 ui.cost.name=Cost  
+ui.return.name=Return  
 ui.max.name=Max!
 ui.currentxp.name=Current xp: 
 ui.opmenu.name=Open Stats Menu
 ui.openhelper.name=Open Stats Compatibility Helper
 ui.hover.name=Click to upgrade, or Ctrl+Click to downgrade
 ui.revert.name=Click to downgrade
-ui.reverted.name=Downgraded levels: %d/%d
+ui.reverted.name=Downgraded levels: %d/%s
+ui.infinite.name=Infinite
 ui.norevert.name=You cannot downgrade anymore!
