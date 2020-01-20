@@ -1,6 +1,6 @@
 package net.infstudio.goki.common.config.stats;
 
-import net.infstudio.goki.common.stats.tool.TreasureFinderEntry;
+import net.infstudio.goki.common.stat.tool.TreasureFinderEntry;
 
 import java.util.ArrayList;
 import java.util.List;

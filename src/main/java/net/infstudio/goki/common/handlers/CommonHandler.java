@@ -1,15 +1,15 @@
 package net.infstudio.goki.common.handlers;
 
+import net.infstudio.goki.api.stat.StatBase;
+import net.infstudio.goki.api.stat.StatSpecial;
+import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.GokiSounds;
 import net.infstudio.goki.common.init.MinecraftEffects;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
-import net.infstudio.goki.common.stats.StatBase;
-import net.infstudio.goki.common.stats.StatSpecial;
-import net.infstudio.goki.common.stats.Stats;
-import net.infstudio.goki.common.stats.tool.IDMDTuple;
-import net.infstudio.goki.common.stats.tool.StatMiningMagician;
+import net.infstudio.goki.common.stat.tool.IDMDTuple;
+import net.infstudio.goki.common.stat.tool.StatMiningMagician;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.block.Block;
@@ -26,7 +26,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -120,14 +119,12 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void playerJoinWorld(EntityJoinWorldEvent event) {
-        if ((event.getEntity() instanceof EntityPlayer)) {
-            EntityPlayer player = (EntityPlayer) event.getEntity();
-            if (!player.world.isRemote) {
-                // Server side
-                GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
-            }  // Client side: Do nothing
-        }
+    public void playerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+        EntityPlayer player = event.player;
+        if (!player.world.isRemote) {
+            // Server side
+            GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
+        }  // Client side: Do nothing
     }
 
     @SubscribeEvent
@@ -170,30 +167,28 @@ public class CommonHandler {
         ItemStack heldItem = event.getEntityPlayer().getHeldItemMainhand();
         EntityPlayer player = event.getEntityPlayer();
 
-        float i = 0, j = 0, k = 0, l = 0;
+        float multiplier = 1.0F;
 
         if (Stats.MINING.needAffectedByStat(heldItem,
                 event.getPos(),
                 player.world)) {
-            i = Stats.MINING.getBonus(player);
+            multiplier += Stats.MINING.getBonus(player);
         }
         if (Stats.DIGGING.needAffectedByStat(heldItem,
                 event.getPos(),
                 player.world)) {
-            j = Stats.DIGGING.getBonus(player);
+            multiplier += Stats.DIGGING.getBonus(player);
         }
         if (Stats.CHOPPING.needAffectedByStat(heldItem,
                 event.getPos(),
                 player.world)) {
-            k = Stats.CHOPPING.getBonus(player);
+            multiplier += Stats.CHOPPING.getBonus(player);
         }
         if (Stats.TRIMMING.needAffectedByStat(heldItem,
                 event.getPos(),
                 player.world)) {
-            l = Stats.TRIMMING.getBonus(player);
+            multiplier += Stats.TRIMMING.getBonus(player);
         }
-
-        float multiplier = 1.0F + i + j + k + l;
 
         event.setNewSpeed(event.getOriginalSpeed() * multiplier);
     }
@@ -275,7 +270,7 @@ public class CommonHandler {
             }
             event.setAmount(bonus + damage);
 
-            if (Stats.REAPER.needAffectedByStat((Entity) victim)) {
+            if (Stats.REAPER.needAffectedByStat(victim)) {
                 float reap = Stats.REAPER.getBonus(player);
                 float reapBonus = 0;
                 if (Stats.STEALTH.needAffectedByStat(player))

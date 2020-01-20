@@ -1,6 +1,6 @@
 package net.infstudio.goki.common.handlers;
 
-import net.infstudio.goki.common.stats.Stats;
+import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -102,9 +102,9 @@ public class TickHandler {
 
                     player.moveRelative(player.moveStrafing, player.moveVertical, player.moveForward, f2);
                     player.move(MoverType.SELF, player.motionX, player.motionY, player.motionZ);
-                    player.motionX *= (double) f1;
+                    player.motionX *= f1;
                     player.motionY *= 0.800000011920929D;
-                    player.motionZ *= (double) f1;
+                    player.motionZ *= f1;
 
                     if (!player.hasNoGravity()) {
                         player.motionY -= 0.02D;
@@ -132,7 +132,7 @@ public class TickHandler {
 
             for (TileEntity listEntity : player.world.loadedTileEntityList) {
                 if (listEntity != null) {
-                    TileEntity tileEntity = (TileEntity) listEntity;
+                    TileEntity tileEntity = listEntity;
                     BlockPos pos = tileEntity.getPos();
                     if (tileEntity instanceof TileEntityFurnace && MathHelper.sqrt(player.getDistanceSq(pos)) < 4.0D) {
                         // TODO work out alter way to do tileEntity

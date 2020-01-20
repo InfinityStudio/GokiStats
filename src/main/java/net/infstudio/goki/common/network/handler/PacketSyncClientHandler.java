@@ -2,7 +2,7 @@ package net.infstudio.goki.common.network.handler;
 
 import net.infstudio.goki.common.network.message.S2CStatSync;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
-import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

@@ -2,7 +2,7 @@ package net.infstudio.goki.common;
 
 import net.infstudio.goki.common.config.ConfigManager;
 import net.infstudio.goki.common.config.Configurable;
-import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.api.stat.StatBase;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,9 +31,9 @@ public class StatsCommand extends CommandBase {
         EntityPlayer player;
         if ((icommandsender instanceof EntityPlayer)) {
             player = (EntityPlayer) icommandsender;
-            player.sendMessage(new TextComponentTranslation("Reloaded gokistats configuration file."));
+            player.sendMessage(new TextComponentTranslation("Reloaded GokiStats configuration file."));
         } else {
-            server.logInfo("Reloaded gokistats configuration file.");
+            server.logInfo("Reloaded GokiStats configuration file.");
         }
     }
 

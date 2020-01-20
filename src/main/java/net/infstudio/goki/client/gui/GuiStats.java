@@ -3,7 +3,7 @@ package net.infstudio.goki.client.gui;
 import net.infstudio.goki.common.handlers.GokiKeyHandler;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.C2SStatSync;
-import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -101,7 +101,7 @@ public class GuiStats extends GuiScreen {
                 GuiStatButton statButton = (GuiStatButton) button;
                 if (!GuiScreen.isCtrlKeyDown())
                     GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), 1));
-                else
+                else // Downgrade
                     GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), -1));
             }
         }

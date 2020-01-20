@@ -1,7 +1,7 @@
 package net.infstudio.goki.common.network.message;
 
 import io.netty.buffer.ByteBuf;
-import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

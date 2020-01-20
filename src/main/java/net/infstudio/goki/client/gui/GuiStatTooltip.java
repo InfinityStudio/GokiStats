@@ -1,7 +1,7 @@
 package net.infstudio.goki.client.gui;
 
 import net.infstudio.goki.common.config.GokiConfig;
-import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -38,9 +38,16 @@ public class GuiStatTooltip extends Gui {
         else
             messageColorMap.put(I18n.format("ui.cost.name") + this.stat.getCost(level) + "xp", -16724737); // Cost
 
+        if (GuiScreen.isCtrlKeyDown())
+            messageColorMap.put(I18n.format("ui.return.name") + this.stat.getCost(level) * GokiConfig.globalModifiers.globalRevertFactor + "xp", -16724737); // Cost
+
         int revertLevel = DataHelper.getPlayerRevertStatLevel(player, stat);
-        if (revertLevel > 0)
-            messageColorMap.put(I18n.format("ui.reverted.name", revertLevel, GokiConfig.globalModifiers.globalMaxRevertLevel), -16724737); // Reverted
+        if (revertLevel > 0) {
+            if (GokiConfig.globalModifiers.globalMaxRevertLevel != -1)
+                messageColorMap.put(I18n.format("ui.reverted.name", revertLevel, String.valueOf(GokiConfig.globalModifiers.globalMaxRevertLevel)), -16724737); // Reverted
+            else
+                messageColorMap.put(I18n.format("ui.reverted.name", revertLevel, I18n.format("ui.infinite.name")), -16724737); // Reverted
+        }
 
         if (GuiScreen.isCtrlKeyDown()) { // Is player reverting?
             if (DataHelper.canPlayerRevertStat(player, stat))

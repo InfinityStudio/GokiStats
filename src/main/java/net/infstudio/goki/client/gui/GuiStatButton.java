@@ -2,7 +2,7 @@ package net.infstudio.goki.client.gui;
 
 import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.utils.Reference;
-import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.api.stat.StatBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -15,6 +15,11 @@ import javax.annotation.Nonnull;
 public class GuiStatButton extends GuiButton {
     public StatBase stat;
     public EntityPlayer player;
+
+    public static final int INACTIVE_X = 0;
+    public static final int ACTIVATED_X = 24;
+    public static final int DISABLED_X = 48;
+    public static final int MAXIMUM_X = 72;
 
     public GuiStatButton(int id, int x, int y, int width, int height, StatBase stat, EntityPlayer player) {
         super(id, x, y, width, height, "");
@@ -33,21 +38,26 @@ public class GuiStatButton extends GuiButton {
             FontRenderer fontrenderer = mc.fontRenderer;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = isUnderMouse(mouseX, mouseY);
-            int which = getHoverState(this.hovered);
+            int hoverState = getHoverState(this.hovered);
 
-            int iconX = 0;
-            if (which == 2) {
-                iconX = 24;
+            int iconX = INACTIVE_X;
+            if (hoverState == 2) { // Hovering
+                iconX = ACTIVATED_X;
             }
             if (playerXP < cost) {
-                iconX = 48;
+                iconX = INACTIVE_X;
             }
             if (level >= this.stat.getLimit()) {
-                iconX = 72;
+                iconX = MAXIMUM_X;
             }
-            if (!DataHelper.canPlayerRevertStat(player, this.stat) && GuiScreen.isCtrlKeyDown()) {
-                iconX = 48;
+            if (GuiScreen.isCtrlKeyDown()) {
+                if (DataHelper.canPlayerRevertStat(player, this.stat))
+                    iconX = ACTIVATED_X;
+                else
+                    iconX = DISABLED_X;
             }
+            if (!stat.enabled)
+                iconX = DISABLED_X;
 
             String message = level + "";
             if (!this.stat.enabled) {
