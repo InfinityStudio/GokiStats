@@ -1,7 +1,8 @@
 package net.infstudio.goki.common.utils;
 
 import net.infstudio.goki.common.config.GokiConfig;
-import net.infstudio.goki.common.stats.StatBase;
+import net.infstudio.goki.common.init.MinecraftEffects;
+import net.infstudio.goki.api.stat.StatBase;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,7 +27,10 @@ public class DataHelper {
     }
 
     public static boolean canPlayerRevertStat(EntityPlayer player, StatBase stat) {
-        return GokiConfig.globalModifiers.globalMaxRevertLevel >= 0 && getPlayerRevertStatLevel(player, stat) < GokiConfig.globalModifiers.globalMaxRevertLevel && getPlayerStatLevel(player, stat) > 0;
+        return GokiConfig.globalModifiers.globalMaxRevertLevel == -1 ||
+                (GokiConfig.globalModifiers.globalMaxRevertLevel >= 0
+                        && getPlayerRevertStatLevel(player, stat) < GokiConfig.globalModifiers.globalMaxRevertLevel
+                        && getPlayerStatLevel(player, stat) > 0);
     }
 
     public static int getPlayerRevertStatLevel(EntityPlayer player, StatBase stat) {
@@ -133,7 +137,7 @@ public class DataHelper {
 
     public static float getFallResistance(EntityLivingBase entity) {
         float resistance = 3.0F;
-        PotionEffect potioneffect = entity.getActivePotionEffect(Potion.getPotionFromResourceLocation("jump"));
+        PotionEffect potioneffect = entity.getActivePotionEffect(MinecraftEffects.JUMP);
         float bonus = potioneffect != null ? potioneffect.getAmplifier() + 1 : 0.0F;
         // TODO check if this work as float...
 

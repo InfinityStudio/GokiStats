@@ -1,15 +1,15 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.common.stats.StatBase;
-import net.infstudio.goki.common.stats.Stats;
-import net.infstudio.goki.common.stats.tool.ToolSpecificStat;
+import net.infstudio.goki.api.stat.StatBase;
+import net.infstudio.goki.api.stat.Stats;
+import net.infstudio.goki.common.stat.tool.ToolSpecificStat;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class GuiCompatibilityHelper extends GuiScreen {
-    private final int BUTTON_WIDTH = 240;
-    private final int BUTTON_HEIGHT = 15;
+    private static final int BUTTON_WIDTH = 240;
+    private static final int BUTTON_HEIGHT = 15;
     private final ToolSpecificStat[] compatibleStats =
             {Stats.MINING, Stats.DIGGING, Stats.CHOPPING, Stats.TRIMMING, Stats.SWORDSMANSHIP, Stats.BOWMANSHIP};
     private EntityPlayer player;

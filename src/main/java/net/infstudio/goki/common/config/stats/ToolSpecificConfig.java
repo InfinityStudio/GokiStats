@@ -1,6 +1,6 @@
 package net.infstudio.goki.common.config.stats;
 
-import net.infstudio.goki.common.stats.tool.ItemIdMetadataTuple;
+import net.infstudio.goki.common.stat.tool.ItemIdMetadataTuple;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,16 +1,14 @@
 package net.infstudio.goki.common.network.handler;
 
+import net.infstudio.goki.api.stat.StatBase;
+import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.C2SStatSync;
-import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.network.message.MessageXPSync;
 import net.infstudio.goki.common.network.message.S2CStatSync;
-import net.infstudio.goki.common.stats.StatBase;
-import net.infstudio.goki.common.stats.StatMaxHealth;
+import net.infstudio.goki.common.stat.StatMaxHealth;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -27,9 +25,9 @@ public class PacketSyncHandler {
                 return null;
             int level = DataHelper.getPlayerStatLevel(player, stat);
 
-            if (level + message.amount > stat.getLimit()) {
-                message.amount = stat.getLimit() - level;
-            }
+            if (message.amount < 0 && level == 0) return null;
+
+            if (level + message.amount > stat.getLimit()) return null;
 
             int cost = stat.getCost(level + message.amount - 1);
             int currentXP = DataHelper.getXPTotal(player.experienceLevel, player.experience);
@@ -38,16 +36,24 @@ public class PacketSyncHandler {
                 if (currentXP >= cost) {
                     int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
                     reverted = Math.max(reverted - message.amount, 0);
+                    if (GokiConfig.globalModifiers.globalMaxRevertLevel < reverted && GokiConfig.globalModifiers.globalMaxRevertLevel != -1) return;
                     DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
 
                     DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
+
+                    // Sync to client player
                     GokiPacketHandler.CHANNEL.sendTo(new S2CStatSync(StatBase.stats.indexOf(stat), level + message.amount, reverted), player);
+
+                    // Deal with health limit
                     if (stat instanceof StatMaxHealth) {
                         player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
                                 .setBaseValue(20 + level + message.amount);
                     }
 
-                    DataHelper.setPlayersExpTo(player, currentXP - cost);
+                    if (message.amount <= 0) {
+                        DataHelper.setPlayersExpTo(player, currentXP + (int) (stat.getCost(level + message.amount + 1) * GokiConfig.globalModifiers.globalRevertFactor));
+                    } else
+                        DataHelper.setPlayersExpTo(player, currentXP - cost);
                 }
             });
             return null;
