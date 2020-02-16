@@ -1,7 +1,7 @@
 [
 {
   "modid": "gokistats",
-  "name": "gokiStats",
+  "name": "Goki Stats",
   "description": "A mod provides player some RPG abilities",
   "version": "@version@",
   "mcversion": "1.12.2",

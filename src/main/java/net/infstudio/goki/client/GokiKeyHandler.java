@@ -1,4 +1,4 @@
-package net.infstudio.goki.common.handlers;
+package net.infstudio.goki.client;
 
 import net.infstudio.goki.GokiStats;
 import net.minecraft.client.Minecraft;

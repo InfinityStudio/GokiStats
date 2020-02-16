@@ -159,7 +159,7 @@ public class CommonHandler {
             for (int stat = 0; stat < StatBase.totalStats; stat++) {
                 DataHelper.multiplyPlayerStatLevel(player,
                         StatBase.stats.get(stat),
-                        level -> level - (int) GokiConfig.globalModifiers.loseStatsMultiplier * level);
+                        level -> level - (int) (GokiConfig.globalModifiers.loseStatsMultiplier * level));
             }
             GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
         }

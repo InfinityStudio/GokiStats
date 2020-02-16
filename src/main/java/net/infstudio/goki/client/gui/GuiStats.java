@@ -1,6 +1,7 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.common.handlers.GokiKeyHandler;
+import net.infstudio.goki.common.config.GokiConfig;
+import net.infstudio.goki.client.GokiKeyHandler;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.C2SStatSync;
 import net.infstudio.goki.common.stats.StatBase;
@@ -117,7 +118,7 @@ public class GuiStats extends GuiScreen {
         super.keyTyped(c, keyCode);
         // 1 is the Esc key, and we made our keybinding array public and static
         // so we can access it here
-        if (c == 1 || keyCode == GokiKeyHandler.statsMenu.getKeyCode()) {
+        if (c == 1 || (GokiConfig.keyBindingEnabled && keyCode == GokiKeyHandler.statsMenu.getKeyCode())) {
             mc.player.closeScreen();
         }
     }

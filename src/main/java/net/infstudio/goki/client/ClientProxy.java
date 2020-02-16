@@ -1,7 +1,7 @@
 package net.infstudio.goki.client;
 
 import net.infstudio.goki.common.CommonProxy;
-import net.infstudio.goki.common.handlers.GokiKeyHandler;
+import net.infstudio.goki.common.config.GokiConfig;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
@@ -13,6 +13,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerHandlers() {
         super.registerHandlers();
-        registerKeybinding();
+        if (GokiConfig.keyBindingEnabled)
+            registerKeybinding();
     }
 }

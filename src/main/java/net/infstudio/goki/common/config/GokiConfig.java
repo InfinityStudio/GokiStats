@@ -8,6 +8,11 @@ public class GokiConfig {
     @Config.Name("Configuration Version")
     public static String version = "v3";
 
+    @Config.Name("Keybinding Enabled")
+    @Config.Comment({"Should register gokistats keybinding (default Y)", "If set to false, player can only use /gokistats gui to open gui"})
+    @Config.RequiresMcRestart
+    public static boolean keyBindingEnabled = true;
+
     @Config.Name("Global Modifiers")
     public static GlobalModifiers globalModifiers = new GlobalModifiers();
 

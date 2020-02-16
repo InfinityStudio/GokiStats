@@ -26,7 +26,7 @@ public class TickHandler {
 
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) { // Due to issue #32
+        if (event.phase == TickEvent.Phase.START) { // Due to issue #32
             EntityPlayer player = event.player;
 
             handleTaskPlayerAPI(player);
