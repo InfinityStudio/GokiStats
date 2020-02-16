@@ -1,22 +1,24 @@
 package net.infstudio.goki;
 
+import net.infstudio.goki.api.stat.StatBase;
+import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.CommonProxy;
 import net.infstudio.goki.common.StatsCommand;
 import net.infstudio.goki.common.config.ConfigManager;
 import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.MinecraftEffects;
-import net.infstudio.goki.api.stat.StatBase;
-import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -75,6 +77,8 @@ public class GokiStats {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        MinecraftEffects.STRENGTH = ForgeRegistries.POTIONS.getValue(new ResourceLocation("minecraft:strength"));
+        MinecraftEffects.JUMP = ForgeRegistries.POTIONS.getValue(new ResourceLocation("minecraft:jump"));
     }
 
     @Mod.EventHandler
