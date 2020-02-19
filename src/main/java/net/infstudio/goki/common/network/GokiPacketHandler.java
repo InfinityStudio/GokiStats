@@ -16,7 +16,7 @@ public class GokiPacketHandler {
     public static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID);
 
     static {
-        CHANNEL.registerMessage(new PacketSyncHandler.Stat(), C2SStatSync.class, 0, Side.SERVER);
+        CHANNEL.registerMessage(PacketSyncHandler.Stat.class, C2SStatSync.class, 0, Side.SERVER);
         CHANNEL.registerMessage(PacketSyncClientHandler.StatAll.class, S2CSyncAll.class, 1, Side.CLIENT);
         CHANNEL.registerMessage(PacketSyncClientHandler.Stat.class, S2CStatSync.class, 2, Side.CLIENT);
         CHANNEL.registerMessage(PacketGuiClientHandler.class, S2COpenGui.class, 3, Side.CLIENT);

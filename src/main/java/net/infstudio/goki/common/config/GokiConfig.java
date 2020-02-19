@@ -13,6 +13,15 @@ public class GokiConfig {
     @Config.RequiresMcRestart
     public static boolean keyBindingEnabled = true;
 
+    @Config.Name("Initiative stat synchronization")
+    @Config.Comment("Enables synchronizing all stat data in a period")
+    public static boolean initiativeSync = false;
+
+    @Config.Name("Ticks for initiative sync")
+    @Config.Comment("Default 400 Ticks (20s)")
+    @Config.RangeInt(min = 20)
+    public static int syncTicks = 400;
+
     @Config.Name("Global Modifiers")
     public static GlobalModifiers globalModifiers = new GlobalModifiers();
 

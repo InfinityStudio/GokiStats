@@ -1,6 +1,9 @@
 package net.infstudio.goki.common.handlers;
 
 import net.infstudio.goki.api.stat.Stats;
+import net.infstudio.goki.common.config.GokiConfig;
+import net.infstudio.goki.common.network.GokiPacketHandler;
+import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -8,21 +11,28 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TickHandler {
     public static final UUID knockbackResistanceID = UUID.randomUUID();
     public static final UUID stealthSpeedID = UUID.randomUUID();
     public static final UUID swimSpeedID = UUID.randomUUID();
+
+    public static AtomicInteger tickTimer = new AtomicInteger();
 
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
@@ -52,6 +62,21 @@ public class TickHandler {
             }
 
             handleFurnace(player);
+        }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.SERVER)
+    public void serverTick(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            if (tickTimer.get() == GokiConfig.syncTicks) {
+                tickTimer.lazySet(0);
+                for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+                    GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), player);
+                }
+            } else {
+                tickTimer.getAndIncrement();
+            }
         }
     }
 

@@ -37,6 +37,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Random;
@@ -118,6 +120,7 @@ public class CommonHandler {
         }
     }
 
+    @SideOnly(Side.SERVER)
     @SubscribeEvent
     public void playerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
         EntityPlayer player = event.player;
@@ -125,16 +128,6 @@ public class CommonHandler {
             // Server side
             GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
         }  // Client side: Do nothing
-    }
-
-    @SubscribeEvent
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
-        EntityPlayer player = event.player;
-        if (!player.world.isRemote) {
-            // Server side
-            GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
-        }  // Client side: Do nothing
-
     }
 
     @SubscribeEvent
@@ -149,14 +142,25 @@ public class CommonHandler {
         }
     }
 
+    @SideOnly(Side.SERVER)
+    @SubscribeEvent
+    public void playerChangedWorld(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (!event.player.world.isRemote) {
+            GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(event.player), (EntityPlayerMP) event.player);
+        }
+    }
+
+    @SideOnly(Side.SERVER)
     @SubscribeEvent
     public void playerRespawn(PlayerRespawnEvent event) {
         EntityPlayer player = event.player;
-        if (!player.world.isRemote && GokiConfig.globalModifiers.loseStatsOnDeath) {
-            for (int stat = 0; stat < StatBase.totalStats; stat++) {
-                DataHelper.multiplyPlayerStatLevel(player,
-                        StatBase.stats.get(stat),
-                        level -> level - (int) (GokiConfig.globalModifiers.loseStatsMultiplier * level));
+        if (!player.world.isRemote) {
+            if (GokiConfig.globalModifiers.loseStatsOnDeath) {
+                for (int stat = 0; stat < StatBase.totalStats; stat++) {
+                    DataHelper.multiplyPlayerStatLevel(player,
+                            StatBase.stats.get(stat),
+                            level -> level - (int) (GokiConfig.globalModifiers.loseStatsMultiplier * level));
+                }
             }
             GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
         }
