@@ -142,7 +142,6 @@ public class CommonHandler {
         }
     }
 
-    @SideOnly(Side.SERVER)
     @SubscribeEvent
     public void playerChangedWorld(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
         if (!event.player.world.isRemote) {
@@ -150,7 +149,6 @@ public class CommonHandler {
         }
     }
 
-    @SideOnly(Side.SERVER)
     @SubscribeEvent
     public void playerRespawn(PlayerRespawnEvent event) {
         EntityPlayer player = event.player;
