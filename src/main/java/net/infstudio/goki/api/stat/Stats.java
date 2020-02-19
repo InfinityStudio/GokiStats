@@ -36,6 +36,6 @@ public interface Stats {
     StatBase STEALTH = new StatStealth(19, "grpg_Stealth", 10);
     StatBase STEADY_GUARD = new StatSteadyGuard(18, "grpg_Steady_Guard", 10);
     StatMiningMagician MINING_MAGICIAN = new StatMiningMagician(20, "grpg_Mining_Magician", 10);
-    StatBase ROLL = new StatRoll(21, "grpg_Roll", 10);
+    StatBase ROLL = new StatRoll(22, "grpg_Roll", 10);
 
 }

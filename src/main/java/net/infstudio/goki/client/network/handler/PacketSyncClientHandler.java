@@ -1,10 +1,12 @@
 package net.infstudio.goki.client.network.handler;
 
+import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.network.message.S2CStatSync;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -22,6 +24,9 @@ public class PacketSyncClientHandler {
                 return null;
             StatBase stat = StatBase.stats.get(message.stat);
             Minecraft.getMinecraft().addScheduledTask(() -> {
+                if (stat == Stats.MAX_HEALTH)
+                    player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                            .setBaseValue(20 + message.amount);
                 DataHelper.setPlayerRevertStatLevel(player, stat, message.reverted);
                 DataHelper.setPlayerStatLevel(player, stat, message.amount);
             });
@@ -45,6 +50,8 @@ public class PacketSyncClientHandler {
                 for (int i = 0; i < message.revertedStatLevels.length; i++) {
                     DataHelper.setPlayerRevertStatLevel(player, StatBase.stats.get(i), message.revertedStatLevels[i]);
                 }
+                player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                        .setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
             });
             return null;
         }

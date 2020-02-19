@@ -32,13 +32,12 @@ public class PacketSyncHandler {
             int cost = stat.getCost(level + message.amount - 1);
             int currentXP = DataHelper.getXPTotal(player.experienceLevel, player.experience);
             player.getServerWorld().addScheduledTask(() -> {
+                int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
+                reverted = Math.max(reverted - message.amount, 0);
+                if (GokiConfig.globalModifiers.globalMaxRevertLevel < reverted && GokiConfig.globalModifiers.globalMaxRevertLevel != -1) return;
+                DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
 
                 if (currentXP >= cost) {
-                    int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
-                    reverted = Math.max(reverted - message.amount, 0);
-                    if (GokiConfig.globalModifiers.globalMaxRevertLevel < reverted && GokiConfig.globalModifiers.globalMaxRevertLevel != -1) return;
-                    DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
-
                     DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
 
                     // Sync to client player
@@ -54,6 +53,9 @@ public class PacketSyncHandler {
                         DataHelper.setPlayersExpTo(player, currentXP + (int) (stat.getCost(level + message.amount + 1) * GokiConfig.globalModifiers.globalRevertFactor));
                     } else
                         DataHelper.setPlayersExpTo(player, currentXP - cost);
+                } else {
+                    // Sync to client player
+                    GokiPacketHandler.CHANNEL.sendTo(new S2CStatSync(StatBase.stats.indexOf(stat), level, reverted), player);
                 }
             });
             return null;
