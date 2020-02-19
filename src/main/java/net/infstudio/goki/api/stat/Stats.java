@@ -21,7 +21,6 @@ public interface Stats {
     DamageSourceProtectionStat PROTECTION = new StatProtection(4, "grpg_Protection", 10);
     DamageSourceProtectionStat TEMPERING = new StatTempering(5, "grpg_Tempering", 10);
     DamageSourceProtectionStat TOUGH_SKIN = new StatToughSkin(6, "grpg_ToughSkin", 10);
-    StatBase MAX_HEALTH = new StatMaxHealth(21, "grpg_Health", 10);
     DamageSourceProtectionStat STAT_FEATHER_FALL = new StatFeatherFall(7, "grpg_FeatherFall", 10);
     StatBase LEAPER_H = new StatLeaperH(8, "grpg_LeaperH", 10);
     StatBase LEAPER_V = new StatLeaperV(9, "grpg_LeaperV", 10);
@@ -36,6 +35,7 @@ public interface Stats {
     StatBase STEALTH = new StatStealth(19, "grpg_Stealth", 10);
     StatBase STEADY_GUARD = new StatSteadyGuard(18, "grpg_Steady_Guard", 10);
     StatMiningMagician MINING_MAGICIAN = new StatMiningMagician(20, "grpg_Mining_Magician", 10);
+    StatMaxHealth MAX_HEALTH = new StatMaxHealth(21, "grpg_Health", 10);
     StatBase ROLL = new StatRoll(22, "grpg_Roll", 10);
 
 }

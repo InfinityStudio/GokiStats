@@ -9,10 +9,29 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CapabilityStat {
     @CapabilityInject(StatStorage.class)
     public static Capability<StatStorage> STAT;
+
+    public static class Provider implements ICapabilityProvider {
+        public StatStorage statStorage = new StatStorage();
+
+        @Override
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == STAT;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            return capability == STAT ? (T) statStorage : null;
+        }
+    }
 
     public static void register() {
         CapabilityManager.INSTANCE.register(StatStorage.class, new Capability.IStorage<StatStorage>() {

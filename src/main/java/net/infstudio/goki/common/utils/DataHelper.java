@@ -1,5 +1,6 @@
 package net.infstudio.goki.common.utils;
 
+import net.infstudio.goki.api.capability.CapabilityStat;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.MinecraftEffects;
 import net.infstudio.goki.api.stat.StatBase;
@@ -36,7 +37,7 @@ public class DataHelper {
     public static int getPlayerRevertStatLevel(EntityPlayer player, StatBase stat) {
         NBTTagCompound nbt = getPlayerPersistentNBT(player);
         if (nbt.hasKey("gokistats_Stats")) {
-            return ((NBTTagCompound) nbt.getTag("gokistats_Stats")).getInteger(stat.key + ".revert");
+            return ((NBTTagCompound) nbt.getTag("gokistats_Stats")).getInteger(stat.getKey() + ".revert");
         }
         return 0;
     }
@@ -44,16 +45,17 @@ public class DataHelper {
     public static int setPlayerRevertStatLevel(EntityPlayer player, StatBase stat, int level) {
         NBTTagCompound nbt = getPlayerPersistentNBT(player);
         if (nbt.hasKey("gokistats_Stats")) {
-            ((NBTTagCompound) nbt.getTag("gokistats_Stats")).setInteger(stat.key + ".revert",
+            ((NBTTagCompound) nbt.getTag("gokistats_Stats")).setInteger(stat.getKey() + ".revert",
                     (byte) level);
         }
         return 0;
     }
 
     public static int getPlayerStatLevel(EntityPlayer player, StatBase stat) {
+        player.getCapability(CapabilityStat.STAT, null).stateMap
         NBTTagCompound nbt = getPlayerPersistentNBT(player);
         if (nbt.hasKey("gokistats_Stats")) {
-            return ((NBTTagCompound) nbt.getTag("gokistats_Stats")).getInteger(stat.key);
+            return ((NBTTagCompound) nbt.getTag("gokistats_Stats")).getInteger(stat.getKey());
         }
         return 0;
     }
@@ -61,7 +63,7 @@ public class DataHelper {
     public static void setPlayerStatLevel(EntityPlayer player, StatBase stat, int level) {
         NBTTagCompound nbt = getPlayerPersistentNBT(player);
         if (nbt.hasKey("gokistats_Stats")) {
-            ((NBTTagCompound) nbt.getTag("gokistats_Stats")).setInteger(stat.key,
+            ((NBTTagCompound) nbt.getTag("gokistats_Stats")).setInteger(stat.getKey(),
                     (byte) level);
         }
     }

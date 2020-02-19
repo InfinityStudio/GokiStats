@@ -32,7 +32,7 @@ public class GuiStatTooltip extends Gui {
         int level = DataHelper.getPlayerStatLevel(this.player, this.stat);
 
         messageColorMap.put(this.stat.getLocalizedName() + " L" + level, -13312); // Header
-        messageColorMap.put(this.stat.getLocalizedDes(this.player), -1); // Message
+        messageColorMap.put(this.stat.getLocalizedDescription(this.player), -1); // Message
         if (level >= this.stat.getLimit())
             messageColorMap.put(I18n.format("ui.max.name"), -16724737);
         else
