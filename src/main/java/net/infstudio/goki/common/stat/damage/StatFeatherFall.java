@@ -28,7 +28,7 @@ public class StatFeatherFall extends DamageSourceProtectionStat {
     }
 
     @Override
-    public String getLocalizedDes(EntityPlayer player) {
+    public String getLocalizedDescription(EntityPlayer player) {
         return I18n.format(this.key + ".des",
                 this.getAppliedDescriptionVar(player)[0],
                 this.getAppliedDescriptionVar(player)[1]);

@@ -6,6 +6,7 @@ import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.DataHelper;
+import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,12 +15,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public abstract class StatBase<T extends StatConfig> implements Stat, Configurable<T> {
+public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry.Impl<Stat> implements Stat, Configurable<T> {
     public static final Map<String, StatBase> statKeyMap = new HashMap<>(16);
     public static final ObjectList<StatBase> stats = new ObjectArrayList<>(16);
     public static int totalStats = 0;
@@ -31,25 +33,16 @@ public abstract class StatBase<T extends StatConfig> implements Stat, Configurab
     public float limitMultiplier = 1.0F;
     public float bonusMultiplier = 1.0F;
     public boolean enabled = true;
-    String name, des;
     private int limit;
-
-    public StatBase() {
-        this.imageID = -1;
-        this.limit = 0;
-        this.key = "Dummy";
-        this.name = "Dummy StatBase";
-        stats.add(this);
-        statKeyMap.put(key, this);
-    }
 
     public StatBase(int imgId, String key, int limit) {
         this.imageID = imgId;
         this.limit = limit;
         this.key = key;
         stats.add(this);
-        totalStats ++;
+        totalStats++;
         statKeyMap.put(key, this);
+        setRegistryName(Reference.MODID, getKey().toLowerCase());
     }
 
     protected static float getFinalBonus(float currentBonus) {
@@ -142,7 +135,7 @@ public abstract class StatBase<T extends StatConfig> implements Stat, Configurab
     }
 
     @SideOnly(Side.CLIENT)
-    public String getLocalizedDes(EntityPlayer player) {
+    public String getLocalizedDescription(EntityPlayer player) {
         return I18n.format(this.key + ".des",
                 this.getAppliedDescriptionVar(player)[0]);
     }

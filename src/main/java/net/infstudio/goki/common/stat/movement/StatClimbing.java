@@ -16,7 +16,7 @@ public class StatClimbing extends StatBase<StatConfig> {
     }
 
     @Override
-    public String getLocalizedDes(EntityPlayer player) {
+    public String getLocalizedDescription(EntityPlayer player) {
         if (Reference.isPlayerAPILoaded) {
             return I18n.format(this.key + ".des1");
         }

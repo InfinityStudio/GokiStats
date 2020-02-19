@@ -50,7 +50,6 @@ grpg_Health.des=增加玩家%f的生命值
 grpg_Roll.des=有%f%%的几率闪避伤害并反击敌人
 
 grpg_Roll.message=*闪避*
-grpg_Roll.message=*击退*
 
 ui.cost.name=消耗 
 ui.return.name=归还 

@@ -3,9 +3,7 @@ package net.infstudio.goki.common.network.handler;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.network.GokiPacketHandler;
-import net.infstudio.goki.common.network.message.C2SStatSync;
-import net.infstudio.goki.common.network.message.MessageXPSync;
-import net.infstudio.goki.common.network.message.S2CStatSync;
+import net.infstudio.goki.common.network.message.*;
 import net.infstudio.goki.common.stat.StatMaxHealth;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -13,6 +11,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketSyncHandler {
 
@@ -70,6 +70,14 @@ public class PacketSyncHandler {
                 DataHelper.setPlayersExpTo(player, message.experience);
             });
             return null;
+        }
+    }
+
+    public static class RequestSync implements IMessageHandler<C2SRequestStatSync, S2CSyncAll> {
+        @Override
+        @SideOnly(Side.SERVER)
+        public S2CSyncAll onMessage(C2SRequestStatSync message, MessageContext ctx) {
+            return new S2CSyncAll(ctx.getServerHandler().player);
         }
     }
 }

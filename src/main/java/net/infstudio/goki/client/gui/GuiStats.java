@@ -3,6 +3,7 @@ package net.infstudio.goki.client.gui;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.client.GokiKeyHandler;
 import net.infstudio.goki.common.network.GokiPacketHandler;
+import net.infstudio.goki.common.network.message.C2SRequestStatSync;
 import net.infstudio.goki.common.network.message.C2SStatSync;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
@@ -32,6 +33,7 @@ public class GuiStats extends GuiScreen {
     private FontRenderer fontRenderer;
 
     public GuiStats(EntityPlayer player) {
+        GokiPacketHandler.CHANNEL.sendToServer(new C2SRequestStatSync());
         this.player = player;
         this.fontRenderer = Minecraft.getMinecraft().fontRenderer;
     }

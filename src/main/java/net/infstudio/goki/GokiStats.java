@@ -1,9 +1,11 @@
 package net.infstudio.goki;
 
+import net.infstudio.goki.api.capability.CapabilityStat;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.CommonProxy;
 import net.infstudio.goki.common.StatsCommand;
+import net.infstudio.goki.common.adapters.StatFix;
 import net.infstudio.goki.common.config.ConfigManager;
 import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
@@ -13,6 +15,7 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.datafix.FixTypes;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -65,14 +68,16 @@ public class GokiStats {
             }
         }
 
+        CapabilityStat.register();
+
         new ConfigManager(event.getModConfigurationDirectory().toPath().resolve(Reference.MODID));
-        System.out.println(StatBase.totalStats);
         StatBase.stats.forEach(Configurable::reloadConfig);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.registerHandlers();
+        FMLCommonHandler.instance().getDataFixer().registerVanillaWalker(FixTypes.PLAYER, new StatFix());
     }
 
     @Mod.EventHandler

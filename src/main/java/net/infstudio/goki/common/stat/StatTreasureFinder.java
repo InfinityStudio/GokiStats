@@ -71,7 +71,7 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
     }
 
     @Override
-    public String getLocalizedDes(EntityPlayer player) {
+    public String getLocalizedDescription(EntityPlayer player) {
         if (getPlayerStatLevel(player) == 0) {
             return I18n.format(this.key + ".des0");
         }

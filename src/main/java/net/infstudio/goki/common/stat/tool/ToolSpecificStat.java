@@ -22,10 +22,6 @@ public abstract class ToolSpecificStat extends StatBase<ToolSpecificConfig> {
 
     public abstract String[] getDefaultSupportedItems();
 
-    public ToolSpecificStat() {
-        Arrays.stream(getDefaultSupportedItems()).map(ItemIdMetadataTuple::new).forEach(supports::add);
-    }
-
     @Override
     public ToolSpecificConfig createConfig() {
         ToolSpecificConfig config = new ToolSpecificConfig();

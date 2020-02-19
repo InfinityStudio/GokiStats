@@ -110,6 +110,6 @@ public class GuiStatButton extends GuiButton {
                     this.stat);
         }
 
-        return this.stat.getLocalizedDes(this.player);
+        return this.stat.getLocalizedDescription(this.player);
     }
 }
