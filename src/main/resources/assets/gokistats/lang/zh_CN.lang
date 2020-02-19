@@ -20,6 +20,7 @@ grpg_Steady_Guard.name=不动
 grpg_Stealth.name=潜行
 grpg_Mining_Magician.name=挖掘魔术
 grpg_Roll.name=翻滚
+grpg_Health.name=Additional Health
 
 grpg_Mining.des=增加%f%%的开采速度
 grpg_Digging.des=增加%f%%的挖掘速度
@@ -46,6 +47,7 @@ grpg_Steady_Guard.des=减缓%f%%的击退
 grpg_Stealth.des=增加潜行时%1$f%%的移动速度和%2$f%%的开采速度(%3$f%%);
 grpg_Mining_Magician.des=增加开采矿物时获得额外材料的概率
 grpg_Roll.des=有%f%%的几率闪避伤害并反击敌人
+grpg_Health.des=Get %f more health.
 
 grpg_Roll.message=*击退*
 grpg_Roll.knockback=*翻滚*
