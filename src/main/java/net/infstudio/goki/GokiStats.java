@@ -10,12 +10,14 @@ import net.infstudio.goki.common.config.ConfigManager;
 import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.MinecraftEffects;
+import net.infstudio.goki.common.loot.conditions.LevelCondition;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.FixTypes;
+import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -67,6 +69,8 @@ public class GokiStats {
                 e.printStackTrace();
             }
         }
+
+        LootConditionManager.registerCondition(new LevelCondition.Serializer(new ResourceLocation(Reference.MODID, "stat_level"), LevelCondition.class));
 
         CapabilityStat.register();
 
