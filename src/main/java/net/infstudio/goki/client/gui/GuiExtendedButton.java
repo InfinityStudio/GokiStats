@@ -6,8 +6,9 @@ import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
 public class GuiExtendedButton extends GuiButton {
+    public static final int BORDER_COLOR = -16777216;
+
     private int backgroundColor;
-    private int borderColor = -16777216;
     private boolean pressed = false;
 
     public GuiExtendedButton(int id, int x, int y, int width, int height, String text, int color) {
@@ -34,10 +35,10 @@ public class GuiExtendedButton extends GuiButton {
     }
 
     private void drawBorder() {
-        drawHorizontalLine(-1, this.width, 0, this.borderColor);
-        drawHorizontalLine(-1, this.width, this.height, this.borderColor);
-        drawVerticalLine(-1, 0, this.height, this.borderColor);
-        drawVerticalLine(this.width, 0, this.height, this.borderColor);
+        drawHorizontalLine(-1, this.width, 0, BORDER_COLOR);
+        drawHorizontalLine(-1, this.width, this.height, BORDER_COLOR);
+        drawVerticalLine(-1, 0, this.height, BORDER_COLOR);
+        drawVerticalLine(this.width, 0, this.height, BORDER_COLOR);
     }
 
     private void drawDisabled(Minecraft mc, int mouseX, int mouseY) {

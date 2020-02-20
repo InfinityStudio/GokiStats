@@ -42,6 +42,7 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
                     new TreasureFinderEntry(Blocks.DIRT, 0, Items.STICK, 0, 1, 100),
                     new TreasureFinderEntry(Blocks.TALLGRASS, 0, Items.PUMPKIN_SEEDS, 0, 1, 30),
                     new TreasureFinderEntry(Blocks.TALLGRASS, 0, Items.MELON_SEEDS, 0, 1, 30),
+
                     new TreasureFinderEntry(Blocks.DIRT, 0, Items.BEEF, 0, 2, 50),
                     new TreasureFinderEntry(Blocks.DIRT, 0, Items.PORKCHOP, 0, 2, 50),
                     new TreasureFinderEntry(Blocks.DIRT, 0, Items.CHICKEN, 0, 2, 50),

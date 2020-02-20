@@ -6,6 +6,7 @@ import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.GokiSounds;
 import net.infstudio.goki.common.init.MinecraftEffects;
+import net.infstudio.goki.common.loot.LootConfigDeserializer;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.stat.tool.IDMDTuple;
@@ -24,6 +25,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -33,12 +37,12 @@ import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 import java.util.List;
 import java.util.Random;
@@ -49,85 +53,81 @@ public class CommonHandler {
     public void harvestBlock(BlockEvent.HarvestDropsEvent event) {
         EntityPlayer player = event.getHarvester();
         Block block = event.getState().getBlock();
-        if (player != null) {
-            if (DataHelper.getPlayerStatLevel(player, Stats.TREASURE_FINDER) > 0) { // Player has treasure finder
-                boolean treasureFound = false; // Make a temp variable here to play sound
-                Random random = player.getRNG();
-                // Note: Items and chances are in pairs
-                List<ItemStack> items = Stats.TREASURE_FINDER.getApplicableItemStackList(block,
-                        block.getMetaFromState(event.getState()),
-                        DataHelper.getPlayerStatLevel(player,
-                                Stats.TREASURE_FINDER));
-                List<Integer> chances = Stats.TREASURE_FINDER.getApplicableChanceList(block,
-                        block.getMetaFromState(event.getState()),
-                        DataHelper.getPlayerStatLevel(player,
-                                Stats.TREASURE_FINDER));
-
-                for (int i = 0; i < items.size(); i++) {
-                    Integer roll = random.nextInt(10000);
-                    if (roll <= chances.get(i)) {
-                        if (items.get(i) != null) {
-                            event.getDrops().add(items.get(i)); // Add treasure to player
-                            treasureFound = true;
-                        } else {
-                            System.out.println("Tried to add an item from Treasure Finder, but it failed!");
-                        }
-                    }
-                }
-                if (treasureFound) {
-                    player.world.playSound(player, event.getPos(), GokiSounds.TREASURE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                }
+        if (player == null) {
+            return;
+        }
+        if (DataHelper.getPlayerStatLevel(player, Stats.TREASURE_FINDER) > 0) { // Player has treasure finder
+            LootTable lootTable = LootConfigDeserializer.TREASURE_FINDER.getLocationForBlock(event.getState()).map(event.getWorld().getLootTableManager()::getLootTableFromLocation).orElse(null);
+            if (lootTable != null) {
+                lootTable.generateLootForPools(event.getWorld().rand, new LootContext(1f, WorldServer, event.getWorld().getLootTableManager(), null, null, null, null));
             }
 
-            if (DataHelper.getPlayerStatLevel(player, Stats.MINING_MAGICIAN) > 0) { // Player has mining magician
-                boolean magicHappened = false;
-                // TODO Rewrite to NBT in 1.13
-                IDMDTuple mme = new IDMDTuple(block, block.getMetaFromState(event.getState()));
-                if (Stats.MINING_MAGICIAN.needAffectedByStat(mme)) { // This block can be affected by magic
-                    for (int i = 0; i < event.getDrops().size(); i++) {
-                        if (player.getRNG().nextDouble() * 100.0D <= Stats.MINING_MAGICIAN.getBonus(player)) {
-                            ItemStack item = event.getDrops().get(i);
-                            if (((item.getItem() instanceof ItemBlock)) && (ItemBlock.getIdFromItem(item.getItem()) == Block.getIdFromBlock(block))) {
-                                if (item.getItemDamage() == block.getMetaFromState(event.getState())) {
-                                    int randomEntry = player.getRNG().nextInt(StatMiningMagician.blockEntries.size());
-                                    IDMDTuple entry = StatMiningMagician.blockEntries.get(randomEntry);
-                                    ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry.id)), 1, entry.metadata);
+            boolean treasureFound = false; // Make a temp variable here to play sound
+            Random random = player.getRNG();
+            // Note: Items and chances are in pairs
+            List<ItemStack> items = Stats.TREASURE_FINDER.getApplicableItemStackList(block,
+                    block.getMetaFromState(event.getState()),
+                    DataHelper.getPlayerStatLevel(player,
+                            Stats.TREASURE_FINDER));
+            List<Integer> chances = Stats.TREASURE_FINDER.getApplicableChanceList(block,
+                    block.getMetaFromState(event.getState()),
+                    DataHelper.getPlayerStatLevel(player,
+                            Stats.TREASURE_FINDER));
+
+            for (int i = 0; i < items.size(); i++) {
+                int roll = random.nextInt(10000);
+                if (roll <= chances.get(i)) {
+                    if (items.get(i) != null) {
+                        event.getDrops().add(items.get(i)); // Add treasure to player
+                        treasureFound = true;
+                    } else {
+                        System.out.println("Tried to add an item from Treasure Finder, but it failed!");
+                    }
+                }
+            }
+            if (treasureFound) {
+                player.world.playSound(player, event.getPos(), GokiSounds.TREASURE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            }
+        }
+
+        if (DataHelper.getPlayerStatLevel(player, Stats.MINING_MAGICIAN) > 0) { // Player has mining magician
+            boolean magicHappened = false;
+            // TODO Rewrite to NBT in 1.13
+            IDMDTuple mme = new IDMDTuple(block, block.getMetaFromState(event.getState()));
+            if (Stats.MINING_MAGICIAN.needAffectedByStat(mme)) { // This block can be affected by magic
+                for (int i = 0; i < event.getDrops().size(); i++) {
+                    if (player.getRNG().nextDouble() * 100.0D <= Stats.MINING_MAGICIAN.getBonus(player)) {
+                        ItemStack item = event.getDrops().get(i);
+                        if (((item.getItem() instanceof ItemBlock)) && (ItemBlock.getIdFromItem(item.getItem()) == Block.getIdFromBlock(block))) {
+                            if (item.getItemDamage() == block.getMetaFromState(event.getState())) {
+                                int randomEntry = player.getRNG().nextInt(StatMiningMagician.blockEntries.size());
+                                IDMDTuple entry = StatMiningMagician.blockEntries.get(randomEntry);
+                                ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry.id)), 1, entry.metadata);
+                                stack.setCount(event.getDrops().get(i).getCount());
+                                event.getDrops().add(stack);
+                                magicHappened = true;
+                            }
+                        } else {
+                            for (int j = 0; j < StatMiningMagician.itemEntries.size(); j++) {
+                                IDMDTuple entry = StatMiningMagician.itemEntries.get(j);
+                                if ((item.getItem().getRegistryName().toString().equals(entry.id)) && (item.getItemDamage() == entry.metadata)) {
+                                    int randomEntry = player.getRNG().nextInt(StatMiningMagician.itemEntries.size());
+                                    IDMDTuple chosenEntry = StatMiningMagician.itemEntries.get(randomEntry);
+                                    ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(chosenEntry.id)), 1, chosenEntry.metadata);
                                     stack.setCount(event.getDrops().get(i).getCount());
                                     event.getDrops().add(stack);
                                     magicHappened = true;
-                                }
-                            } else {
-                                for (int j = 0; j < StatMiningMagician.itemEntries.size(); j++) {
-                                    IDMDTuple entry = StatMiningMagician.itemEntries.get(j);
-                                    if ((item.getItem().getRegistryName().toString().equals(entry.id)) && (item.getItemDamage() == entry.metadata)) {
-                                        int randomEntry = player.getRNG().nextInt(StatMiningMagician.itemEntries.size());
-                                        IDMDTuple chosenEntry = StatMiningMagician.itemEntries.get(randomEntry);
-                                        ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(chosenEntry.id)), 1, chosenEntry.metadata);
-                                        stack.setCount(event.getDrops().get(i).getCount());
-                                        event.getDrops().add(stack);
-                                        magicHappened = true;
-                                        break;
-                                    }
+                                    break;
                                 }
                             }
                         }
                     }
-                    if (magicHappened) {
-                        player.world.playSound(player, event.getPos(), GokiSounds.MAGICIAN, SoundCategory.BLOCKS, 0.3f, 1.0f);
-                    }
+                }
+                if (magicHappened) {
+                    player.world.playSound(player, event.getPos(), GokiSounds.MAGICIAN, SoundCategory.BLOCKS, 0.3f, 1.0f);
                 }
             }
         }
-    }
-
-    @SideOnly(Side.SERVER)
-    @SubscribeEvent
-    public void playerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
-        EntityPlayer player = event.player;
-        if (!player.world.isRemote) {
-            // Server side
-            GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
-        }  // Client side: Do nothing
     }
 
     @SubscribeEvent
@@ -139,13 +139,6 @@ public class CommonHandler {
             if (event.getDistance() < 3.0D + featherFallLevel * 0.1D) {
                 event.setDistance(0.0F);
             }
-        }
-    }
-
-    @SubscribeEvent
-    public void playerChangedWorld(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
-        if (!event.player.world.isRemote) {
-            GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(event.player), (EntityPlayerMP) event.player);
         }
     }
 
@@ -291,6 +284,7 @@ public class CommonHandler {
     public void configChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(Reference.MODID)) {
             ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
+            LootConfigDeserializer.reloadAll();
         }
     }
 }
