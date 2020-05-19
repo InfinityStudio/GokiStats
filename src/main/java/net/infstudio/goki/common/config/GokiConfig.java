@@ -25,13 +25,13 @@ public class GokiConfig {
     @Config.RangeInt(min = 20)
     public static int syncTicks = 400;
 
-    public static List<String> treasureFinderLootTables = Lists.newArrayList(
+    public static String[] treasureFinderLootTables = new String[]{
             "ore:dirt|gokistats:treasure_finder/dirt", "ore:treeLeaves|gokistats:treasure_finder/leaves",
-            "minecraft:tallgrass|gokistats:treasure_finder/tallgrass");
+            "minecraft:tallgrass|gokistats:treasure_finder/tallgrass"};
 
-    public static List<String> miningMagicianLootTables = Lists.newArrayList(
+    public static String[] miningMagicianLootTables = new String[]{
             "ore:dirt|gokistats:treasure_finder/dirt", "ore:treeLeaves|gokistats:treasure_finder/leaves",
-            "minecraft:tallgrass|gokistats:treasure_finder/tallgrass");
+            "minecraft:tallgrass|gokistats:treasure_finder/tallgrass"};
 
     @Config.Name("Global Modifiers")
     public static GlobalModifiers globalModifiers = new GlobalModifiers();

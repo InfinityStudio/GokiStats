@@ -16,8 +16,8 @@ public class LootConfigDeserializer {
     public List<String> configValue;
     public List<Function<IBlockState, ResourceLocation>> lootFunctions = new ArrayList<>();
 
-    public LootConfigDeserializer(List<String> configValue) {
-        this.configValue = configValue;
+    public LootConfigDeserializer(String[] configValue) {
+        this.configValue = Arrays.asList(configValue);
     }
 
     public Optional<ResourceLocation> getLocationForBlock(IBlockState state) {

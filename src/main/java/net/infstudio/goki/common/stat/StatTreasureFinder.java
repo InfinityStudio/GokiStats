@@ -1,5 +1,7 @@
 package net.infstudio.goki.common.stat;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.stats.TreasureFinderConfig;
 import net.infstudio.goki.common.stat.tool.TreasureFinderEntry;
@@ -112,8 +114,8 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
         return items;
     }
 
-    public List<Integer> getApplicableChanceList(Block block, int blockMD, int level) {
-        List<Integer> chance = new ArrayList<>();
+    public IntList getApplicableChanceList(Block block, int blockMD, int level) {
+        IntList chance = new IntArrayList();
         for (TreasureFinderEntry tfe : entries) {
             if (tfe.minimumLevel <= level) {
                 if (((tfe.getBlock() == null) && ((block == Blocks.DIRT) || (block == Blocks.GRASS))) || ((tfe.getBlock() == block) && (tfe.blockMetadata == blockMD))) {

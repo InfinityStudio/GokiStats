@@ -1,5 +1,6 @@
 package net.infstudio.goki.common.handlers;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.StatSpecial;
 import net.infstudio.goki.api.stat.Stats;
@@ -27,7 +28,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -37,12 +37,12 @@ import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.server.FMLServerHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Random;
@@ -50,6 +50,7 @@ import java.util.Random;
 @GameRegistry.ObjectHolder("gokistats")
 public class CommonHandler {
     @SubscribeEvent
+    @SideOnly(Side.SERVER)
     public void harvestBlock(BlockEvent.HarvestDropsEvent event) {
         EntityPlayer player = event.getHarvester();
         Block block = event.getState().getBlock();
@@ -57,10 +58,7 @@ public class CommonHandler {
             return;
         }
         if (DataHelper.getPlayerStatLevel(player, Stats.TREASURE_FINDER) > 0) { // Player has treasure finder
-            LootTable lootTable = LootConfigDeserializer.TREASURE_FINDER.getLocationForBlock(event.getState()).map(event.getWorld().getLootTableManager()::getLootTableFromLocation).orElse(null);
-            if (lootTable != null) {
-                lootTable.generateLootForPools(event.getWorld().rand, new LootContext(1f, WorldServer, event.getWorld().getLootTableManager(), null, null, null, null));
-            }
+            LootConfigDeserializer.TREASURE_FINDER.getLocationForBlock(event.getState()).map(event.getWorld().getLootTableManager()::getLootTableFromLocation).ifPresent(lootTable -> lootTable.generateLootForPools(event.getWorld().rand, new LootContext(1f, (WorldServer) event.getWorld(), event.getWorld().getLootTableManager(), null, null, null)));
 
             boolean treasureFound = false; // Make a temp variable here to play sound
             Random random = player.getRNG();
@@ -69,14 +67,14 @@ public class CommonHandler {
                     block.getMetaFromState(event.getState()),
                     DataHelper.getPlayerStatLevel(player,
                             Stats.TREASURE_FINDER));
-            List<Integer> chances = Stats.TREASURE_FINDER.getApplicableChanceList(block,
+            IntList chances = Stats.TREASURE_FINDER.getApplicableChanceList(block,
                     block.getMetaFromState(event.getState()),
                     DataHelper.getPlayerStatLevel(player,
                             Stats.TREASURE_FINDER));
 
             for (int i = 0; i < items.size(); i++) {
                 int roll = random.nextInt(10000);
-                if (roll <= chances.get(i)) {
+                if (roll <= chances.getInt(i)) {
                     if (items.get(i) != null) {
                         event.getDrops().add(items.get(i)); // Add treasure to player
                         treasureFound = true;
