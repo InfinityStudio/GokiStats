@@ -52,7 +52,6 @@ public class DataHelper {
     }
 
     public static int getPlayerStatLevel(EntityPlayer player, StatBase stat) {
-        player.getCapability(CapabilityStat.STAT, null).stateMap
         NBTTagCompound nbt = getPlayerPersistentNBT(player);
         if (nbt.hasKey("gokistats_Stats")) {
             return ((NBTTagCompound) nbt.getTag("gokistats_Stats")).getInteger(stat.getKey());
