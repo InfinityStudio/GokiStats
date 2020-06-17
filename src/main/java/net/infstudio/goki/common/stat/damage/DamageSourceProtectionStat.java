@@ -37,7 +37,7 @@ public abstract class DamageSourceProtectionStat extends StatBase<DamageSourcePr
     }
 
     @Override
-    public boolean needAffectedByStat(Object... obj) {
+    public boolean isEffectiveOn(Object... obj) {
         if (obj != null) {
             if ((obj[0] instanceof DamageSource)) {
                 DamageSource source = (DamageSource) obj[0];

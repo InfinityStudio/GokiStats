@@ -91,8 +91,11 @@ public class CommonHandler {
         if (DataHelper.getPlayerStatLevel(player, Stats.MINING_MAGICIAN) > 0) { // Player has mining magician
             boolean magicHappened = false;
             // TODO Rewrite to NBT in 1.13
+            LootConfigDeserializer.MINING_MAGICIAN.getLocationForBlock(event.getState()).map(event.getWorld().getLootTableManager()::getLootTableFromLocation).ifPresent(lootTable ->
+                    lootTable.generateLootForPools(event.getWorld().rand, new LootContext(1f, (WorldServer) event.getWorld(), event.getWorld().getLootTableManager(), null, null, null)));
+
             IDMDTuple mme = new IDMDTuple(block, block.getMetaFromState(event.getState()));
-            if (Stats.MINING_MAGICIAN.needAffectedByStat(mme)) { // This block can be affected by magic
+            if (Stats.MINING_MAGICIAN.isEffectiveOn(mme)) { // This block can be affected by magic
                 for (int i = 0; i < event.getDrops().size(); i++) {
                     if (player.getRNG().nextDouble() * 100.0D <= Stats.MINING_MAGICIAN.getBonus(player)) {
                         ItemStack item = event.getDrops().get(i);
@@ -162,22 +165,22 @@ public class CommonHandler {
 
         float multiplier = 1.0F;
 
-        if (Stats.MINING.needAffectedByStat(heldItem,
+        if (Stats.MINING.isEffectiveOn(heldItem,
                 event.getPos(),
                 player.world)) {
             multiplier += Stats.MINING.getBonus(player);
         }
-        if (Stats.DIGGING.needAffectedByStat(heldItem,
+        if (Stats.DIGGING.isEffectiveOn(heldItem,
                 event.getPos(),
                 player.world)) {
             multiplier += Stats.DIGGING.getBonus(player);
         }
-        if (Stats.CHOPPING.needAffectedByStat(heldItem,
+        if (Stats.CHOPPING.isEffectiveOn(heldItem,
                 event.getPos(),
                 player.world)) {
             multiplier += Stats.CHOPPING.getBonus(player);
         }
-        if (Stats.TRIMMING.needAffectedByStat(heldItem,
+        if (Stats.TRIMMING.isEffectiveOn(heldItem,
                 event.getPos(),
                 player.world)) {
             multiplier += Stats.TRIMMING.getBonus(player);
@@ -263,10 +266,10 @@ public class CommonHandler {
             }
             event.setAmount(bonus + damage);
 
-            if (Stats.REAPER.needAffectedByStat(victim)) {
+            if (Stats.REAPER.isEffectiveOn(victim)) {
                 float reap = Stats.REAPER.getBonus(player);
                 float reapBonus = 0;
-                if (Stats.STEALTH.needAffectedByStat(player))
+                if (Stats.STEALTH.isEffectiveOn(player))
                     reapBonus = reap * ((StatSpecial) Stats.STEALTH).getSecondaryBonus(player) / 100.0F;
                 float reapChance = reap + reapBonus;
                 if (player.getRNG().nextFloat() <= reapChance) {

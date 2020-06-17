@@ -57,13 +57,13 @@ public class StatMiningMagician extends StatBase<MiningMagicianConfig> {
     }
 
     @Override
-    public float[] getAppliedDescriptionVar(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(EntityPlayer player) {
         return new float[]
                 {DataHelper.trimDecimals(getBonus(player), 1)};
     }
 
     @Override
-    public boolean needAffectedByStat(Object... obj) {
+    public boolean isEffectiveOn(Object... obj) {
         IDMDTuple idmd;
         if ((obj[0] instanceof IDMDTuple)) {
             idmd = (IDMDTuple) obj[0];

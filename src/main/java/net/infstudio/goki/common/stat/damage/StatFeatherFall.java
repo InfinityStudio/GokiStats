@@ -15,7 +15,7 @@ public class StatFeatherFall extends DamageSourceProtectionStat {
     }
 
     @Override
-    public float[] getAppliedDescriptionVar(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(EntityPlayer player) {
         // TODO special
         float height = DataHelper.getFallResistance(player) + DataHelper.trimDecimals(getSecondaryBonus(getPlayerStatLevel(player)),
                 1);
@@ -30,8 +30,8 @@ public class StatFeatherFall extends DamageSourceProtectionStat {
     @Override
     public String getLocalizedDescription(EntityPlayer player) {
         return I18n.format(this.key + ".des",
-                this.getAppliedDescriptionVar(player)[0],
-                this.getAppliedDescriptionVar(player)[1]);
+                this.getDescriptionFormatArguments(player)[0],
+                this.getDescriptionFormatArguments(player)[1]);
     }
 
     @Override

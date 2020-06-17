@@ -12,11 +12,5 @@ public abstract class StatSpecialBase extends StatBase<StatConfig> implements St
     @Override
     public final float getSecondaryBonus(EntityPlayer player) {
         return getSecondaryBonus(DataHelper.getPlayerStatLevel(player, this));
-
     }
-
-    public abstract float getSecondaryBonus(int paramInt);
-
-    @Override
-    public abstract float getBonus(int level);
 }

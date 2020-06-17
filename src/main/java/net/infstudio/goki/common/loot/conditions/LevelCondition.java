@@ -3,8 +3,6 @@ package net.infstudio.goki.common.loot.conditions;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import net.infstudio.goki.api.stat.Stat;
-import net.infstudio.goki.api.stat.StatBase;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootContext;
@@ -15,11 +13,11 @@ import java.util.Random;
 
 public class LevelCondition implements LootCondition {
     public int level;
-    public Stat stat;
+//    public Stat stat;
 
-    public LevelCondition(int level, String stat) {
+    public LevelCondition(int level) {
         this.level = level;
-        this.stat = StatBase.statKeyMap.get(stat);
+//        this.stat = StatBase.statKeyMap.get(stat);
     }
 
     @Override
@@ -35,13 +33,13 @@ public class LevelCondition implements LootCondition {
         @Override
         public void serialize(JsonObject json, LevelCondition value, JsonSerializationContext context) {
             json.addProperty("minLevel", value.level);
-            json.addProperty("stat", value.stat.getKey());
+//            json.addProperty("stat", value.stat.getKey());
         }
 
         @Nonnull
         @Override
         public LevelCondition deserialize(JsonObject json, JsonDeserializationContext context) {
-            return new LevelCondition(JsonUtils.getInt(json, "minLevel"), JsonUtils.getString(json, "stat"));
+            return new LevelCondition(JsonUtils.getInt(json, "minLevel"));
         }
     }
 }

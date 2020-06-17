@@ -18,16 +18,24 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
         classpath 'co.riiid:gradle-github-plugin:0.4.2'
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
+		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0"
     }
 }
 
 apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: 'co.riiid.gradle'
 apply plugin: "com.matthewprenger.cursegradle"
+apply plugin: "org.sonarqube"
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
+}
+
+sonarqube {
+    properties {
+        property "sonar.sourceEncoding", "UTF-8"
+    }
 }
 
 version = "1.2.8"

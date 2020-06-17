@@ -16,7 +16,7 @@ public class StatSteadyGuard extends StatBase<StatConfig> {
     }
 
     @Override
-    public float[] getAppliedDescriptionVar(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(EntityPlayer player) {
         // TODO special
         return new float[]
                 {DataHelper.trimDecimals(getBonus(player), 1)};
