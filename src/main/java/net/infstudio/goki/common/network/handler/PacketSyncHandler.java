@@ -46,7 +46,7 @@ public class PacketSyncHandler {
                     // Deal with health limit
                     if (stat instanceof StatMaxHealth) {
                         player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-                                .setBaseValue(20 + level + message.amount);
+                                .setBaseValue(20 + stat.getBonus(level) + message.amount);
                     }
 
                     if (message.amount <= 0) {
