@@ -1,5 +1,6 @@
 package net.infstudio.goki.client.network.handler;
 
+import net.infstudio.goki.GokiStats;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.network.message.S2CStatSync;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
@@ -29,6 +30,7 @@ public class PacketSyncClientHandler {
                             .setBaseValue(20 + message.amount);
                 DataHelper.setPlayerRevertStatLevel(player, stat, message.reverted);
                 DataHelper.setPlayerStatLevel(player, stat, message.amount);
+                GokiStats.log.debug("Loaded stat from server.");
             });
             return null;
         }
@@ -52,6 +54,7 @@ public class PacketSyncClientHandler {
                 }
                 player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
                         .setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
+                GokiStats.log.debug("Loaded stats from server.");
             });
             return null;
         }

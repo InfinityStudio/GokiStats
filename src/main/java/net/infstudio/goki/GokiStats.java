@@ -24,6 +24,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,7 +38,10 @@ public class GokiStats {
     @SidedProxy(clientSide = "net.infstudio.goki.client.ClientProxy", serverSide = "net.infstudio.goki.common.CommonProxy")
     public static CommonProxy proxy;
 
-    private static Class<?>[] loadClasses = {
+    // Keep this same with FMLPreInitializationEvent.getModLog()
+    public static final Logger log = LogManager.getLogger(Reference.MODID);
+
+    private static final Class<?>[] loadClasses = {
             Stats.class, MinecraftEffects.class
     };
 
@@ -45,7 +50,8 @@ public class GokiStats {
         try {
             for (Class<?> clz : loadClasses)
                 Class.forName(clz.getName());
-        } catch (ClassNotFoundException ignored) {
+        } catch (ClassNotFoundException e) {
+            log.warn("Cannot load classes, this may cause some issues", e);
         }
     }
 
@@ -60,17 +66,17 @@ public class GokiStats {
                     try {
                         Files.deleteIfExists(path);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        log.warn("Unable to remove v2 config files", e);
                     }
                 });
                 Files.deleteIfExists(event.getModConfigurationDirectory().toPath().resolve(Reference.MODID));
                 net.minecraftforge.common.config.ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warn("Unable to remove v2 config files", e);
             }
         }
 
-        LootConditionManager.registerCondition(new LevelCondition.Serializer(new ResourceLocation(Reference.MODID, "stat_level"), LevelCondition.class));
+        LootConditionManager.registerCondition(new LevelCondition.Serializer(new ResourceLocation(Reference.MODID, "min_level"), LevelCondition.class));
 
         CapabilityStat.register();
 

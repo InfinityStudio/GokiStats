@@ -1,10 +1,7 @@
 package net.infstudio.goki.common.config;
 
-import com.google.common.collect.Lists;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraftforge.common.config.Config;
-
-import java.util.List;
 
 @Config(modid = Reference.MODID, name = "gokistats_v2")
 public class GokiConfig {
@@ -27,11 +24,12 @@ public class GokiConfig {
 
     public static String[] treasureFinderLootTables = new String[]{
             "ore:dirt|gokistats:treasure_finder/dirt", "ore:treeLeaves|gokistats:treasure_finder/leaves",
-            "minecraft:tallgrass|gokistats:treasure_finder/tallgrass"};
+            "minecraft:tallgrass|gokistats:treasure_finder/grass"};
 
     public static String[] miningMagicianLootTables = new String[]{
-            "ore:dirt|gokistats:treasure_finder/dirt", "ore:treeLeaves|gokistats:treasure_finder/leaves",
-            "minecraft:tallgrass|gokistats:treasure_finder/tallgrass"};
+            "ore:oreIron|gokistats:mining_magician/ore", "ore:oreCoal|gokistats:mining_magician/ore",
+            "ore:oreRedstone|gokistats:mining_magician/ore", "ore:oreDiamond|gokistats:mining_magician/ore",
+            "ore:oreGold|gokistats:mining_magician/ore", "ore:oreEmerald|gokistats:mining_magician/ore"};
 
     @Config.Name("Global Modifiers")
     public static GlobalModifiers globalModifiers = new GlobalModifiers();

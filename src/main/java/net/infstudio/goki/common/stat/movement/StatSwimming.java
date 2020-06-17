@@ -21,6 +21,6 @@ public class StatSwimming extends StatBase<StatConfig> {
             return I18n.format(this.key + ".des1");
         }
         return I18n.format(this.key + ".des0",
-                this.getAppliedDescriptionVar(player)[0]);
+                this.getDescriptionFormatArguments(player)[0]);
     }
 }

@@ -30,7 +30,7 @@ public class StatMaxHealth extends StatBase {
     }
 
     @Override
-    public float[] getAppliedDescriptionVar(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(EntityPlayer player) {
         return new float[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)), 0)};
     }

@@ -16,7 +16,7 @@ public class StatStealth extends StatLeaper {
     }
 
     @Override
-    public boolean needAffectedByStat(Object... obj) {
+    public boolean isEffectiveOn(Object... obj) {
         return ((obj[0] instanceof EntityPlayer)) && (((EntityPlayer) obj[0]).isSneaking());
     }
 
@@ -26,7 +26,7 @@ public class StatStealth extends StatLeaper {
     }
 
     @Override
-    public float[] getAppliedDescriptionVar(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(EntityPlayer player) {
         // TODO special
         float speed = DataHelper.trimDecimals(getBonus(player), 1);
         float reapBonus = DataHelper.trimDecimals(getSecondaryBonus(player), 1);
@@ -42,8 +42,8 @@ public class StatStealth extends StatLeaper {
     @Override
     public String getLocalizedDescription(EntityPlayer player) {
         return I18n.format(this.key + ".des",
-                this.getAppliedDescriptionVar(player)[0],
-                this.getAppliedDescriptionVar(player)[1],
-                this.getAppliedDescriptionVar(player)[2]);
+                this.getDescriptionFormatArguments(player)[0],
+                this.getDescriptionFormatArguments(player)[1],
+                this.getDescriptionFormatArguments(player)[2]);
     }
 }

@@ -21,7 +21,7 @@ public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
     }
 
     @Override
-    public float[] getAppliedDescriptionVar(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(EntityPlayer player) {
         // TODO special
         int level = getPlayerStatLevel(player);
         return new float[]
@@ -33,7 +33,7 @@ public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
     @Override
     public String getLocalizedDescription(EntityPlayer player) {
         return I18n.format(this.key + ".des",
-                this.getAppliedDescriptionVar(player)[0],
-                this.getAppliedDescriptionVar(player)[1]);
+                this.getDescriptionFormatArguments(player)[0],
+                this.getDescriptionFormatArguments(player)[1]);
     }
 }

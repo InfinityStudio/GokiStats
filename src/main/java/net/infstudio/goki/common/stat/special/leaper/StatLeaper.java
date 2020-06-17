@@ -22,7 +22,7 @@ public abstract class StatLeaper extends StatSpecialBase implements StatSpecial 
     }
 
     @Override
-    public float[] getAppliedDescriptionVar(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(EntityPlayer player) {
         // TODO speical
         return new float[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), DataHelper.trimDecimals(getSecondaryBonus(getPlayerStatLevel(player)) * 100,
@@ -37,7 +37,7 @@ public abstract class StatLeaper extends StatSpecialBase implements StatSpecial 
     @Override
     public String getLocalizedDescription(EntityPlayer player) {
         return I18n.format(this.key + ".des",
-                this.getAppliedDescriptionVar(player)[0],
-                this.getAppliedDescriptionVar(player)[1]);
+                this.getDescriptionFormatArguments(player)[0],
+                this.getDescriptionFormatArguments(player)[1]);
     }
 }

@@ -97,7 +97,7 @@ public abstract class ToolSpecificStat extends StatBase<ToolSpecificConfig> {
     }
 
     @Override
-    public boolean needAffectedByStat(Object... obj) {
+    public boolean isEffectiveOn(Object... obj) {
         if (obj[0] != null && obj[0] instanceof ItemStack) {
             ItemStack item = (ItemStack) obj[0];
             return isItemSupported(item);
@@ -107,7 +107,7 @@ public abstract class ToolSpecificStat extends StatBase<ToolSpecificConfig> {
 
     @Override
     public float getAppliedBonus(EntityPlayer player, Object object) {
-        if (needAffectedByStat(object))
+        if (isEffectiveOn(object))
             return getBonus(player);
         else
             return 0;

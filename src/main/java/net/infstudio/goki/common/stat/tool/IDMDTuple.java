@@ -28,4 +28,9 @@ public class IDMDTuple {
         }
         return super.equals(object);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, metadata);
+    }
 }

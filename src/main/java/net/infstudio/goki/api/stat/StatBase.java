@@ -75,7 +75,7 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
     }
 
     @Override
-    public float[] getAppliedDescriptionVar(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(EntityPlayer player) {
         return new float[]
                 {DataHelper.trimDecimals(getBonus(player) * 100, 1)};
     }
@@ -86,7 +86,7 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
     }
 
     @Override
-    public boolean needAffectedByStat(Object... obj) {
+    public boolean isEffectiveOn(Object... obj) {
         if (((obj[1] instanceof ItemStack)) && ((obj[2] instanceof BlockPos)) && ((obj[3] instanceof World))) {
             ItemStack stack = (ItemStack) obj[1];
             BlockPos pos = (BlockPos) obj[2];
@@ -107,7 +107,7 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
 
     @Override
     public float getAppliedBonus(EntityPlayer player, Object object) {
-        if (needAffectedByStat(object))
+        if (isEffectiveOn(object))
             return getBonus(player);
         else
             return 0;
@@ -117,16 +117,10 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
         return DataHelper.getPlayerStatLevel(player, this);
     }
 
-    public final boolean needAffectedByStat(Object object1, Object object2, Object object3) {
-        if (((object1 instanceof ItemStack)) && ((object2 instanceof BlockPos)) && ((object3 instanceof World))) {
-            ItemStack stack = (ItemStack) object1;
-            BlockPos pos = (BlockPos) object2;
-            World world = (World) object3;
-
-            if (ForgeHooks.isToolEffective(world, pos, stack))
-                return true;
-        }
-        return needAffectedByStat(object1);
+    public final boolean isEffectiveOn(ItemStack stack, BlockPos pos, World world) {
+        if (ForgeHooks.isToolEffective(world, pos, stack))
+            return true;
+        else return isEffectiveOn(stack);
     }
 
     @SideOnly(Side.CLIENT)
@@ -137,7 +131,7 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
     @SideOnly(Side.CLIENT)
     public String getLocalizedDescription(EntityPlayer player) {
         return I18n.format(this.key + ".des",
-                this.getAppliedDescriptionVar(player)[0]);
+                this.getDescriptionFormatArguments(player)[0]);
     }
 
     @Override

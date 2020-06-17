@@ -45,7 +45,7 @@ public class GuiCompatibilityHelper extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (this.compatibleStats[button.id].needAffectedByStat(this.player.getHeldItemMainhand())) {
+        if (this.compatibleStats[button.id].isEffectiveOn(this.player.getHeldItemMainhand())) {
             this.compatibleStats[button.id].removeSupportForItem(this.player.getHeldItemMainhand());
         } else {
             this.compatibleStats[button.id].addSupportForItem(this.player.getHeldItemMainhand());
@@ -57,7 +57,7 @@ public class GuiCompatibilityHelper extends GuiScreen {
     public void checkStatus() {
         StatBase.stats.forEach(StatBase::reloadConfig);
         for (int i = 0; i < this.compatibleStats.length; i++) {
-            if (this.compatibleStats[i].needAffectedByStat(this.player.getHeldItemMainhand())) {
+            if (this.compatibleStats[i].isEffectiveOn(this.player.getHeldItemMainhand())) {
                 ((GuiExtendedButton) this.buttonList.get(i)).displayString = ("Remove item from " + this.compatibleStats[i].getLocalizedName() + " list.");
                 ((GuiExtendedButton) this.buttonList.get(i)).setBackgroundColor(3381555);
             } else {
