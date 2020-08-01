@@ -6,7 +6,6 @@ import net.infstudio.goki.api.stat.StatSpecial;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.GokiSounds;
-import net.infstudio.goki.common.init.MinecraftEffects;
 import net.infstudio.goki.common.loot.LootConfigDeserializer;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
@@ -19,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
@@ -227,7 +227,7 @@ public class CommonHandler {
                     event.setCanceled(true);
 
                     player.addPotionEffect(
-                            new PotionEffect(MinecraftEffects.STRENGTH, 20, 2)
+                            new PotionEffect(MobEffects.STRENGTH, 20, 2)
                     );
 
                     victim.addTag("knockback");
