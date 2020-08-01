@@ -1,6 +1,6 @@
 # GokiStats
 
-[![Build Status](https://travis-ci.org/InfinityStudio/GokiStats.svg?branch=master)](https://travis-ci.org/InfinityStudio/GokiStats)
+[![Build Status](https://travis-ci.org/InfinityStudio/GokiStats.svg?branch=1.15.2)](https://travis-ci.org/InfinityStudio/GokiStats)
 ![](https://img.shields.io/github/downloads/InfinityStudio/GokiStats/total.svg)
 [![CurseForge](http://cf.way2muchnoise.eu/298141.svg)](https://minecraft.curseforge.com/projects/gokistats)
 
@@ -10,11 +10,13 @@ Feel free to solve any issue with crash-report in GitHub Issues.
 
 Forum thread on [Mcbbs](http://www.mcbbs.net/thread-805910-1-1.html)
 
-## Why you still port it to recent versions?
+## 1.15.2 Version
 
-Umm... Because lots of players have used to type 'Y' to open the skill menu and drain their experiences.
+**After 1.15.2, we change to GPL License as I discovered illegal copies of this Mod.**
 
-Also, the interface provides is pretty and easy-to-use.
+This version of GokiStats is highly experimental, many of the skill doesn't work.
+
+Configuration will not be implemented unless Forge work out their config system.
 
 ## Screenshots
 
@@ -22,13 +24,7 @@ Also, the interface provides is pretty and easy-to-use.
 
 ## License
 
-Source code are under MIT License, and resources are under CC-BY-NC-SA 4.0 License.
-
-## Disclaimer
-
-I, Lasm_Gratel is not the original author of this Mod, since the mod forum was gone and deleted, source code was then released to Public Domain.
-
-However, I choose to grant permissions with MIT License and you are free to contribute.
+Source code are under GPL-3.0 License, and resources are under CC-BY-NC-SA 4.0 License.
 
 ## Donation
 
