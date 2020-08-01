@@ -3,7 +3,7 @@ package net.infstudio.goki.common.stat.special.leaper;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.api.stat.StatSpecial;
 import net.infstudio.goki.api.stat.StatSpecialBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.client.resources.I18n;
 
 public abstract class StatLeaper extends StatSpecialBase implements StatSpecial {
@@ -22,7 +22,7 @@ public abstract class StatLeaper extends StatSpecialBase implements StatSpecial 
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(PlayerEntity player) {
         // TODO speical
         return new float[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), DataHelper.trimDecimals(getSecondaryBonus(getPlayerStatLevel(player)) * 100,
@@ -35,7 +35,7 @@ public abstract class StatLeaper extends StatSpecialBase implements StatSpecial 
     }
 
     @Override
-    public String getLocalizedDescription(EntityPlayer player) {
+    public String getLocalizedDescription(PlayerEntity player) {
         return I18n.format(this.key + ".des",
                 this.getDescriptionFormatArguments(player)[0],
                 this.getDescriptionFormatArguments(player)[1]);

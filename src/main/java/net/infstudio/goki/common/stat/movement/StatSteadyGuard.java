@@ -3,7 +3,7 @@ package net.infstudio.goki.common.stat.movement;
 import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.api.stat.StatBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class StatSteadyGuard extends StatBase<StatConfig> {
     public StatSteadyGuard(int id, String key, int limit) {
@@ -16,7 +16,7 @@ public class StatSteadyGuard extends StatBase<StatConfig> {
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(PlayerEntity player) {
         // TODO special
         return new float[]
                 {DataHelper.trimDecimals(getBonus(player), 1)};

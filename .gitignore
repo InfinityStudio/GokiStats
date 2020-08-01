@@ -48,7 +48,6 @@ out/
 *.iml
 *.ipr
 *.iws
-gradle.properties
 
 .classpath
 .project

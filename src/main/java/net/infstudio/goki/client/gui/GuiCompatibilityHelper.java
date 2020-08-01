@@ -1,74 +1,76 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.stat.tool.ToolSpecificStat;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 
-public class GuiCompatibilityHelper extends GuiScreen {
+public class GuiCompatibilityHelper extends Screen {
     private static final int BUTTON_WIDTH = 240;
     private static final int BUTTON_HEIGHT = 15;
     private final ToolSpecificStat[] compatibleStats =
             {Stats.MINING, Stats.DIGGING, Stats.CHOPPING, Stats.TRIMMING, Stats.SWORDSMANSHIP, Stats.BOWMANSHIP};
-    private EntityPlayer player;
+    private final PlayerEntity player = minecraft.player;
 
-    public GuiCompatibilityHelper(EntityPlayer player) {
-        this.player = player;
+    public GuiCompatibilityHelper() {
+        super(new StringTextComponent(""));
+        minecraft = Minecraft.getInstance();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void initGui() {
-        int button = 0;
+    public void init() {
         int x = this.width / 2;
         int y = this.height / 2 - 45;
-        this.buttonList.add(new GuiExtendedButton(button, x - 120, y - 15 + 15 * button++, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Mining list", 3355443));
-        this.buttonList.add(new GuiExtendedButton(button, x - 120, y - 15 + 15 * button++, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Digging list", 3355443));
-        this.buttonList.add(new GuiExtendedButton(button, x - 120, y - 15 + 15 * button++, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Chopping list", 3355443));
-        this.buttonList.add(new GuiExtendedButton(button, x - 120, y - 15 + 15 * button++, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Trimming list", 3355443));
-        this.buttonList.add(new GuiExtendedButton(button, x - 120, y - 15 + 15 * button++, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Swordsmanship list", 3355443));
-        this.buttonList.add(new GuiExtendedButton(button, x - 120, y - 15 + 15 * button++, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Bowmanship list", 3355443));
+        this.buttons.add(new GuiExtendedButton(0, x - 120, y - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Mining list", 3355443, this::actionPerformed));
+        this.buttons.add(new GuiExtendedButton(1, x - 120, y - 15 + 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Digging list", 3355443, this::actionPerformed));
+        this.buttons.add(new GuiExtendedButton(2, x - 120, y - 15 + 15 * 2, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Chopping list", 3355443, this::actionPerformed));
+        this.buttons.add(new GuiExtendedButton(3, x - 120, y - 15 + 15 * 3, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Trimming list", 3355443, this::actionPerformed));
+        this.buttons.add(new GuiExtendedButton(4, x - 120, y - 15 + 15 * 4, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Swordsmanship list", 3355443, this::actionPerformed));
+        this.buttons.add(new GuiExtendedButton(5, x - 120, y - 15 + 15 * 5, BUTTON_WIDTH, BUTTON_HEIGHT, "Add item to Bowmanship list", 3355443, this::actionPerformed));
         checkStatus();
     }
 
     @Override
-    public void drawScreen(int par1, int par2, float par3) {
-        super.drawScreen(par1, par2, par3);
-        drawCenteredString(this.mc.fontRenderer,
+    public void render(int par1, int par2, float par3) {
+        super.render(par1, par2, par3);
+        drawCenteredString(minecraft.fontRenderer,
                 "This is CLIENT-SIDE. Copy the config to the server and /reloadGokiStats.",
                 this.width / 2,
                 16,
                 16777215);
     }
 
-    @Override
-    protected void actionPerformed(GuiButton button) {
+    protected void actionPerformed(Button btn) {
+        if (!(btn instanceof GuiExtendedButton)) return;
+        GuiExtendedButton button = (GuiExtendedButton) btn;
         if (this.compatibleStats[button.id].isEffectiveOn(this.player.getHeldItemMainhand())) {
             this.compatibleStats[button.id].removeSupportForItem(this.player.getHeldItemMainhand());
         } else {
             this.compatibleStats[button.id].addSupportForItem(this.player.getHeldItemMainhand());
         }
-        StatBase.stats.forEach(StatBase::saveConfig);
+//        StatBase.stats.forEach(StatBase::saveConfig);
         checkStatus();
     }
 
     public void checkStatus() {
-        StatBase.stats.forEach(StatBase::reloadConfig);
+//        StatBase.stats.forEach(StatBase::reloadConfig);
         for (int i = 0; i < this.compatibleStats.length; i++) {
             if (this.compatibleStats[i].isEffectiveOn(this.player.getHeldItemMainhand())) {
-                ((GuiExtendedButton) this.buttonList.get(i)).displayString = ("Remove item from " + this.compatibleStats[i].getLocalizedName() + " list.");
-                ((GuiExtendedButton) this.buttonList.get(i)).setBackgroundColor(3381555);
+                this.buttons.get(i).setMessage("Remove item from " + this.compatibleStats[i].getLocalizedName() + " list.");
+                ((GuiExtendedButton) this.buttons.get(i)).setBackgroundColor(3381555);
             } else {
-                ((GuiExtendedButton) this.buttonList.get(i)).displayString = ("Add item to " + this.compatibleStats[i].getLocalizedName() + " list.");
-                ((GuiExtendedButton) this.buttonList.get(i)).setBackgroundColor(10040115);
+                this.buttons.get(i).setMessage("Add item to " + this.compatibleStats[i].getLocalizedName() + " list.");
+                ((GuiExtendedButton) this.buttons.get(i)).setBackgroundColor(10040115);
             }
         }
     }
 
     @Override
-    public void onGuiClosed() {
-        StatBase.stats.forEach(StatBase::saveConfig);
+    public void onClose() {
+//        StatBase.stats.forEach(StatBase::saveConfig);
     }
 }

@@ -3,7 +3,7 @@ package net.infstudio.goki.common.stat;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class StatMaxHealth extends StatBase {
 
@@ -30,7 +30,7 @@ public class StatMaxHealth extends StatBase {
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(PlayerEntity player) {
         return new float[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)), 0)};
     }

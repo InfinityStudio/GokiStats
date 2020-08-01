@@ -3,7 +3,7 @@ package net.infstudio.goki.common.stat.movement;
 import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.Reference;
 import net.infstudio.goki.api.stat.StatBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.client.resources.I18n;
 
 public class StatSwimming extends StatBase<StatConfig> {
@@ -16,7 +16,7 @@ public class StatSwimming extends StatBase<StatConfig> {
     }
 
     @Override
-    public String getLocalizedDescription(EntityPlayer player) {
+    public String getLocalizedDescription(PlayerEntity player) {
         if (Reference.isPlayerAPILoaded) {
             return I18n.format(this.key + ".des1");
         }

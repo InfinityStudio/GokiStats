@@ -1,23 +1,23 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.common.config.GokiConfig;
-import net.infstudio.goki.client.GokiKeyHandler;
+import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.C2SRequestStatSync;
 import net.infstudio.goki.common.network.message.C2SStatSync;
-import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.util.vector.Vector2f;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.text.StringTextComponent;
 
-import java.io.IOException;
-
-public class GuiStats extends GuiScreen {
+/**
+ * Stats ui, where player upgrade/downgrade their skills
+ */
+public class GuiStats extends Screen {
     public static final int STATUS_BUTTON_WIDTH = 24;
     public static final int STATUS_BUTTON_HEIGHT = 24;
     // private static final int HORIZONTAL_SPACING = 8;
@@ -27,53 +27,59 @@ public class GuiStats extends GuiScreen {
             {4, 4, 5, 4, 5, 4};
     public static float SCALE = 1.0F;
 
-    private EntityPlayer player;
+    private final PlayerEntity player = Minecraft.getInstance().player;
+    private final FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+
     private int currentColumn = 0;
     private int currentRow = 0;
-    private GuiStatTooltip toolTip = null;
-    private FontRenderer fontRenderer;
 
-    public GuiStats(EntityPlayer player) {
-        GokiPacketHandler.CHANNEL.sendToServer(new C2SRequestStatSync());
-        this.player = player;
-        this.fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    /**
+     * Tooltip for the skill under mouse hover
+     */
+    private GuiStatTooltip toolTip = null;
+
+
+    public GuiStats() {
+        super(new StringTextComponent(""));
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float par3) {
-        int ttx = 0;
-        int tty = 0;
+    public void render(int mouseX, int mouseY, float par3) {
+        int toolTipX = 0;
+        int toolTipY = 0;
         this.toolTip = null;
-        drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, par3);
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            if ((this.buttonList.get(i) instanceof GuiStatButton)) {
-                GuiStatButton button = (GuiStatButton) this.buttonList.get(i);
+        renderBackground();
+        super.render(mouseX, mouseY, par3);
+        for (int i = 0; i < this.buttons.size(); i++) {
+            if ((this.buttons.get(i) instanceof GuiStatButton)) {
+                GuiStatButton button = (GuiStatButton) this.buttons.get(i);
                 if (button.isUnderMouse(mouseX, mouseY)) {
                     this.toolTip = new GuiStatTooltip(StatBase.stats.get(i), this.player);
-                    ttx = button.x + 12;
-                    tty = button.y - 1;
+                    toolTipX = button.x + 12;
+                    toolTipY = button.y - 1;
                     break;
                 }
             }
         }
         drawCenteredString(fontRenderer,
-                I18n.format("ui.currentxp.name") + DataHelper.getXPTotal(player.experienceLevel,
+                I18n.format("ui.currentxp") + DataHelper.getXPTotal(player.experienceLevel,
                         player.experience) + "xp",
                 width / 2,
                 this.height - 16,
                 0xFFFFFFFF);
 
         if (this.toolTip != null)
-            this.toolTip.draw(ttx, tty, 0);
+            this.toolTip.draw(toolTipX, toolTipY, 0);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void initGui() {
+    public void init() {
+        // Sync the stat
+        GokiPacketHandler.CHANNEL.sendToServer(new C2SRequestStatSync());
         for (int stat = 0; stat < StatBase.totalStats; stat++) {
-            Vector2f pos = getButton(stat);
-            this.buttonList.add(new GuiStatButton(stat, (int) pos.x, (int) pos.y, 24, 24, StatBase.stats.get(stat), this.player));
+            Vec2f pos = getButton(stat);
+            this.buttons.add(new GuiStatButton(stat, (int) pos.x, (int) pos.y, 24, 24, StatBase.stats.get(stat), this.player, this::actionPerformed));
             this.currentColumn += 1;
             if (this.currentColumn >= COLUMNS[this.currentRow]) {
                 this.currentRow += 1;
@@ -83,46 +89,32 @@ public class GuiStats extends GuiScreen {
                 this.currentRow = (COLUMNS.length - 1);
             }
         }
+        children.addAll(buttons);
     }
 
-    private Vector2f getButton(int n) {
-        Vector2f vec = new Vector2f();
+    private Vec2f getButton(int n) {
         int columns = COLUMNS[this.currentRow];
         int x = n % columns;
         int y = this.currentRow;
         int rows = COLUMNS.length;
         float width = columns * 32 * SCALE;
         float height = rows * 36 * SCALE;
-        vec.x = (width / columns * x + (this.width - width + 8.0F) / 2.0F);
-        vec.y = (height / rows * y + (this.height - height + 12.0F) / 2.0F);
-        return vec;
+        return new Vec2f((width / columns * x + (this.width - width + 8.0F) / 2.0F),
+                (height / rows * y + (this.height - height + 12.0F) / 2.0F));
     }
 
-    @Override
-    protected void actionPerformed(GuiButton button) {
+    protected void actionPerformed(Button btn) {
+        if (!(btn instanceof GuiStatButton))
+            return;
+
+        GuiStatButton button = (GuiStatButton) btn;
         if ((button.id >= 0) && (button.id <= StatBase.totalStats)) {
-            if ((button instanceof GuiStatButton)) {
-                GuiStatButton statButton = (GuiStatButton) button;
-                if (!GuiScreen.isCtrlKeyDown())
-                    GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), 1));
-                else // Downgrade
-                    GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), -1));
-            }
+            GuiStatButton statButton = (GuiStatButton) button;
+            if (!hasControlDown())
+                GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), 1));
+            else // Downgrade
+                GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), -1));
         }
     }
 
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
-    protected void keyTyped(char c, int keyCode) throws IOException {
-        super.keyTyped(c, keyCode);
-        // 1 is the Esc key, and we made our keybinding array public and static
-        // so we can access it here
-        if (c == 1 || (GokiConfig.keyBindingEnabled && keyCode == GokiKeyHandler.statsMenu.getKeyCode())) {
-            mc.player.closeScreen();
-        }
-    }
 }

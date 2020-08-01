@@ -1,58 +1,61 @@
 package net.infstudio.goki;
 
 import net.infstudio.goki.api.capability.CapabilityStat;
-import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.Stats;
-import net.infstudio.goki.common.CommonProxy;
 import net.infstudio.goki.common.StatsCommand;
-import net.infstudio.goki.common.adapters.StatFix;
-import net.infstudio.goki.common.config.ConfigManager;
-import net.infstudio.goki.common.config.Configurable;
-import net.infstudio.goki.common.config.GokiConfig;
-import net.infstudio.goki.common.loot.conditions.LevelCondition;
+import net.infstudio.goki.common.handlers.CommonHandler;
+import net.infstudio.goki.common.handlers.TickHandler;
+import net.infstudio.goki.common.init.GokiSounds;
+import net.infstudio.goki.common.init.MinecraftEffects;
+import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.utils.Reference;
-import net.minecraft.command.ICommandManager;
-import net.minecraft.command.ServerCommandManager;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.datafix.FixTypes;
-import net.minecraft.world.storage.loot.conditions.LootConditionManager;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.nio.file.Files;
-
-@Mod(modid = Reference.MODID, useMetadata = true, updateJSON = "https://infinitystudio.github.io/Updates/gokistats.json")
+@Mod(Reference.MODID)
 public class GokiStats {
-    @Mod.Instance(Reference.MODID)
     public static GokiStats instance;
-
-    @SidedProxy(clientSide = "net.infstudio.goki.client.ClientProxy", serverSide = "net.infstudio.goki.common.CommonProxy")
-    public static CommonProxy proxy;
 
     // Keep this same with FMLPreInitializationEvent.getModLog()
     public static final Logger log = LogManager.getLogger(Reference.MODID);
 
     private static final Class<?>[] loadClasses = {
-            Stats.class
+            Stats.class, MinecraftEffects.class
     };
 
-    @Mod.EventHandler
-    public void construct(FMLConstructionEvent event) {
+    public GokiStats() {
+        instance = this;
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        eventBus.addListener(this::construct);
+        eventBus.addListener(this::registerCommands);
+        GokiPacketHandler.registerMessages();
+    }
+
+    public void construct(FMLCommonSetupEvent event) {
         try {
             for (Class<?> clz : loadClasses)
                 Class.forName(clz.getName());
         } catch (ClassNotFoundException e) {
             log.warn("Cannot load classes, this may cause some issues", e);
         }
+
+        CapabilityStat.register();
+        MinecraftForge.EVENT_BUS.register(new GokiStats());
+        MinecraftForge.EVENT_BUS.register(new GokiSounds());
+        MinecraftForge.EVENT_BUS.register(new CommonHandler());
+        MinecraftForge.EVENT_BUS.register(new TickHandler());
     }
 
+    public void registerCommands(FMLServerStartingEvent event) {
+        StatsCommand.register(event.getCommandDispatcher());
+    }
+/*
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         instance = this;
@@ -76,10 +79,10 @@ public class GokiStats {
 
         LootConditionManager.registerCondition(new LevelCondition.Serializer(new ResourceLocation(Reference.MODID, "min_level"), LevelCondition.class));
 
-        CapabilityStat.register();
+
 
         new ConfigManager(event.getModConfigurationDirectory().toPath().resolve(Reference.MODID));
-        StatBase.stats.forEach(Configurable::reloadConfig);
+       StatBase.stats.forEach(Configurable::reloadConfig);
     }
 
     @Mod.EventHandler
@@ -101,5 +104,5 @@ public class GokiStats {
         ServerCommandManager serverCommand = (ServerCommandManager) command;
         serverCommand.registerCommand(new StatsCommand());
         // TODO notice it's a reversion
-    }
+    }*/
 }

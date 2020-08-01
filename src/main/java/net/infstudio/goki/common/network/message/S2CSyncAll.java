@@ -1,19 +1,18 @@
 package net.infstudio.goki.common.network.message;
 
-import io.netty.buffer.ByteBuf;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketBuffer;
 
 public class S2CSyncAll implements IMessage {
-    public int[] statLevels;
-    public int[] revertedStatLevels;
+    public int[] statLevels = new int[0];
+    public int[] revertedStatLevels = new int[0];
 
     public S2CSyncAll() {
     }
 
-    public S2CSyncAll(EntityPlayer player) {
+    public S2CSyncAll(PlayerEntity player) {
         this.statLevels = new int[StatBase.stats.size()];
         this.revertedStatLevels = new int[StatBase.stats.size()];
         for (int i = 0; i < this.statLevels.length; i++) {
@@ -26,9 +25,9 @@ public class S2CSyncAll implements IMessage {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        this.statLevels = new int[StatBase.stats.size()];
-        this.revertedStatLevels = new int[StatBase.stats.size()];
+    public void fromBytes(PacketBuffer buf) {
+        this.statLevels = new int[buf.readInt()];
+        this.revertedStatLevels = new int[buf.readInt()];
         for (int i = 0; i < this.statLevels.length; i++) {
             this.statLevels[i] = buf.readInt();
         }
@@ -38,7 +37,9 @@ public class S2CSyncAll implements IMessage {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(PacketBuffer buf) {
+        buf.writeInt(statLevels.length);
+        buf.writeInt(revertedStatLevels.length);
         for (int statLevel : this.statLevels) {
             buf.writeInt(statLevel);
         }

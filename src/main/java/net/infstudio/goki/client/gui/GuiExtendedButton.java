@@ -1,33 +1,36 @@
 package net.infstudio.goki.client.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 import org.lwjgl.opengl.GL11;
 
-public class GuiExtendedButton extends GuiButton {
+public class GuiExtendedButton extends Button {
     public static final int BORDER_COLOR = -16777216;
 
     private int backgroundColor;
     private boolean pressed = false;
+    public boolean disabled = false;
+    public final int id;
 
-    public GuiExtendedButton(int id, int x, int y, int width, int height, String text, int color) {
-        super(id, x, y, width, height, text);
+    public GuiExtendedButton(int id, int x, int y, int width, int height, String text, int color, IPressable onPress) {
+        super(x, y, width, height, text, onPress);
+        this.id = id;
         this.backgroundColor = color;
     }
 
+
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-        if (this.enabled) {
+    public void renderButton(int mouseX, int mouseY, float partialTicks) {
+        if (!this.disabled) {
             if (!isUnderMouse(mouseX, mouseY)) {
-                drawIdle(mc, mouseX, mouseY);
+                drawIdle(Minecraft.getInstance(), mouseX, mouseY);
             } else if (this.pressed) {
-                drawDown(mc, mouseX, mouseY);
+                drawDown(Minecraft.getInstance(), mouseX, mouseY);
             } else {
-                drawHover(mc, mouseX, mouseY);
+                drawHover(Minecraft.getInstance(), mouseX, mouseY);
             }
         } else
-            drawDisabled(mc, mouseX, mouseY);
+            drawDisabled(Minecraft.getInstance(), mouseX, mouseY);
     }
 
     public boolean isUnderMouse(int mouseX, int mouseY) {
@@ -35,18 +38,18 @@ public class GuiExtendedButton extends GuiButton {
     }
 
     private void drawBorder() {
-        drawHorizontalLine(-1, this.width, 0, BORDER_COLOR);
-        drawHorizontalLine(-1, this.width, this.height, BORDER_COLOR);
-        drawVerticalLine(-1, 0, this.height, BORDER_COLOR);
-        drawVerticalLine(this.width, 0, this.height, BORDER_COLOR);
+        hLine(-1, this.width, 0, BORDER_COLOR);
+        hLine(-1, this.width, this.height, BORDER_COLOR);
+        vLine(-1, 0, this.height, BORDER_COLOR);
+        vLine(this.width, 0, this.height, BORDER_COLOR);
     }
 
     private void drawDisabled(Minecraft mc, int mouseX, int mouseY) {
         GL11.glPushMatrix();
         GL11.glTranslatef(this.x, this.y, 0.0F);
-        Gui.drawRect(0, 0, this.width, this.height, -2011028958);
+        fill(0, 0, this.width, this.height, -2011028958);
         drawCenteredString(mc.fontRenderer,
-                this.displayString,
+                this.getMessage(),
                 this.width / 2,
                 this.height / 2 - mc.fontRenderer.FONT_HEIGHT / 2 + 1,
                 3355443);
@@ -57,13 +60,13 @@ public class GuiExtendedButton extends GuiButton {
     private void drawIdle(Minecraft mc, int mouseX, int mouseY) {
         GL11.glPushMatrix();
         GL11.glTranslatef(this.x, this.y, 0.0F);
-        Gui.drawRect(0,
+        fill(0,
                 0,
                 this.width,
                 this.height,
                 this.backgroundColor + -2013265920);
         drawCenteredString(mc.fontRenderer,
-                this.displayString,
+                this.getMessage(),
                 this.width / 2,
                 this.height / 2 - mc.fontRenderer.FONT_HEIGHT / 2 + 1,
                 16777215);
@@ -74,13 +77,13 @@ public class GuiExtendedButton extends GuiButton {
     private void drawHover(Minecraft mc, int mouseX, int mouseY) {
         GL11.glPushMatrix();
         GL11.glTranslatef(this.x, this.y, 0.0F);
-        Gui.drawRect(0,
+        fill(0,
                 0,
                 this.width,
                 this.height,
                 this.backgroundColor + -16777216);
         drawCenteredString(mc.fontRenderer,
-                this.displayString,
+                this.getMessage(),
                 this.width / 2,
                 this.height / 2 - mc.fontRenderer.FONT_HEIGHT / 2 + 1,
                 16763904);
@@ -91,9 +94,9 @@ public class GuiExtendedButton extends GuiButton {
     private void drawDown(Minecraft mc, int mouseX, int mouseY) {
         GL11.glPushMatrix();
         GL11.glTranslatef(this.x, this.y, 0.0F);
-        Gui.drawRect(0, 0, this.width, this.height, -16777216);
+        fill(0, 0, this.width, this.height, -16777216);
         drawCenteredString(mc.fontRenderer,
-                this.displayString,
+                this.getMessage(),
                 this.width / 2,
                 this.height / 2 - mc.fontRenderer.FONT_HEIGHT / 2 + 1,
                 16763904);
@@ -105,15 +108,32 @@ public class GuiExtendedButton extends GuiButton {
         this.backgroundColor = color;
     }
 
-    public void onPressed() {
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        if (this.active && this.visible) {
+            if (keyCode != 257 && keyCode != 32 && keyCode != 335) {
+                return false;
+            } else {
+                this.onRelease();
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void onPress() {
+        super.onPress();
         this.pressed = true;
     }
 
-    public void onReleased() {
+    public void onRelease() {
         this.pressed = false;
     }
 
     public boolean isPressed() {
         return this.pressed;
     }
+
 }

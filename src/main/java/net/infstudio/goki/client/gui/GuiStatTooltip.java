@@ -1,25 +1,26 @@
 package net.infstudio.goki.client.gui;
 
-import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.api.stat.StatBase;
+import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GuiStatTooltip extends Gui {
+public class GuiStatTooltip extends AbstractGui {
     private StatBase stat;
-    private EntityPlayer player;
-    private Minecraft mc = Minecraft.getMinecraft();
+    private PlayerEntity player;
     private int padding = 4;
 
-    public GuiStatTooltip(StatBase stat, EntityPlayer player) {
+    private final Minecraft mc = Minecraft.getInstance();
+
+    public GuiStatTooltip(StatBase stat, PlayerEntity player) {
         this.stat = stat;
         this.player = player;
     }
@@ -34,28 +35,28 @@ public class GuiStatTooltip extends Gui {
         messageColorMap.put(this.stat.getLocalizedName() + " L" + level, -13312); // Header
         messageColorMap.put(this.stat.getLocalizedDescription(this.player), -1); // Message
         if (level >= this.stat.getLimit())
-            messageColorMap.put(I18n.format("ui.max.name"), -16724737);
+            messageColorMap.put(I18n.format("ui.max"), -16724737);
         else
-            messageColorMap.put(I18n.format("ui.cost.name") + this.stat.getCost(level) + "xp", -16724737); // Cost
+            messageColorMap.put(I18n.format("ui.cost") + this.stat.getCost(level) + "xp", -16724737); // Cost
 
-        if (GuiScreen.isCtrlKeyDown())
-            messageColorMap.put(I18n.format("ui.return.name") + this.stat.getCost(level) * GokiConfig.globalModifiers.globalRevertFactor + "xp", -16724737); // Cost
+        if (Screen.hasControlDown())
+            messageColorMap.put(I18n.format("ui.return") + this.stat.getCost(level) * GokiConfig.globalModifiers.globalRevertFactor + "xp", -16724737); // Cost
 
         int revertLevel = DataHelper.getPlayerRevertStatLevel(player, stat);
         if (revertLevel > 0) {
             if (GokiConfig.globalModifiers.globalMaxRevertLevel != -1)
-                messageColorMap.put(I18n.format("ui.reverted.name", revertLevel, String.valueOf(GokiConfig.globalModifiers.globalMaxRevertLevel)), -16724737); // Reverted
+                messageColorMap.put(I18n.format("ui.reverted", revertLevel, String.valueOf(GokiConfig.globalModifiers.globalMaxRevertLevel)), -16724737); // Reverted
             else
-                messageColorMap.put(I18n.format("ui.reverted.name", revertLevel, I18n.format("ui.infinite.name")), -16724737); // Reverted
+                messageColorMap.put(I18n.format("ui.reverted", revertLevel, I18n.format("ui.infinite")), -16724737); // Reverted
         }
 
-        if (GuiScreen.isCtrlKeyDown()) { // Is player reverting?
+        if (Screen.hasControlDown()) { // Is player reverting?
             if (DataHelper.canPlayerRevertStat(player, stat))
-                messageColorMap.put(I18n.format("ui.revert.name"), 0xff0467ff);
+                messageColorMap.put(I18n.format("ui.revert"), 0xff0467ff);
             else
-                messageColorMap.put(I18n.format("ui.norevert.name"), 0xfffb1a00);
+                messageColorMap.put(I18n.format("ui.norevert"), 0xfffb1a00);
         } else
-            messageColorMap.put(I18n.format("ui.hover.name"), 0xff0467ff);
+            messageColorMap.put(I18n.format("ui.hover"), 0xff0467ff);
 
         messageColorMap.forEach((text, color) -> {
             widthAtomic.set(Math.max(widthAtomic.get(), this.mc.fontRenderer.getStringWidth(text)));
@@ -76,7 +77,7 @@ public class GuiStatTooltip extends Gui {
         if (right > rightEdge) {
             x += rightEdge - right - 1;
         }
-        drawRect(x, drawY, x + width, drawY - height, -872415232);
+        fill(x, drawY, x + width, drawY - height, -872415232);
 
         for (int i = messageColorMap.size(); i >= 1; i--) {
             Map.Entry<String, Integer> entry = messageColorMap.entrySet().toArray(new Map.Entry[0])[messageColorMap.size() - i];
@@ -91,9 +92,9 @@ public class GuiStatTooltip extends Gui {
     }
 
     private void drawBorder(int x, int y, int width, int height, int borderColor) {
-        drawHorizontalLine(x - 1, x + width, y, borderColor);
-        drawHorizontalLine(x - 1, x + width, y - height, borderColor);
-        drawVerticalLine(x - 1, y, y - height, borderColor);
-        drawVerticalLine(x + width, y, y - height, borderColor);
+        hLine(x - 1, x + width, y, borderColor);
+        hLine(x - 1, x + width, y - height, borderColor);
+        vLine(x - 1, y, y - height, borderColor);
+        vLine(x + width, y, y - height, borderColor);
     }
 }

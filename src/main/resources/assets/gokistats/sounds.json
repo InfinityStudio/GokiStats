@@ -1,35 +1,35 @@
 {
-    "gokistats:critical" : {
+    "critical" : {
         "category": "master",
         "sounds": [
-            "gokistats:critical1",
-            "gokistats:critical2",
-			"gokistats:critical3",
-			"gokistats:critical4"
+          {"name": "gokistats:critical1"},
+          {"name": "gokistats:critical2"},
+          {"name": "gokistats:critical3"},
+          {"name": "gokistats:critical4"}
         ]
     },
-	"gokistats:magician" : {
+	"magician" : {
         "category": "blocks",
         "sounds": [
-            "gokistats:magician1",
-            "gokistats:magician2",
-			"gokistats:magician3"
+          {"name": "gokistats:magician1"},
+          {"name": "gokistats:magician2"},
+          {"name": "gokistats:magician3"}
         ]
     },
-	"gokistats:reaper" : {
+	"reaper" : {
         "category": "master",
         "sounds": [
-            "gokistats:reaper1",
-            "gokistats:reaper2",
-			"gokistats:reaper3"
+          {"name": "gokistats:reaper1"},
+          {"name": "gokistats:reaper2"},
+          {"name": "gokistats:reaper3"}
         ]
     },
-	"gokistats:treasure" : {
+	"treasure" : {
         "category": "blocks",
         "sounds": [
-            "gokistats:treasure1",
-            "gokistats:treasure2",
-			"gokistats:treasure3"
+          {"name": "gokistats:treasure1"},
+          {"name": "gokistats:treasure2"},
+          {"name": "gokistats:treasure3"}
         ]
     }
 }
