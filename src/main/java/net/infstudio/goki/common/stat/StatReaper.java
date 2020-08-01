@@ -4,8 +4,8 @@ import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class StatReaper extends StatBase {
     public StatReaper(int id, String key, int limit) {
@@ -18,7 +18,7 @@ public class StatReaper extends StatBase {
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(EntityPlayer player) {// TODO special
+    public float[] getDescriptionFormatArguments(PlayerEntity player) {// TODO special
         return new float[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), GokiConfig.support.reaperLimit};
         // return Helper.trimDecimals(getBonus(getPlayerStatLevel(player)) *
@@ -27,7 +27,7 @@ public class StatReaper extends StatBase {
     }
 
     @Override
-    public String getLocalizedDescription(EntityPlayer player) {
+    public String getLocalizedDescription(PlayerEntity player) {
         return I18n.format(this.key + ".des",
                 this.getDescriptionFormatArguments(player)[0],
                 this.getDescriptionFormatArguments(player)[1]);
@@ -36,9 +36,9 @@ public class StatReaper extends StatBase {
     @Override
     public boolean isEffectiveOn(Object... obj) {
         if (obj[0] != null) {
-            if (!(obj[0] instanceof EntityPlayer)) {
-                if ((obj[0] instanceof EntityLivingBase)) {
-                    EntityLivingBase target = (EntityLivingBase) obj[0];
+            if (!(obj[0] instanceof PlayerEntity)) {
+                if ((obj[0] instanceof LivingEntity)) {
+                    LivingEntity target = (LivingEntity) obj[0];
 
                     return target.getMaxHealth() <= GokiConfig.support.reaperLimit;
                 }

@@ -2,28 +2,22 @@ package net.infstudio.goki.common.handlers;
 
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
-import net.infstudio.goki.common.network.GokiPacketHandler;
-import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,12 +31,12 @@ public class TickHandler {
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START) { // Due to issue #32
-            EntityPlayer player = event.player;
+            PlayerEntity player = event.player;
 
             handleTaskPlayerAPI(player);
 
-            IAttributeInstance atinst = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-            AttributeModifier mod = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, 1);
+            IAttributeInstance atinst = player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+            AttributeModifier mod = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, AttributeModifier.Operation.byId(1));
             if (player.isSneaking()) {
                 if (atinst.getModifier(stealthSpeedID) == null) {
                     atinst.applyModifier(mod);
@@ -51,8 +45,8 @@ public class TickHandler {
                 atinst.removeModifier(mod);
             }
 
-            atinst = player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
-            mod = new AttributeModifier(knockbackResistanceID, "KnockbackResistance", Stats.STEADY_GUARD.getBonus(player), 0);
+            atinst = player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
+            mod = new AttributeModifier(knockbackResistanceID, "KnockbackResistance", Stats.STEADY_GUARD.getBonus(player), AttributeModifier.Operation.byId(0));
             if (player.isActiveItemStackBlocking()) {
                 if (atinst.getModifier(knockbackResistanceID) == null) {
                     atinst.applyModifier(mod);
@@ -66,13 +60,13 @@ public class TickHandler {
     }
 
     @SubscribeEvent
-    @SideOnly(Side.SERVER)
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public void serverTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             if (tickTimer.get() == GokiConfig.syncTicks) {
                 tickTimer.lazySet(0);
-                for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-                    GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), player);
+                for (ServerPlayerEntity player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+                    SyncEventHandler.syncPlayerData(player);
                 }
             } else {
                 tickTimer.getAndIncrement();
@@ -80,32 +74,13 @@ public class TickHandler {
         }
     }
 
-    public static boolean isJumping(EntityLivingBase livingBase) {
-        Field field = null;
-        try {
-            field = EntityLivingBase.class.getDeclaredField("field_70703_bu"); // isJumping
-        } catch (NoSuchFieldException e) {
-            try {
-                field = EntityLivingBase.class.getDeclaredField("isJumping");
-            } catch (NoSuchFieldException e1) {
-                e1.printStackTrace();
-            }
-        }
-
-        if (field != null) {
-            field.setAccessible(true);
-            try {
-                return field.getBoolean(livingBase);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
+    public static boolean isJumping(LivingEntity livingBase) {
+        return ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, livingBase, "field_70703_bu");
     }
 
-    private void handleTaskPlayerAPI(EntityPlayer player) {
+    private void handleTaskPlayerAPI(PlayerEntity player) {
         if (player.isServerWorld() || player.canPassengerSteer())
-            if (player.isInWater() && !player.capabilities.isFlying) {
+            if (player.isSwimming()) {
                 float multiplier = Math.max(0.0F,
                         Stats.SWIMMING.getBonus(player));
                 if (isJumping(player)) {
@@ -115,8 +90,8 @@ public class TickHandler {
                     //								player.motionY * multiplier,
                     //								player.motionZ * multiplier);
 
-                    // Copied from EntityLivingBase
-                    double d0 = player.posY;
+                    // Copied from LivingEntity
+                    double d0 = player.getPosY();
                     float f1 = 0.8f;
                     float f2 = 0.02F;
 
@@ -125,52 +100,52 @@ public class TickHandler {
                         f2 += (player.getAIMoveSpeed() - f2) * multiplier;
                     }
 
-                    player.moveRelative(player.moveStrafing, player.moveVertical, player.moveForward, f2);
-                    player.move(MoverType.SELF, player.motionX, player.motionY, player.motionZ);
-                    player.motionX *= f1;
-                    player.motionY *= 0.800000011920929D;
-                    player.motionZ *= f1;
+                    player.moveRelative(f2, new Vec3d(player.moveStrafing, player.moveVertical, player.moveForward));
+                    player.move(MoverType.SELF, player.getMotion());
+                    player.setMotion(player.getMotion().mul(f1, 0.800000011920929D, f1));
 
                     if (!player.hasNoGravity()) {
-                        player.motionY -= 0.02D;
+                        player.setMotion(player.getMotion().add(0, 0.02, 0));
                     }
 
-                    if (player.collidedHorizontally && player.isOffsetPositionInLiquid(player.motionX, player.motionY + 0.6000000238418579D - player.posY + d0, player.motionZ)) {
-                        player.motionY = 0.30000001192092896D;
+                    Vec3d offset = player.getMotion().add(0, 0.6000000238418579D - player.getPosY() + d0, 0);
+                    if (player.collidedHorizontally && player.isOffsetPositionInLiquid(offset.x, offset.y, offset.z)) {
+                        player.setMotion(new Vec3d(player.getMotion().x, 0.30000001192092896D, player.getMotion().z));
                     }
 
-                    player.move(MoverType.SELF, player.moveStrafing * multiplier, player.moveVertical * multiplier, 0.02f);
+
+                    player.move(MoverType.SELF, new Vec3d(player.moveStrafing * multiplier, player.moveVertical * multiplier, 0.02f));
                 }
             }
 
         if (player.isOnLadder() && !player.isSneaking()) {
             float multiplier = Stats.CLIMBING.getBonus(player);
-            player.move(MoverType.SELF, player.motionX,
-                    player.motionY * multiplier,
-                    player.motionZ);
+            player.move(MoverType.SELF, player.getMotion().mul(1, multiplier, 1));
         }
     }
 
-    private void handleFurnace(EntityPlayer player) {
+    private void handleFurnace(PlayerEntity player) {
         if (DataHelper.getPlayerStatLevel(player, Stats.FURNACE_FINESSE) > 0) {
-            ArrayList<TileEntityFurnace> furnacesAroundPlayer = new ArrayList<>();
+            /*
+            ArrayList<FurnaceTileEntity> furnacesAroundPlayer = new ArrayList<>();
 
             for (TileEntity listEntity : player.world.loadedTileEntityList) {
                 if (listEntity != null) {
                     TileEntity tileEntity = listEntity;
                     BlockPos pos = tileEntity.getPos();
-                    if (tileEntity instanceof TileEntityFurnace && MathHelper.sqrt(player.getDistanceSq(pos)) < 4.0D) {
+                    if (tileEntity instanceof FurnaceTileEntity && MathHelper.sqrt(player.getDistanceSq(pos)) < 4.0D) {
                         // TODO work out alter way to do tileEntity
-                        furnacesAroundPlayer.add((TileEntityFurnace) tileEntity);
+                        furnacesAroundPlayer.add((FurnaceTileEntity) tileEntity);
                     }
                 }
             }
 
             // FIXME Laggy
-            for (TileEntityFurnace furnace : furnacesAroundPlayer)
+
+            for (FurnaceTileEntity furnace : furnacesAroundPlayer)
                 if (furnace.isBurning())
                     for (int i = 0; i < Stats.FURNACE_FINESSE.getBonus(player); i++) // Intend to "mount" ticks, same as Torcherino.
-                        furnace.update();
+                        furnace.update();*/
         }
 
     }

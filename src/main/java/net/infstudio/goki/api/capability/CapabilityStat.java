@@ -3,13 +3,14 @@ package net.infstudio.goki.api.capability;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.StatState;
 import net.infstudio.goki.api.stat.StatStorage;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,42 +21,39 @@ public class CapabilityStat {
 
     public static class Provider implements ICapabilityProvider {
         public StatStorage statStorage = new StatStorage();
+        public final LazyOptional<StatStorage> storageProperty = LazyOptional.of(() -> statStorage);
 
         @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == STAT;
-        }
-
-        @Nullable
-        @Override
-        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-            return capability == STAT ? (T) statStorage : null;
+        @Nonnull
+        public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, final @Nullable Direction side) {
+            if (cap == STAT) return (LazyOptional<T>) storageProperty;
+            else return LazyOptional.empty();
         }
     }
 
     public static void register() {
         CapabilityManager.INSTANCE.register(StatStorage.class, new Capability.IStorage<StatStorage>() {
             @Override
-            public NBTBase writeNBT(Capability<StatStorage> capability, StatStorage instance, EnumFacing side) {
-                NBTTagCompound compound = new NBTTagCompound();
+            public INBT writeNBT(Capability<StatStorage> capability, StatStorage instance, Direction side) {
+                CompoundNBT compound = new CompoundNBT();
                 instance.stateMap.forEach((stat, state) -> {
-                    NBTTagCompound stateTag = new NBTTagCompound();
-                    stateTag.setInteger("level", state.level);
-                    stateTag.setInteger("revertedLevel", state.revertedLevel);
-                    compound.setTag(stat.getKey(), stateTag);
+                    CompoundNBT stateTag = new CompoundNBT();
+                    stateTag.putInt("level", state.level);
+                    stateTag.putInt("revertedLevel", state.revertedLevel);
+                    compound.put(stat.getRegistryName().toString(), stateTag);
                 });
                 return compound;
             }
 
             @Override
-            public void readNBT(Capability<StatStorage> capability, StatStorage instance, EnumFacing side, NBTBase nbt) {
-                if (nbt instanceof NBTTagCompound) {
-                    NBTTagCompound compound = (NBTTagCompound) nbt;
-                    for (String stat : compound.getKeySet()) {
+            public void readNBT(Capability<StatStorage> capability, StatStorage instance, Direction side, INBT nbt) {
+                if (nbt instanceof CompoundNBT) {
+                    CompoundNBT compound = (CompoundNBT) nbt;
+                    for (String stat : compound.keySet()) {
                         if (!StatBase.statKeyMap.containsKey(stat)) continue;
-                        NBTTagCompound stateTag = compound.getCompoundTag(stat);
+                        CompoundNBT stateTag = compound.getCompound(stat);
                         StatBase statBase = StatBase.statKeyMap.get(stat);
-                        instance.stateMap.put(statBase, new StatState(statBase, stateTag.getInteger("level"), stateTag.getInteger("revertedLevel")));
+                        instance.stateMap.put(statBase, new StatState(statBase, stateTag.getInt("level"), stateTag.getInt("revertedLevel")));
                     }
                 }
             }

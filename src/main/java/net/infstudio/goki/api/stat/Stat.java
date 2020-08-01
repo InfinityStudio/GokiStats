@@ -1,20 +1,12 @@
 package net.infstudio.goki.api.stat;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public interface Stat extends IForgeRegistryEntry<Stat> {
-    /**
-     * Used to be an identifier and translation key
-     * @deprecated change to ResourceLocation in the future
-     * @return unique key of this stat
-     */
-    @Deprecated
-    String getKey();
-
     /**
      * Return if this stat is effective on the specified objects
      * @param obj in-world objects, like ItemStack, Entity, etc
@@ -29,7 +21,7 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      * @param player player instance
      * @return format arguments, most commonly the bonus and the limit of the stat
      */
-    float[] getDescriptionFormatArguments(EntityPlayer player);
+    float[] getDescriptionFormatArguments(PlayerEntity player);
 
     /**
      * Bonus to be used for this stat
@@ -44,7 +36,7 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      * @param player player instance
      * @return final bonus
      */
-    float getBonus(EntityPlayer player);
+    float getBonus(PlayerEntity player);
 
 //	abstract float getBonus(int paramInt);
 
@@ -54,7 +46,7 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      * @param paramObject game object such as ItemStack or Entity
      * @return final bonus
      */
-    float getAppliedBonus(EntityPlayer player, Object paramObject);
+    float getAppliedBonus(PlayerEntity player, Object paramObject);
 
     /**
      * XP Cost for each level
@@ -68,6 +60,8 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      * @return limit
      */
     int getLimit();
+
+    boolean isEnabled();
 
 //	public String getSimpleDescriptionString();
 }

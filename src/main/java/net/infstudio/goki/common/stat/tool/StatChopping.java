@@ -1,8 +1,8 @@
 package net.infstudio.goki.common.stat.tool;
 
 import net.infstudio.goki.api.stat.StatBase;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
+import net.minecraftforge.common.ToolType;
 
 public class StatChopping extends ToolSpecificStat {
     public StatChopping(int id, String key, int limit) {
@@ -15,13 +15,17 @@ public class StatChopping extends ToolSpecificStat {
     }
 
     @Override
+    public boolean isItemSupported(ItemStack item) {
+        return super.isItemSupported(item) || item.getItem().getToolTypes(item).contains(ToolType.AXE);
+    }
+
+    @Override
     public float getBonus(int level) {
         return StatBase.getFinalBonus((float) Math.pow(level, 1.3D) * 0.01523F);
     }
 
     @Override
-    public String[] getDefaultSupportedItems() {
-        return new String[]
-                {Item.getIdFromItem(Items.WOODEN_AXE) + ":0", Item.getIdFromItem(Items.STONE_AXE) + ":0", Item.getIdFromItem(Items.IRON_AXE) + ":0", Item.getIdFromItem(Items.GOLDEN_AXE) + ":0", Item.getIdFromItem(Items.DIAMOND_AXE) + ":0"};
+    public Item[] getDefaultSupportedItems() {
+        return new Item[]{Items.WOODEN_AXE, Items.STONE_AXE, Items.IRON_AXE, Items.GOLDEN_AXE, Items.DIAMOND_AXE};
     }
 }

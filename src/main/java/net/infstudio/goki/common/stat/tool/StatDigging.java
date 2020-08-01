@@ -1,8 +1,8 @@
 package net.infstudio.goki.common.stat.tool;
 
 import net.infstudio.goki.api.stat.StatBase;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
+import net.minecraftforge.common.ToolType;
 
 public class StatDigging extends ToolSpecificStat {
     public StatDigging(int id, String key, int limit) {
@@ -15,13 +15,17 @@ public class StatDigging extends ToolSpecificStat {
     }
 
     @Override
+    public boolean isItemSupported(ItemStack item) {
+        return super.isItemSupported(item) || item.getItem().getToolTypes(item).contains(ToolType.SHOVEL);
+    }
+
+    @Override
     public float getBonus(int level) {
         return StatBase.getFinalBonus((float) Math.pow(level, 1.3D) * 0.01523F);
     }
 
     @Override
-    public String[] getDefaultSupportedItems() {
-        return new String[]
-                {Item.getIdFromItem(Items.WOODEN_SHOVEL) + ":0", Item.getIdFromItem(Items.STONE_SHOVEL) + ":0", Item.getIdFromItem(Items.IRON_SHOVEL) + ":0", Item.getIdFromItem(Items.GOLDEN_SHOVEL) + ":0", Item.getIdFromItem(Items.DIAMOND_SHOVEL) + ":0"};
+    public Item[] getDefaultSupportedItems() {
+        return new Item[]{Items.WOODEN_SHOVEL, Items.STONE_SHOVEL, Items.IRON_SHOVEL, Items.GOLDEN_SHOVEL, Items.DIAMOND_SHOVEL};
     }
 }

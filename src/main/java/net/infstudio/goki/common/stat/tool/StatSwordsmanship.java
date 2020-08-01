@@ -1,9 +1,9 @@
 package net.infstudio.goki.common.stat.tool;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
+import net.minecraft.item.Items;
+import net.minecraft.item.SwordItem;
 
 public class StatSwordsmanship extends ToolSpecificStat {
     public StatSwordsmanship(int id, String key, int limit) {
@@ -17,7 +17,7 @@ public class StatSwordsmanship extends ToolSpecificStat {
 
     @Override
     public boolean isItemSupported(ItemStack item) {
-        return super.isItemSupported(item) || item.getItem() instanceof ItemSword;
+        return super.isItemSupported(item) || item.getItem() instanceof SwordItem;
     }
 
     @Override
@@ -26,8 +26,7 @@ public class StatSwordsmanship extends ToolSpecificStat {
     }
 
     @Override
-    public String[] getDefaultSupportedItems() {
-        return new String[]
-                {Item.getIdFromItem(Items.WOODEN_SWORD) + ":0", Item.getIdFromItem(Items.STONE_SWORD) + ":0", Item.getIdFromItem(Items.IRON_SWORD) + ":0", Item.getIdFromItem(Items.GOLDEN_SWORD) + ":0", Item.getIdFromItem(Items.DIAMOND_SWORD) + ":0"};
+    public Item[] getDefaultSupportedItems() {
+        return new Item[]{Items.WOODEN_SWORD, Items.STONE_SWORD, Items.IRON_SWORD, Items.GOLDEN_SWORD, Items.DIAMOND_SWORD};
     }
 }

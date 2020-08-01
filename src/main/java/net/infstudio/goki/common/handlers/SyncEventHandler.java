@@ -3,34 +3,34 @@ package net.infstudio.goki.common.handlers;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.utils.Reference;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.network.PacketDistributor;
 
-@SideOnly(Side.SERVER)
-@Mod.EventBusSubscriber(value = Side.SERVER, modid = Reference.MODID)
+@OnlyIn(Dist.DEDICATED_SERVER)
+@Mod.EventBusSubscriber(value = Dist.DEDICATED_SERVER, modid = Reference.MODID)
 public class SyncEventHandler {
-    private static void syncPlayerData(EntityPlayer player) {
-        GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
+    public static void syncPlayerData(PlayerEntity player) {
+        GokiPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new S2CSyncAll(player));
     }
 
     @SubscribeEvent
     public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        syncPlayerData(event.player);
+        syncPlayerData(event.getPlayer());
     }
 
     @SubscribeEvent
     public static void playerChangedWorld(PlayerEvent.PlayerChangedDimensionEvent event) {
-        syncPlayerData(event.player);
+        syncPlayerData(event.getPlayer());
     }
 
     @SubscribeEvent
     public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        syncPlayerData(event.player);
+        syncPlayerData(event.getPlayer());
     }
 }

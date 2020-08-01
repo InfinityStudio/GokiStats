@@ -2,26 +2,25 @@ package net.infstudio.goki.api.stat;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry.Impl<Stat> implements Stat, Configurable<T> {
+public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<Stat> implements Stat {
     public static final Map<String, StatBase> statKeyMap = new HashMap<>(16);
     public static final ObjectList<StatBase> stats = new ObjectArrayList<>(16);
     public static int totalStats = 0;
@@ -29,10 +28,11 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
 //	 "Focus", 25);
     public int imageID;
     public String key;
+
     public float costMultiplier = 1.0F;
     public float limitMultiplier = 1.0F;
     public float bonusMultiplier = 1.0F;
-    public boolean enabled = true;
+    private boolean enabled = true;
     private int limit;
 
     public StatBase(int imgId, String key, int limit) {
@@ -42,13 +42,13 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
         stats.add(this);
         totalStats++;
         statKeyMap.put(key, this);
-        setRegistryName(Reference.MODID, getKey().toLowerCase());
+        setRegistryName(Reference.MODID, key.toLowerCase());
     }
 
     protected static float getFinalBonus(float currentBonus) {
         return currentBonus * GokiConfig.globalModifiers.globalBonusMultiplier;
     }
-
+/*
     @Override
     public T createConfig() {
         return (T) new StatConfig();
@@ -68,14 +68,14 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
     public void reload() {
         bonusMultiplier = getConfig().bonusMultiplier;
     }
-
+ */
     @Override
-    public float getBonus(EntityPlayer player) {
+    public float getBonus(PlayerEntity player) {
         return getBonus(DataHelper.getPlayerStatLevel(player, this)) * bonusMultiplier;
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(PlayerEntity player) {
         return new float[]
                 {DataHelper.trimDecimals(getBonus(player) * 100, 1)};
     }
@@ -106,14 +106,14 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
     }
 
     @Override
-    public float getAppliedBonus(EntityPlayer player, Object object) {
+    public float getAppliedBonus(PlayerEntity player, Object object) {
         if (isEffectiveOn(object))
             return getBonus(player);
         else
             return 0;
     }
 
-    protected final int getPlayerStatLevel(EntityPlayer player) {
+    protected final int getPlayerStatLevel(PlayerEntity player) {
         return DataHelper.getPlayerStatLevel(player, this);
     }
 
@@ -123,13 +123,13 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
         else return isEffectiveOn(stack);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getLocalizedName() {
-        return I18n.format(this.key + ".name");
+        return I18n.format(this.key);
     }
 
-    @SideOnly(Side.CLIENT)
-    public String getLocalizedDescription(EntityPlayer player) {
+    @OnlyIn(Dist.CLIENT)
+    public String getLocalizedDescription(PlayerEntity player) {
         return I18n.format(this.key + ".des",
                 this.getDescriptionFormatArguments(player)[0]);
     }
@@ -139,38 +139,25 @@ public abstract class StatBase<T extends StatConfig> extends IForgeRegistryEntry
         if (this == o) return true;
         if (!(o instanceof StatBase)) return false;
         StatBase<?> statBase = (StatBase<?>) o;
-        return Objects.equals(getKey(), statBase.getKey());
+        return Objects.equals(getRegistryName(), statBase.getRegistryName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getKey());
+        return Objects.hash(getRegistryName());
     }
 
     @Override
     public String toString() {
-        return getKey();
+        return getRegistryName().toString();
     }
-//	protected float getSecondaryBonus(int amount)
-//	{
-//		return 0;
-//	}
 
-//	@Override
-//	public float getSecondaryBonus(EntityPlayer player)
-//	{
-//		return getSecondaryBonus(DataHelper.getPlayerStatLevel(player, this));
-//	}
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-
-//	public static StatBase getStat(int n)
-//	{
-//		return stats.get(n);
-//	}
-
-
-//	@Override
-//	public abstract String getSimpleDescriptionString();
-
-
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

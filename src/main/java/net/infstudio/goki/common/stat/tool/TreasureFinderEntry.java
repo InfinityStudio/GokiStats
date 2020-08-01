@@ -3,23 +3,19 @@ package net.infstudio.goki.common.stat.tool;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class TreasureFinderEntry {
     public String block;
     public String item;
-    public int blockMetadata;
-    public int itemMetadata;
     public int minimumLevel;
     public int chance;
 
-    public TreasureFinderEntry(Block block, int bMD, Item item, int iMD, int mL, int c) {
+    public TreasureFinderEntry(Block block, Item item, int minimumLevel, int chance) {
         this.block = block.getRegistryName().toString();
         this.item = item.getRegistryName().toString();
-        this.blockMetadata = bMD;
-        this.itemMetadata = iMD;
-        this.minimumLevel = mL;
-        this.chance = c;
+        this.minimumLevel = minimumLevel;
+        this.chance = chance;
     }
 
     public Block getBlock() {

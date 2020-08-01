@@ -1,7 +1,9 @@
 package net.infstudio.goki.common.stat.tool;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.ShearsItem;
 
 public class StatTrimming extends ToolSpecificStat {
     public StatTrimming(int id, String key, int limit) {
@@ -14,13 +16,17 @@ public class StatTrimming extends ToolSpecificStat {
     }
 
     @Override
+    public boolean isItemSupported(ItemStack item) {
+        return super.isItemSupported(item) || item.getItem() instanceof ShearsItem;
+    }
+
+    @Override
     public float getBonus(int level) {
         return getFinalBonus(level * 0.1F);
     }
 
     @Override
-    public String[] getDefaultSupportedItems() {
-        return new String[]
-                {Item.getIdFromItem(Items.SHEARS) + ":0"};
+    public Item[] getDefaultSupportedItems() {
+        return new Item[]{Items.SHEARS};
     }
 }

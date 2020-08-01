@@ -1,7 +1,7 @@
 package net.infstudio.goki.common.stat.damage;
 
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.client.resources.I18n;
 
 public class StatFeatherFall extends DamageSourceProtectionStat {
@@ -15,7 +15,7 @@ public class StatFeatherFall extends DamageSourceProtectionStat {
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(PlayerEntity player) {
         // TODO special
         float height = DataHelper.getFallResistance(player) + DataHelper.trimDecimals(getSecondaryBonus(getPlayerStatLevel(player)),
                 1);
@@ -28,7 +28,7 @@ public class StatFeatherFall extends DamageSourceProtectionStat {
     }
 
     @Override
-    public String getLocalizedDescription(EntityPlayer player) {
+    public String getLocalizedDescription(PlayerEntity player) {
         return I18n.format(this.key + ".des",
                 this.getDescriptionFormatArguments(player)[0],
                 this.getDescriptionFormatArguments(player)[1]);

@@ -1,30 +1,32 @@
 package net.infstudio.goki.common.stat.tool;
 
+import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.stats.MiningMagicianConfig;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.infstudio.goki.api.stat.StatBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class StatMiningMagician extends StatBase<MiningMagicianConfig> {
-    public static List<IDMDTuple> blockEntries = new ArrayList<>();
-    public static List<IDMDTuple> itemEntries = new ArrayList<>();
-    private static IDMDTuple[] defaultBlockEntries =
-            {new IDMDTuple(Blocks.COAL_ORE, 0), new IDMDTuple(Blocks.DIAMOND_ORE, 0), new IDMDTuple(Blocks.EMERALD_ORE, 0), new IDMDTuple(Blocks.GOLD_ORE, 0), new IDMDTuple(Blocks.IRON_ORE, 0), new IDMDTuple(Blocks.LAPIS_ORE, 0), new IDMDTuple(Blocks.QUARTZ_ORE, 0), new IDMDTuple(Blocks.REDSTONE_ORE, 0)};
-    private static IDMDTuple[] defaultItemEntries =
-            {new IDMDTuple(Items.COAL, 0), new IDMDTuple(Items.DIAMOND, 0), new IDMDTuple(Items.EMERALD, 0), new IDMDTuple(Items.GOLD_INGOT, 0), new IDMDTuple(Items.IRON_INGOT, 0), new IDMDTuple(Items.DYE, 4), new IDMDTuple(Items.QUARTZ, 0), new IDMDTuple(Items.REDSTONE, 0)};
+    public static List<Block> blockEntries = new ArrayList<>();
+    public static List<Item> itemEntries = new ArrayList<>();
+    private static final List<Block> defaultBlockEntries =
+            Arrays.asList(Blocks.COAL_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.GOLD_ORE, Blocks.IRON_ORE, Blocks.LAPIS_ORE, Blocks.NETHER_QUARTZ_ORE, Blocks.REDSTONE_ORE);
+    private static final List<Item> defaultItemEntries =
+            Arrays.asList(Items.COAL, Items.DIAMOND, Items.EMERALD, Items.GOLD_INGOT, Items.IRON_INGOT, Items.WHITE_DYE, Items.QUARTZ, Items.REDSTONE);
 
     public StatMiningMagician(int id, String key, int limit) {
         super(id, key, limit);
-        Collections.addAll(blockEntries, defaultBlockEntries);
-        Collections.addAll(itemEntries, defaultItemEntries);
+        blockEntries.addAll(defaultBlockEntries);
+        itemEntries.addAll(defaultItemEntries);
     }
-
+/*
     @Override
     public void save() {
         super.save();
@@ -50,34 +52,22 @@ public class StatMiningMagician extends StatBase<MiningMagicianConfig> {
         blockEntries.addAll(getConfig().blockEntries);
         itemEntries.addAll(getConfig().itemEntries);
     }
-
+*/
     @Override
     public float getBonus(int level) {
         return getFinalBonus(level * 0.3F);
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(EntityPlayer player) {
+    public float[] getDescriptionFormatArguments(PlayerEntity player) {
         return new float[]
                 {DataHelper.trimDecimals(getBonus(player), 1)};
     }
 
     @Override
     public boolean isEffectiveOn(Object... obj) {
-        IDMDTuple idmd;
-        if ((obj[0] instanceof IDMDTuple)) {
-            idmd = (IDMDTuple) obj[0];
-            for (IDMDTuple entry : blockEntries) {
-                if (idmd.equals(entry)) {
-                    return true;
-                }
-            }
-            for (IDMDTuple entry : itemEntries) {
-                if (idmd.equals(entry)) {
-                    return true;
-                }
-            }
-        }
+        if (obj[0] instanceof Item) return itemEntries.contains(obj[0]);
+        else if (obj[0] instanceof Block) return blockEntries.contains(obj[0]);
         return false;
         // return super.needAffectedByStat(obj[0]);
     }
