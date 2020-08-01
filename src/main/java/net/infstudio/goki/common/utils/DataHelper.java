@@ -1,14 +1,13 @@
 package net.infstudio.goki.common.utils;
 
-import net.infstudio.goki.api.capability.CapabilityStat;
-import net.infstudio.goki.common.config.GokiConfig;
-import net.infstudio.goki.common.init.MinecraftEffects;
 import net.infstudio.goki.api.stat.StatBase;
+import net.infstudio.goki.common.config.GokiConfig;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -138,7 +137,7 @@ public class DataHelper {
 
     public static float getFallResistance(EntityLivingBase entity) {
         float resistance = 3.0F;
-        PotionEffect potioneffect = entity.getActivePotionEffect(MinecraftEffects.JUMP);
+        PotionEffect potioneffect = entity.getActivePotionEffect(MobEffects.JUMP_BOOST);
         float bonus = potioneffect != null ? potioneffect.getAmplifier() + 1 : 0.0F;
         // TODO check if this work as float...
 

@@ -9,7 +9,6 @@ import net.infstudio.goki.common.adapters.StatFix;
 import net.infstudio.goki.common.config.ConfigManager;
 import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
-import net.infstudio.goki.common.init.MinecraftEffects;
 import net.infstudio.goki.common.loot.conditions.LevelCondition;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.command.ICommandManager;
@@ -23,7 +22,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,7 +40,7 @@ public class GokiStats {
     public static final Logger log = LogManager.getLogger(Reference.MODID);
 
     private static final Class<?>[] loadClasses = {
-            Stats.class, MinecraftEffects.class
+            Stats.class
     };
 
     @Mod.EventHandler
@@ -88,12 +86,6 @@ public class GokiStats {
     public void init(FMLInitializationEvent event) {
         proxy.registerHandlers();
         FMLCommonHandler.instance().getDataFixer().registerVanillaWalker(FixTypes.PLAYER, new StatFix());
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        MinecraftEffects.STRENGTH = ForgeRegistries.POTIONS.getValue(new ResourceLocation("minecraft:strength"));
-        MinecraftEffects.JUMP = ForgeRegistries.POTIONS.getValue(new ResourceLocation("minecraft:jump"));
     }
 
     @Mod.EventHandler

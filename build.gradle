@@ -38,7 +38,7 @@ sonarqube {
     }
 }
 
-version = "1.2.8"
+version = "1.2.8.1"
 group= "net.infstudio.gokistats" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "gokiStats"
 

@@ -1,6 +1,5 @@
 package net.infstudio.goki.common.init;
 
-import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
