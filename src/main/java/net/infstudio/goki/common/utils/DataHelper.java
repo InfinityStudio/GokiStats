@@ -8,12 +8,15 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 
+import java.util.Collection;
 import java.util.function.IntFunction;
 
 public class DataHelper {
@@ -78,7 +81,12 @@ public class DataHelper {
     }
 
     public static int getXPTotal(PlayerEntity player) {
-        return (int) (getXPValueFromLevel(player.experienceLevel) + getXPValueToNextLevel(player.experienceLevel) * player.experience);
+        return player.experienceTotal;
+    }
+
+    public static boolean hasDamageModifier(ItemStack stack) {
+        Collection<AttributeModifier> modifiers = stack.getItem().getAttributeModifiers(EquipmentSlotType.MAINHAND, stack).get(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
+        return modifiers != null && !modifiers.isEmpty();
     }
 
     public static int getXPValueFromLevel(int xpLevel) {

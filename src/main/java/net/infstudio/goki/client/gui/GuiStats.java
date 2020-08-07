@@ -43,6 +43,14 @@ public class GuiStats extends Screen {
         super(new StringTextComponent(""));
     }
 
+    /**
+     * Should the screen pauses Singleplayer game
+     */
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
     @Override
     public void render(int mouseX, int mouseY, float par3) {
         int toolTipX = 0;
@@ -62,8 +70,7 @@ public class GuiStats extends Screen {
             }
         }
         drawCenteredString(fontRenderer,
-                I18n.format("ui.currentxp") + DataHelper.getXPTotal(player.experienceLevel,
-                        player.experience) + "xp",
+                I18n.format("ui.currentxp") + DataHelper.getXPTotal(player) + "xp",
                 width / 2,
                 this.height - 16,
                 0xFFFFFFFF);
