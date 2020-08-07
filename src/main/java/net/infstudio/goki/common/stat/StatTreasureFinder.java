@@ -71,6 +71,7 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
     public StatTreasureFinder(int id, String key, int limit) {
         super(id, key, limit);
         Collections.addAll(entries, defaultEntries);
+        setEnabled(false);
     }
 
     @Override

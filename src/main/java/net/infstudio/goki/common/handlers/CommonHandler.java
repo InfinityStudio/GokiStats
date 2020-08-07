@@ -25,8 +25,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -46,14 +44,14 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = Reference.MODID)
 public class CommonHandler {
     @SubscribeEvent
-    public void injectCapability(AttachCapabilitiesEvent<Entity> event) {
+    public static void injectCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity)
             event.addCapability(new ResourceLocation(Reference.MODID, "stat_storage"), new CapabilityStat.Provider());
     }
 
     @SubscribeEvent
-    @OnlyIn(Dist.DEDICATED_SERVER)
-    public void harvestBlock(BlockEvent.HarvestDropsEvent event) {
+    public static void harvestBlock(BlockEvent.HarvestDropsEvent event) {
+        // FIXME FUCKING LEXMANOS, THIS DOESN'T WORK NOW
         PlayerEntity player = event.getHarvester();
         Block block = event.getState().getBlock();
         if (player == null) {
@@ -96,13 +94,14 @@ public class CommonHandler {
                 for (int i = 0; i < event.getDrops().size(); i++) {
                     if (player.getRNG().nextDouble() * 100.0D <= Stats.MINING_MAGICIAN.getBonus(player)) {
                         ItemStack item = event.getDrops().get(i);
+                        // If this block drops itself, give player additional block drops
                         if (item.getItem() instanceof BlockItem && item.getItem().getRegistryName().equals(block.getRegistryName())) {
                             int randomEntry = player.getRNG().nextInt(StatMiningMagician.blockEntries.size());
                             ItemStack stack = new ItemStack(StatMiningMagician.blockEntries.get(randomEntry), 1);
                             stack.setCount(event.getDrops().get(i).getCount());
                             event.getDrops().add(stack);
                             magicHappened = true;
-                        } else {
+                        } else { // Give additional item drops
                             for (int j = 0; j < StatMiningMagician.itemEntries.size(); j++) {
                                 if (item.getItem() == StatMiningMagician.itemEntries.get(j)) {
                                     int randomEntry = player.getRNG().nextInt(StatMiningMagician.itemEntries.size());
@@ -124,7 +123,7 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void playerFall(LivingFallEvent event) {
+    public static void playerFall(LivingFallEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntity();
             int featherFallLevel = DataHelper.getPlayerStatLevel(player,
@@ -136,7 +135,7 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+    public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         PlayerEntity player = event.getPlayer();
         if (!player.world.isRemote) {
             if (GokiConfig.globalModifiers.loseStatsOnDeath) {
@@ -151,7 +150,7 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void playerBreakSpeed(PlayerEvent.BreakSpeed event) {
+    public static void playerBreakSpeed(PlayerEvent.BreakSpeed event) {
         ItemStack heldItem = event.getPlayer().getHeldItemMainhand();
         PlayerEntity player = event.getPlayer();
 
@@ -182,7 +181,7 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void playerJump(LivingEvent.LivingJumpEvent event) {
+    public static void playerJump(LivingEvent.LivingJumpEvent event) {
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             if (player.isSprinting()) {
@@ -192,7 +191,7 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void entityKnockback(LivingKnockBackEvent event) {
+    public static void entityKnockback(LivingKnockBackEvent event) {
         if (event.getOriginalAttacker() == null && event.getAttacker() == null) return;
         Entity attacker = event.getOriginalAttacker() != null ? event.getOriginalAttacker() : event.getAttacker();
         if (attacker.getTags().contains("knockback")) {
@@ -203,7 +202,7 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void entityHurt(LivingHurtEvent event) {
+    public static void entityHurt(LivingHurtEvent event) {
         DamageSource source = event.getSource();
 
         LivingEntity victim = event.getEntityLiving();
@@ -249,6 +248,10 @@ public class CommonHandler {
                     bonus = Math.round(damage * Stats.SWORDSMANSHIP.getAppliedBonus(player, heldItem));
                 } else if (Stats.BOWMANSHIP.isItemSupported(heldItem)) {
                     bonus = Math.round(damage * Stats.BOWMANSHIP.getAppliedBonus(player, heldItem));
+                } else {
+                    if (!DataHelper.hasDamageModifier(heldItem))
+                        // This is not a item providing damage, apply pugilism
+                        bonus = Math.round(damage + Stats.PUGILISM.getBonus(player));
                 }
             } else {
 //				bonus = Math.round(damage + (StatBase.PUGILISM.getBonus(DataHelper.getPlayerStatLevel(	player, StatBase.PUGILISM))));

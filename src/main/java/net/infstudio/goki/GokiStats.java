@@ -3,7 +3,6 @@ package net.infstudio.goki;
 import net.infstudio.goki.api.capability.CapabilityStat;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.StatsCommand;
-import net.infstudio.goki.common.handlers.CommonHandler;
 import net.infstudio.goki.common.handlers.TickHandler;
 import net.infstudio.goki.common.init.GokiSounds;
 import net.infstudio.goki.common.init.MinecraftEffects;
@@ -48,7 +47,6 @@ public class GokiStats {
         CapabilityStat.register();
         MinecraftForge.EVENT_BUS.register(new GokiStats());
         MinecraftForge.EVENT_BUS.register(new GokiSounds());
-        MinecraftForge.EVENT_BUS.register(new CommonHandler());
         MinecraftForge.EVENT_BUS.register(new TickHandler());
     }
 
