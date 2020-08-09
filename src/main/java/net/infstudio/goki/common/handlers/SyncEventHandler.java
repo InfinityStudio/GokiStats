@@ -5,15 +5,12 @@ import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-@OnlyIn(Dist.DEDICATED_SERVER)
-@Mod.EventBusSubscriber(value = Dist.DEDICATED_SERVER, modid = Reference.MODID)
+@Mod.EventBusSubscriber(modid = Reference.MODID)
 public class SyncEventHandler {
     public static void syncPlayerData(PlayerEntity player) {
         GokiPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new S2CSyncAll(player));

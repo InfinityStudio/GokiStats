@@ -32,7 +32,7 @@ public class PacketSyncHandler {
         ctx.enqueueWork(() -> {
             int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
             reverted = Math.max(reverted - message.amount, 0);
-            if (GokiConfig.globalModifiers.globalMaxRevertLevel < reverted && GokiConfig.globalModifiers.globalMaxRevertLevel != -1) return;
+            if (GokiConfig.SERVER.globalMaxRevertLevel.get() < reverted && GokiConfig.SERVER.globalMaxRevertLevel.get() != -1) return;
             DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
 
             if (currentXP >= cost) {
@@ -49,7 +49,7 @@ public class PacketSyncHandler {
 
                 if (message.amount <= 0) {
 //                    DataHelper.setPlayersExpTo(player, currentXP + (int) (stat.getCost(level + message.amount + 1) * GokiConfig.globalModifiers.globalRevertFactor));
-                    player.giveExperiencePoints((int) (stat.getCost(level + message.amount + 1) * GokiConfig.globalModifiers.globalRevertFactor));
+                    player.giveExperiencePoints((int) (stat.getCost(level + message.amount + 1) * GokiConfig.SERVER.globalRevertFactor.get()));
                 } else
 //                    DataHelper.setPlayersExpTo(player, currentXP - cost);
                     player.giveExperiencePoints(-cost);

@@ -9,19 +9,23 @@ import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryBuilder;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<Stat> implements Stat {
-    public static final Map<String, StatBase> statKeyMap = new HashMap<>(16);
+    public static final IForgeRegistry<Stat> REGISTRY = new RegistryBuilder<Stat>()
+            .setName(new ResourceLocation(Reference.MODID, "stats"))
+            .setType(Stat.class)
+            .create();
     public static final ObjectList<StatBase> stats = new ObjectArrayList<>(16);
     public static int totalStats = 0;
     //	 public static final StatBase STAT_FOCUS = new StatFocus(14, "grpg_Focus",
@@ -41,12 +45,12 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
         this.key = key;
         stats.add(this);
         totalStats++;
-        statKeyMap.put(key, this);
         setRegistryName(Reference.MODID, key.toLowerCase());
+        REGISTRY.register(this);
     }
 
     protected static float getFinalBonus(float currentBonus) {
-        return currentBonus * GokiConfig.globalModifiers.globalBonusMultiplier;
+        return (float) (currentBonus * GokiConfig.SERVER.globalBonusMultiplier.get());
     }
 /*
     @Override
@@ -82,7 +86,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     @Override
     public int getCost(int level) {
-        return (int) ((Math.pow(level, 1.6D) + 6.0D + level) * GokiConfig.globalModifiers.globalCostMultiplier);
+        return (int) ((Math.pow(level, 1.6D) + 6.0D + level) * GokiConfig.SERVER.globalCostMultiplier.get());
     }
 
     @Override
@@ -99,10 +103,10 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     @Override
     public int getLimit() {
-        if (GokiConfig.globalModifiers.globalLimitMultiplier <= 0.0F) {
+        if (GokiConfig.SERVER.globalLimitMultiplier.get() <= 0) {
             return 127;
         }
-        return (int) (this.limit * GokiConfig.globalModifiers.globalLimitMultiplier);
+        return (int) (this.limit * GokiConfig.SERVER.globalLimitMultiplier.get());
     }
 
     @Override

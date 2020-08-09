@@ -1,71 +1,55 @@
 package net.infstudio.goki.common.config;
 
-//@Config(modid = Reference.MODID, name = "gokistats_v2")
+import net.minecraftforge.common.ForgeConfigSpec;
+import org.apache.commons.lang3.tuple.Pair;
+
+/**
+ * GokiStats mod config, in Forge config specification
+ */
 public class GokiConfig {
-//    @Config.Name("Configuration Version")
-    public static String version = "v3";
-
-//    @Config.Name("Keybinding Enabled")
-//    @Config.Comment({"Should register gokistats keybinding (default Y)", "If set to false, player can only use /gokistats gui to open gui"})
-//    @Config.RequiresMcRestart
-    public static boolean keyBindingEnabled = true;
-
-//    @Config.Name("Initiative stat synchronization")
-//    @Config.Comment("Enables synchronizing all stat data in a period")
-    public static boolean initiativeSync = false;
-
-//    @Config.Name("Ticks for initiative sync")
-//    @Config.Comment("Default 400 Ticks (20s)")
-//    @Config.RangeInt(min = 20)
-    public static int syncTicks = 400;
-
-    public static String[] treasureFinderLootTables = new String[]{
-            "ore:dirt|gokistats:treasure_finder/dirt", "ore:treeLeaves|gokistats:treasure_finder/leaves",
-            "minecraft:tallgrass|gokistats:treasure_finder/grass"};
-
-    public static String[] miningMagicianLootTables = new String[]{
-            "ore:oreIron|gokistats:mining_magician/ore", "ore:oreCoal|gokistats:mining_magician/ore",
-            "ore:oreRedstone|gokistats:mining_magician/ore", "ore:oreDiamond|gokistats:mining_magician/ore",
-            "ore:oreGold|gokistats:mining_magician/ore", "ore:oreEmerald|gokistats:mining_magician/ore"};
-
-//    @Config.Name("Global Modifiers")
-    public static GlobalModifiers globalModifiers = new GlobalModifiers();
-
-//    @Config.Name("Support")
-    public static Support support = new Support();
-
-    public static class Support {
-//        @Config.Name("Reaper Limit")
-        public float reaperLimit = 20;
+    public static final ForgeConfigSpec serverSpec;
+    public static final Server SERVER;
+    static {
+        final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Server::new);
+        serverSpec = specPair.getRight();
+        SERVER = specPair.getLeft();
     }
 
-    public static class GlobalModifiers {
-//        @Config.Name("Cost Multiplier")
-//        @Config.Comment("A flat multiplier on the cost to upgrade all stats.")
-        public float globalCostMultiplier = 1;
+    public static class Server {
+        public static boolean initiativeSync = false;
 
-//        @Config.Name("Limit Multiplier")
-//        @Config.Comment("A flat multiplier on the amount limit of all stats.")
-        public float globalLimitMultiplier = 2.5f;
+        public final ForgeConfigSpec.IntValue syncTicks;
+        public final ForgeConfigSpec.DoubleValue globalCostMultiplier;
+        public final ForgeConfigSpec.DoubleValue globalLimitMultiplier;
+        public final ForgeConfigSpec.DoubleValue globalBonusMultiplier;
+        public final ForgeConfigSpec.BooleanValue loseStatsOnDeath;
+        public final ForgeConfigSpec.DoubleValue loseStatsMultiplier;
+        public final ForgeConfigSpec.IntValue globalMaxRevertLevel;
+        public final ForgeConfigSpec.DoubleValue globalRevertFactor;
+        public final ForgeConfigSpec.IntValue reaperLimit;
 
-//        @Config.Name("Bonus Multiplier")
-//        @Config.Comment("A flat multiplier on the bonus all stats gives.")
-        public float globalBonusMultiplier = 1;
+        Server(ForgeConfigSpec.Builder builder) {
+            builder.comment("Server configuration settings")
+                    .push("server");
 
-//        @Config.Name("Death Loss")
-//        @Config.Comment("Lose stats on death?")
-        public boolean loseStatsOnDeath = false;
-
-//        @Config.Name("Death Loss Multiplier")
-//        @Config.Comment("Multiplier of levels you will lose, between 0~1.")
-        public float loseStatsMultiplier = 1;
-
-//        @Config.Name("Maximum revertable skill amount")
-//        @Config.Comment("An integer that constrains the max number of amount of the skill can be reverted. -1 for no limit. 0 to disable reverting.")
-        public int globalMaxRevertLevel = -1;
-
-//        @Config.Name("Revert Factor")
-//        @Config.Comment("How much percentage of exp will be given back to player if a player revert a skill.")
-        public float globalRevertFactor = 0.8F;
+            syncTicks = builder.comment("Ticks for initiative sync, default for 400 ticks (20s). Set to 0 to disable this feature")
+                    .defineInRange("syncTicks", 400, 0, Integer.MAX_VALUE);
+            globalCostMultiplier = builder.comment("A global multiplier on the cost to upgrade all stats")
+                    .defineInRange("globalCostMultiplier", 1, 0, Double.MAX_VALUE);
+            globalLimitMultiplier = builder.comment("A global multiplier on the max level limit of all stats")
+                    .defineInRange("globalLimitMultiplier", 2.5, 0, Double.MAX_VALUE);
+            globalBonusMultiplier = builder.comment("A global multiplier on the bonus all stats gives")
+                    .defineInRange("globalBonusMultiplier", 1, 0, Double.MAX_VALUE);
+            loseStatsOnDeath = builder.comment("Does your stats lose on death")
+                    .define("loseStatsOnDeath", false);
+            loseStatsMultiplier = builder.comment("Multiplier of levels you will lose, between 0-1")
+                    .defineInRange("loseStatsMultiplier", 1, 0d, 1d);
+            globalMaxRevertLevel = builder.comment("An integer that constrains the max number of amount of the skill can be reverted. -1 for no limit. 0 to disable reverting.")
+                    .defineInRange("globalMaxRevertLevel", -1, -1, Integer.MAX_VALUE);
+            globalRevertFactor = builder.comment("How much percentage of exp will be given back to player if a player revert a skill, between 0-1.")
+                    .defineInRange("globalRevertFactor", 0.8, 0d, 1d);
+            reaperLimit = builder.comment("When using reaper skill, the maximum health of target hostile. -1 for no limit.")
+                    .defineInRange("reaperLimit", 20, -1, Integer.MAX_VALUE);
+        }
     }
 }

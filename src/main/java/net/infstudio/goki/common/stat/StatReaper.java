@@ -20,7 +20,7 @@ public class StatReaper extends StatBase {
     @Override
     public float[] getDescriptionFormatArguments(PlayerEntity player) {// TODO special
         return new float[]
-                {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), GokiConfig.support.reaperLimit};
+                {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), GokiConfig.SERVER.reaperLimit.get()};
         // return Helper.trimDecimals(getBonus(getPlayerStatLevel(player)) *
         // 100, 1) + "% chance to instantly kill enemies with less than " +
         // healthLimit + " health.";
@@ -40,7 +40,8 @@ public class StatReaper extends StatBase {
                 if ((obj[0] instanceof LivingEntity)) {
                     LivingEntity target = (LivingEntity) obj[0];
 
-                    return target.getMaxHealth() <= GokiConfig.support.reaperLimit;
+                    final int limit = GokiConfig.SERVER.reaperLimit.get();
+                    return target.getMaxHealth() <= limit || limit == -1;
                 }
             }
         }

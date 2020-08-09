@@ -3,14 +3,17 @@ package net.infstudio.goki;
 import net.infstudio.goki.api.capability.CapabilityStat;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.StatsCommand;
+import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.handlers.TickHandler;
 import net.infstudio.goki.common.init.GokiSounds;
-import net.infstudio.goki.common.init.MinecraftEffects;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -25,7 +28,7 @@ public class GokiStats {
     public static final Logger log = LogManager.getLogger(Reference.MODID);
 
     private static final Class<?>[] loadClasses = {
-            Stats.class, MinecraftEffects.class
+            Stats.class
     };
 
     public GokiStats() {
@@ -48,10 +51,20 @@ public class GokiStats {
         MinecraftForge.EVENT_BUS.register(new GokiStats());
         MinecraftForge.EVENT_BUS.register(new GokiSounds());
         MinecraftForge.EVENT_BUS.register(new TickHandler());
+        initConfig();
+
+        if (ModList.get().isLoaded("additionalevents")) {
+            Stats.TREASURE_FINDER.setEnabled(true);
+            Stats.MINING_MAGICIAN.setEnabled(true);
+        }
     }
 
     public void registerCommands(FMLServerStartingEvent event) {
         StatsCommand.register(event.getCommandDispatcher());
+    }
+
+    public void initConfig() {
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, GokiConfig.serverSpec);
     }
 /*
     @Mod.EventHandler

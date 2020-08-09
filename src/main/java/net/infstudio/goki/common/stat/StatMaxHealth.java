@@ -18,15 +18,15 @@ public class StatMaxHealth extends StatBase {
 
     @Override
     public int getLimit() {
-        if (GokiConfig.globalModifiers.globalLimitMultiplier >= 1.0F)
+        if (GokiConfig.SERVER.globalLimitMultiplier.get() >= 1.0)
             return 40;
         else
-            return (int) (40 * this.limitMultiplier * GokiConfig.globalModifiers.globalLimitMultiplier);
+            return (int) (40 * this.limitMultiplier * GokiConfig.SERVER.globalLimitMultiplier.get());
     }
 
     @Override
     public int getCost(int level) {
-        return (int) ((Math.pow(level, 2D) + 12.0D + level) * GokiConfig.globalModifiers.globalCostMultiplier);
+        return (int) ((Math.pow(level, 2D) + 12.0D + level) * GokiConfig.SERVER.globalCostMultiplier.get());
     }
 
     @Override
