@@ -15,7 +15,7 @@ public class GokiSounds {
     public static final SoundEvent REAPER = null;
 
     @SubscribeEvent
-    public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
+    public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
         event.getRegistry().registerAll(
                 new SoundEvent(new ResourceLocation(MODID, "treasure")),
                 new SoundEvent(new ResourceLocation(MODID, "magician")),

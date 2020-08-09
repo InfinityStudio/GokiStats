@@ -10,13 +10,23 @@ Feel free to solve any issue with crash-report in GitHub Issues.
 
 Forum thread on [Mcbbs](http://www.mcbbs.net/thread-805910-1-1.html)
 
+## Why my Mining Magician and Treasure Finder skill are disabled?
+
+According to https://github.com/MinecraftForge/MinecraftForge/pull/5871 Forge are recommending to use global loot functions, but they are rather complicated and not suitable for the skill.
+
+You have to install [Additional Events](https://www.curseforge.com/minecraft/mc-mods/additional-events) and its dependency [MixinBootstrap](https://www.curseforge.com/minecraft/mc-mods/mixinbootstrap), and your skill will work fine.
+
+## Why Furnace Finesse is disabled?
+
+Because it drops TPS heavily. I will working on a better implementation.
+
 ## 1.15.2 Version
 
 **After 1.15.2, we change to GPL License as I discovered illegal copies of this Mod.**
 
-This version of GokiStats is highly experimental, many of the skill doesn't work.
+This version of GokiStats is highly experimental.
 
-Configuration will not be implemented unless Forge work out their config system.
+Configuration for each skill have no plan to implement as in 1.12.2 version it has severe bugs.
 
 ## Screenshots
 

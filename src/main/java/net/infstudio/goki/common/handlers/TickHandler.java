@@ -62,8 +62,8 @@ public class TickHandler {
     @SubscribeEvent
     @OnlyIn(Dist.DEDICATED_SERVER)
     public void serverTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            if (tickTimer.get() == GokiConfig.syncTicks) {
+        if (event.phase == TickEvent.Phase.END && GokiConfig.SERVER.syncTicks.get() > 0) {
+            if (tickTimer.get() == GokiConfig.SERVER.syncTicks.get()) {
                 tickTimer.lazySet(0);
                 for (ServerPlayerEntity player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
                     SyncEventHandler.syncPlayerData(player);

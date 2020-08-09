@@ -10,5 +10,6 @@ import java.util.function.Supplier;
 public class PacketGuiClientHandler {
     public static void acceptOpenGui(S2COpenGui message, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> Minecraft.getInstance().displayGuiScreen(new GuiStats()));
+        context.get().setPacketHandled(true);
     }
 }

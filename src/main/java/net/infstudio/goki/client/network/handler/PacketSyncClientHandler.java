@@ -28,6 +28,7 @@ public class PacketSyncClientHandler {
             DataHelper.setPlayerStatLevel(player, stat, message.amount);
             GokiStats.log.debug("Loaded stat from server.");
         });
+        ctx.setPacketHandled(true);
     }
 
     public static void acceptSyncAll(S2CSyncAll message, Supplier<NetworkEvent.Context> context) {
@@ -48,5 +49,6 @@ public class PacketSyncClientHandler {
                     .setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
             GokiStats.log.debug("Loaded stats from server.");
         });
+        ctx.setPacketHandled(true);
     }
 }

@@ -21,9 +21,9 @@ import java.util.function.IntFunction;
 
 public class DataHelper {
     public static boolean canPlayerRevertStat(PlayerEntity player, StatBase stat) {
-        return GokiConfig.globalModifiers.globalMaxRevertLevel == -1 ||
-                (GokiConfig.globalModifiers.globalMaxRevertLevel >= 0
-                        && getPlayerRevertStatLevel(player, stat) < GokiConfig.globalModifiers.globalMaxRevertLevel
+        return GokiConfig.SERVER.globalMaxRevertLevel.get() == -1 ||
+                (GokiConfig.SERVER.globalMaxRevertLevel.get() >= 0
+                        && getPlayerRevertStatLevel(player, stat) < GokiConfig.SERVER.globalMaxRevertLevel.get()
                         && getPlayerStatLevel(player, stat) > 0);
     }
 
