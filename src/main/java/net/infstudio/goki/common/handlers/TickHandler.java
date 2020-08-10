@@ -15,12 +15,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static net.infstudio.goki.common.utils.Reference.MODID;
+
+@Mod.EventBusSubscriber(modid = MODID)
 public class TickHandler {
     public static final UUID knockbackResistanceID = UUID.randomUUID();
     public static final UUID stealthSpeedID = UUID.randomUUID();
@@ -29,7 +33,7 @@ public class TickHandler {
     public static AtomicInteger tickTimer = new AtomicInteger();
 
     @SubscribeEvent
-    public void playerTick(TickEvent.PlayerTickEvent event) {
+    public static void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START) { // Due to issue #32
             PlayerEntity player = event.player;
 
@@ -78,7 +82,7 @@ public class TickHandler {
         return ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, livingBase, "field_70703_bu");
     }
 
-    private void handleTaskPlayerAPI(PlayerEntity player) {
+    private static void handleTaskPlayerAPI(PlayerEntity player) {
         if (player.isServerWorld() || player.canPassengerSteer())
             if (player.isSwimming()) {
                 float multiplier = Math.max(0.0F,
@@ -124,7 +128,7 @@ public class TickHandler {
         }
     }
 
-    private void handleFurnace(PlayerEntity player) {
+    private static void handleFurnace(PlayerEntity player) {
         if (DataHelper.getPlayerStatLevel(player, Stats.FURNACE_FINESSE) > 0) {
             /*
             ArrayList<FurnaceTileEntity> furnacesAroundPlayer = new ArrayList<>();

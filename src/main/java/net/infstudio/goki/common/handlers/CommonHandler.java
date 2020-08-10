@@ -66,7 +66,7 @@ public class CommonHandler {
         PlayerEntity player = event.getPlayer();
         if (!player.world.isRemote) {
             if (GokiConfig.SERVER.loseStatsOnDeath.get()) {
-                for (int stat = 0; stat < StatBase.totalStats; stat++) {
+                for (int stat = 0; stat < StatBase.totalStats.orElse(0); stat++) {
                     DataHelper.multiplyPlayerStatLevel(player,
                             StatBase.stats.get(stat),
                             level -> level - (int) (GokiConfig.SERVER.loseStatsMultiplier.get() * level));
@@ -124,7 +124,7 @@ public class CommonHandler {
         if (attacker.getTags().contains("knockback")) {
             attacker.removeTag("knockback");
             event.setStrength(event.getStrength() * 2f);
-            attacker.sendMessage(new TranslationTextComponent("grpg_Roll.knockback"));
+            attacker.sendMessage(new TranslationTextComponent("skill.gokistats.roll.knockback"));
         }
     }
 
@@ -147,7 +147,7 @@ public class CommonHandler {
                     );
 
                     victim.addTag("knockback");
-                    player.sendMessage(new TranslationTextComponent("grpg_Roll.message"));
+                    player.sendMessage(new TranslationTextComponent("skill.gokistats.roll.message"));
 
                     return;
                 }

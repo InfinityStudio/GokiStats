@@ -2,6 +2,7 @@ package net.infstudio.goki.api.stat;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import net.infstudio.goki.common.config.Configurable;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.DataHelper;
@@ -14,22 +15,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Objects;
 
-public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<Stat> implements Stat {
+public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<Stat> implements Stat, Configurable<T> {
     public static final IForgeRegistry<Stat> REGISTRY = new RegistryBuilder<Stat>()
             .setName(new ResourceLocation(Reference.MODID, "stats"))
             .setType(Stat.class)
             .create();
     public static final ObjectList<StatBase> stats = new ObjectArrayList<>(16);
-    public static int totalStats = 0;
-    //	 public static final StatBase STAT_FOCUS = new StatFocus(14, "grpg_Focus",
-//	 "Focus", 25);
+    public static LazyOptional<Integer> totalStats = LazyOptional.of(() -> REGISTRY.getValues().size());
     public int imageID;
     public String key;
 
@@ -37,14 +39,22 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     public float limitMultiplier = 1.0F;
     public float bonusMultiplier = 1.0F;
     private boolean enabled = true;
-    private int limit;
+    private final int limit;
+
+    public final T config;
+    public final ForgeConfigSpec configSpec;
 
     public StatBase(int imgId, String key, int limit) {
         this.imageID = imgId;
         this.limit = limit;
         this.key = key;
         stats.add(this);
-        totalStats++;
+
+        final Pair<T, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
+                .configure(this::createConfig);
+        configSpec = specPair.getRight();
+        config = specPair.getLeft();
+
         setRegistryName(Reference.MODID, key.toLowerCase());
         REGISTRY.register(this);
     }
@@ -52,12 +62,14 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     protected static float getFinalBonus(float currentBonus) {
         return (float) (currentBonus * GokiConfig.SERVER.globalBonusMultiplier.get());
     }
-/*
-    @Override
-    public T createConfig() {
-        return (T) new StatConfig();
-    }
 
+    @Override
+    public T createConfig(ForgeConfigSpec.Builder builder) {
+        builder.comment("Server configuration settings")
+                .push("stats." + key);
+        return (T) new StatConfig(builder);
+    }
+/*
     @Override
     public String getKey() {
         return key;
@@ -129,12 +141,12 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     @OnlyIn(Dist.CLIENT)
     public String getLocalizedName() {
-        return I18n.format(this.key);
+        return I18n.format("skill.gokistats." + this.key);
     }
 
     @OnlyIn(Dist.CLIENT)
     public String getLocalizedDescription(PlayerEntity player) {
-        return I18n.format(this.key + ".des",
+        return I18n.format("skill.gokistats." + this.key + ".text",
                 this.getDescriptionFormatArguments(player)[0]);
     }
 

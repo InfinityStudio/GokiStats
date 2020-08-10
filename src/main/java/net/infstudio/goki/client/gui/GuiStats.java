@@ -70,7 +70,7 @@ public class GuiStats extends Screen {
             }
         }
         drawCenteredString(fontRenderer,
-                I18n.format("ui.currentxp") + DataHelper.getXPTotal(player) + "xp",
+                I18n.format("ui.currentxp", DataHelper.getXPTotal(player)),
                 width / 2,
                 this.height - 16,
                 0xFFFFFFFF);
@@ -84,7 +84,7 @@ public class GuiStats extends Screen {
     public void init() {
         // Sync the stat
         GokiPacketHandler.CHANNEL.sendToServer(new C2SRequestStatSync());
-        for (int stat = 0; stat < StatBase.totalStats; stat++) {
+        for (int stat = 0; stat < StatBase.totalStats.orElse(0); stat++) {
             Vec2f pos = getButton(stat);
             this.buttons.add(new GuiStatButton(stat, (int) pos.x, (int) pos.y, 24, 24, StatBase.stats.get(stat), this.player, this::actionPerformed));
             this.currentColumn += 1;
@@ -115,7 +115,7 @@ public class GuiStats extends Screen {
             return;
 
         GuiStatButton button = (GuiStatButton) btn;
-        if ((button.id >= 0) && (button.id <= StatBase.totalStats)) {
+        if ((button.id >= 0) && (button.id <= StatBase.totalStats.orElse(0))) {
             GuiStatButton statButton = (GuiStatButton) button;
             if (!hasControlDown())
                 GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), 1));

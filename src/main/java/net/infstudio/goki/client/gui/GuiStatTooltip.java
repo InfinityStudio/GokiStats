@@ -37,10 +37,10 @@ public class GuiStatTooltip extends AbstractGui {
         if (level >= this.stat.getLimit())
             messageColorMap.put(I18n.format("ui.max"), -16724737);
         else
-            messageColorMap.put(I18n.format("ui.cost") + this.stat.getCost(level) + "xp", -16724737); // Cost
+            messageColorMap.put(I18n.format("ui.cost", this.stat.getCost(level)), -16724737); // Cost
 
         if (Screen.hasControlDown())
-            messageColorMap.put(I18n.format("ui.return") + this.stat.getCost(level) * GokiConfig.SERVER.globalRevertFactor.get() + "xp", -16724737); // Cost
+            messageColorMap.put(I18n.format("ui.return", this.stat.getCost(level) * GokiConfig.SERVER.globalRevertFactor.get()), -16724737); // Cost
 
         int revertLevel = DataHelper.getPlayerRevertStatLevel(player, stat);
         if (revertLevel > 0) {
