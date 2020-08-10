@@ -35,7 +35,7 @@ public class PacketSyncHandler {
                 int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
                 reverted = Math.max(reverted - message.amount, 0);
                 if (GokiConfig.globalModifiers.globalMaxRevertLevel < reverted && GokiConfig.globalModifiers.globalMaxRevertLevel != -1) return;
-                DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
+                if (message.amount <= 0) DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
 
                 if (currentXP >= cost) {
                     DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
@@ -54,6 +54,14 @@ public class PacketSyncHandler {
                     } else
                         DataHelper.setPlayersExpTo(player, currentXP - cost);
                 } else {
+                    if (message.amount <= 0) {
+                        // Deal with health limit
+                        if (stat instanceof StatMaxHealth) {
+                            player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                                    .setBaseValue(20 + stat.getBonus(level) + message.amount);
+                        }
+                        DataHelper.setPlayersExpTo(player, currentXP + (int) (stat.getCost(level + message.amount + 1) * GokiConfig.globalModifiers.globalRevertFactor));
+                    }
                     // Sync to client player
                     GokiPacketHandler.CHANNEL.sendTo(new S2CStatSync(StatBase.stats.indexOf(stat), level, reverted), player);
                 }
