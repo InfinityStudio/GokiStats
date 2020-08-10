@@ -33,11 +33,8 @@ public class PacketSyncHandler {
             int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
             reverted = Math.max(reverted - message.amount, 0);
             if (GokiConfig.SERVER.globalMaxRevertLevel.get() < reverted && GokiConfig.SERVER.globalMaxRevertLevel.get() != -1) return;
-            DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
 
             if (currentXP >= cost) {
-                DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
-
                 // Sync to client player
                 GokiPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new S2CStatSync(StatBase.stats.indexOf(stat), level + message.amount, reverted));
 
@@ -50,10 +47,23 @@ public class PacketSyncHandler {
                 if (message.amount <= 0) {
 //                    DataHelper.setPlayersExpTo(player, currentXP + (int) (stat.getCost(level + message.amount + 1) * GokiConfig.globalModifiers.globalRevertFactor));
                     player.giveExperiencePoints((int) (stat.getCost(level + message.amount + 1) * GokiConfig.SERVER.globalRevertFactor.get()));
-                } else
+                } else {
 //                    DataHelper.setPlayersExpTo(player, currentXP - cost);
                     player.giveExperiencePoints(-cost);
+                    DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
+                }
             } else {
+                if (message.amount <= 0) { // Downgrade
+                    DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
+
+                    player.giveExperiencePoints((int) (stat.getCost(level + message.amount + 1) * GokiConfig.SERVER.globalRevertFactor.get()));
+                    // Deal with health limit
+                    if (stat instanceof StatMaxHealth) {
+                        player.getAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                                .setBaseValue(20 + stat.getBonus(level) + message.amount);
+                    }
+                    DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
+                }
                 // Sync to client player
                 GokiPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new S2CStatSync(StatBase.stats.indexOf(stat), level, reverted));
             }

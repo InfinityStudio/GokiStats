@@ -5,6 +5,7 @@ import net.infstudio.goki.api.stat.StatBase;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.*;
 
@@ -18,29 +19,18 @@ public abstract class ToolSpecificStat extends StatBase<ToolSpecificConfig> {
 
     public abstract String getConfigurationKey();
 
+    /**
+     * Default supported items, will be
+     */
     public abstract Item[] getDefaultSupportedItems();
-/*
+
     @Override
-    public ToolSpecificConfig createConfig() {
-        ToolSpecificConfig config = new ToolSpecificConfig();
-        Arrays.stream(getDefaultSupportedItems()).map(ItemIdMetadataTuple::new).forEach(config.supports::add);
+    public ToolSpecificConfig createConfig(ForgeConfigSpec.Builder builder) {
+        ToolSpecificConfig config = new ToolSpecificConfig(builder);
+//        Arrays.stream(getDefaultSupportedItems()).map(ItemIdMetadataTuple::new).forEach(config.supports::add);
         return config;
     }
 
-    @Override
-    public void save() {
-        super.save();
-        getConfig().supports.clear();
-        getConfig().supports.addAll(supports);
-    }
-
-    @Override
-    public void reload() {
-        super.reload();
-        supports.clear();
-        supports.addAll(getConfig().supports);
-    }
-*/
     public void addSupportForItem(ItemStack item) {
         supports.add(item.getItem());
     }

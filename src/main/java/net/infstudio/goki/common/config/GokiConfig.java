@@ -28,7 +28,7 @@ public class GokiConfig {
         public final ForgeConfigSpec.DoubleValue globalRevertFactor;
         public final ForgeConfigSpec.IntValue reaperLimit;
 
-        Server(ForgeConfigSpec.Builder builder) {
+        public Server(ForgeConfigSpec.Builder builder) {
             builder.comment("Server configuration settings")
                     .push("server");
 

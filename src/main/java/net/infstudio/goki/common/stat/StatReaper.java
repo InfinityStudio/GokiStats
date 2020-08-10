@@ -28,7 +28,7 @@ public class StatReaper extends StatBase {
 
     @Override
     public String getLocalizedDescription(PlayerEntity player) {
-        return I18n.format(this.key + ".des",
+        return I18n.format("skill.gokistats." + this.key + ".text",
                 this.getDescriptionFormatArguments(player)[0],
                 this.getDescriptionFormatArguments(player)[1]);
     }

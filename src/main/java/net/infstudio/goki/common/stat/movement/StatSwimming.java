@@ -18,9 +18,9 @@ public class StatSwimming extends StatBase<StatConfig> {
     @Override
     public String getLocalizedDescription(PlayerEntity player) {
         if (Reference.isPlayerAPILoaded) {
-            return I18n.format(this.key + ".des1");
+            return I18n.format("skill.gokistats." + this.key + ".disabled");
         }
-        return I18n.format(this.key + ".des0",
+        return I18n.format("skill.gokistats." + this.key + ".text",
                 this.getDescriptionFormatArguments(player)[0]);
     }
 }
