@@ -10,7 +10,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import static net.infstudio.goki.common.utils.Reference.MODID;
 
 @ObjectHolder(MODID)
-@Mod.EventBusSubscriber(modid = MODID)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class GokiSounds {
     public static final SoundEvent TREASURE = null;
     public static final SoundEvent MAGICIAN = null;
@@ -19,9 +19,9 @@ public class GokiSounds {
     @SubscribeEvent
     public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
         event.getRegistry().registerAll(
-                new SoundEvent(new ResourceLocation(MODID, "treasure")),
-                new SoundEvent(new ResourceLocation(MODID, "magician")),
-                new SoundEvent(new ResourceLocation(MODID, "reaper"))
+                new SoundEvent(new ResourceLocation(MODID, "treasure")).setRegistryName(MODID, "treasure"),
+                new SoundEvent(new ResourceLocation(MODID, "magician")).setRegistryName(MODID, "magician"),
+                new SoundEvent(new ResourceLocation(MODID, "reaper")).setRegistryName(MODID, "reaper")
         );
     }
 }
