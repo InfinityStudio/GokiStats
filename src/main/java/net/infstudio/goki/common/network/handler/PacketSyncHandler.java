@@ -11,8 +11,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketSyncHandler {
 
@@ -83,7 +81,6 @@ public class PacketSyncHandler {
 
     public static class RequestSync implements IMessageHandler<C2SRequestStatSync, S2CSyncAll> {
         @Override
-        @SideOnly(Side.SERVER)
         public S2CSyncAll onMessage(C2SRequestStatSync message, MessageContext ctx) {
             return new S2CSyncAll(ctx.getServerHandler().player);
         }

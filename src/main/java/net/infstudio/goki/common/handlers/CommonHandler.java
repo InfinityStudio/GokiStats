@@ -91,8 +91,6 @@ public class CommonHandler {
         if (DataHelper.getPlayerStatLevel(player, Stats.MINING_MAGICIAN) > 0) { // Player has mining magician
             boolean magicHappened = false;
             // TODO Rewrite to NBT in 1.13
-            LootConfigDeserializer.MINING_MAGICIAN.getLocationForBlock(event.getState()).map(event.getWorld().getLootTableManager()::getLootTableFromLocation).ifPresent(lootTable ->
-                    lootTable.generateLootForPools(event.getWorld().rand, new LootContext(1f, (WorldServer) event.getWorld(), event.getWorld().getLootTableManager(), null, null, null)));
 
             IDMDTuple mme = new IDMDTuple(block, block.getMetaFromState(event.getState()));
             if (Stats.MINING_MAGICIAN.isEffectiveOn(mme)) { // This block can be affected by magic
