@@ -21,7 +21,11 @@ public class PacketSyncHandler {
         StatBase stat = StatBase.stats.get(message.stat);
         if (!stat.isEnabled())
             return;
-        int level = DataHelper.getPlayerStatLevel(player, stat);
+
+        final int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
+        if (GokiConfig.SERVER.globalMaxRevertLevel.get() < reverted - message.amount && GokiConfig.SERVER.globalMaxRevertLevel.get() != -1) return;
+
+        final int level = DataHelper.getPlayerStatLevel(player, stat);
 
         if (message.amount < 0 && level == 0) return;
 
@@ -30,14 +34,18 @@ public class PacketSyncHandler {
         int cost = stat.getCost(level + message.amount - 1);
         int currentXP = DataHelper.getXPTotal(player);
         ctx.enqueueWork(() -> {
-            int reverted = DataHelper.getPlayerRevertStatLevel(player, stat);
-            reverted = Math.max(reverted - message.amount, 0);
-            if (GokiConfig.SERVER.globalMaxRevertLevel.get() < reverted && GokiConfig.SERVER.globalMaxRevertLevel.get() != -1) return;
+            if (message.amount <= 0) { // Downgrade
+                DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
 
-            if (currentXP >= cost) {
-                // Sync to client player
+                player.giveExperiencePoints((int) (stat.getCost(level + message.amount) * GokiConfig.SERVER.globalRevertFactor.get()));
+                // Deal with health limit
+                if (stat instanceof StatMaxHealth) {
+                    player.getAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                            .setBaseValue(20 + stat.getBonus(level) + message.amount);
+                }
+                DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
                 GokiPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new S2CStatSync(StatBase.stats.indexOf(stat), level + message.amount, reverted));
-
+            } else if (currentXP >= cost) {
                 // Deal with health limit
                 if (stat instanceof StatMaxHealth) {
                     player.getAttribute(SharedMonsterAttributes.MAX_HEALTH)
@@ -52,20 +60,8 @@ public class PacketSyncHandler {
                     player.giveExperiencePoints(-cost);
                     DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
                 }
-            } else {
-                if (message.amount <= 0) { // Downgrade
-                    DataHelper.setPlayerRevertStatLevel(player, stat, reverted);
-
-                    player.giveExperiencePoints((int) (stat.getCost(level + message.amount + 1) * GokiConfig.SERVER.globalRevertFactor.get()));
-                    // Deal with health limit
-                    if (stat instanceof StatMaxHealth) {
-                        player.getAttribute(SharedMonsterAttributes.MAX_HEALTH)
-                                .setBaseValue(20 + stat.getBonus(level) + message.amount);
-                    }
-                    DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
-                }
-                // Sync to client player
-                GokiPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new S2CStatSync(StatBase.stats.indexOf(stat), level, reverted));
+                // Sync
+                GokiPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new S2CStatSync(StatBase.stats.indexOf(stat), level + message.amount, reverted));
             }
         });
         ctx.setPacketHandled(true);
