@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/InfinityStudio/GokiStats.svg?branch=1.15.2)](https://travis-ci.org/InfinityStudio/GokiStats)
 ![](https://img.shields.io/github/downloads/InfinityStudio/GokiStats/total.svg)
 [![CurseForge](http://cf.way2muchnoise.eu/298141.svg)](https://minecraft.curseforge.com/projects/gokistats)
+[![Gitter](https://badges.gitter.im/InfinityStudio/GokiStats.svg)](https://gitter.im/InfinityStudio/GokiStats?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 GokiStats is a skill improvement mod for Minecraft, it has been well-known before 1.7.10 but it has stopped developing for years.
 
