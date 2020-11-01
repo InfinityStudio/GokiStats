@@ -5,7 +5,10 @@
 # Find more information on toml format here:  https://github.com/toml-lang/toml
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[34,)"
+# The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
+# Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
+license="GPL-3.0"
 issueTrackerURL="https://github.com/InfinityStudio/GokiStats/issues" #optional
 [[mods]] #mandatory
 # The modid of the mod
@@ -35,20 +38,8 @@ A mod provides player some RPG abilities
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[31,)" #mandatory
+    versionRange="[34,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
-
-[[dependencies.gokistats]] #optional
-    # the modid of the dependency
-    modId="additionalevents" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
-    mandatory=false #mandatory
-    # The version range of the dependency
-    versionRange="[1.1,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
-    ordering="AFTER"
-    # Side this dependency is applied on - BOTH, CLIENT or SERVER
-    side="SERVER"

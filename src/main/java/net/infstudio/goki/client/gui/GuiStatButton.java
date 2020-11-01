@@ -1,5 +1,6 @@
 package net.infstudio.goki.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.utils.Reference;
@@ -8,6 +9,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.opengl.GL11;
 
 public class GuiStatButton extends Button {
@@ -23,14 +25,14 @@ public class GuiStatButton extends Button {
     private final Minecraft mc = Minecraft.getInstance();
 
     public GuiStatButton(int id, int x, int y, int width, int height, StatBase stat, PlayerEntity player, IPressable onPress) {
-        super(x, y, width, height, "", onPress);
+        super(x, y, width, height, StringTextComponent.EMPTY, onPress);
         this.id = id;
         this.stat = stat;
         this.player = player;
     }
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
             int iconY = 24 * (this.stat.imageID % 10);
             int level = DataHelper.getPlayerStatLevel(this.player, this.stat);
@@ -82,12 +84,12 @@ public class GuiStatButton extends Button {
             GL11.glPushMatrix();
             GL11.glTranslatef(this.x, this.y, 0.0F);
             GL11.glScalef(GuiStats.SCALE, GuiStats.SCALE, 0.0F);
-            blit(0, 0, iconX, iconY, this.width, this.height);
+            blit(stack, 0, 0, iconX, iconY, this.width, this.height);
 
             GL11.glPopMatrix();
             GL11.glPushMatrix();
             GL11.glTranslatef(this.x, this.y, 0.0F);
-            drawCenteredString(fontrenderer,
+            drawCenteredString(stack, fontrenderer,
                     message,
                     (int) (this.width / 2 * GuiStats.SCALE),
                     (int) (this.height * GuiStats.SCALE) + 2,

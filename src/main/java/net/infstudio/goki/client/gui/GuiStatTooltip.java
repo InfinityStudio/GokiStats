@@ -1,5 +1,6 @@
 package net.infstudio.goki.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.utils.DataHelper;
@@ -25,7 +26,7 @@ public class GuiStatTooltip extends AbstractGui {
         this.player = player;
     }
 
-    public void draw(int drawX, int drawY, int mouseButton) {
+    public void draw(MatrixStack stack, int drawX, int drawY, int mouseButton) {
         Map<String, Integer> messageColorMap = new LinkedHashMap<>();
 
         AtomicInteger widthAtomic = new AtomicInteger(), heightAtomic = new AtomicInteger();
@@ -33,6 +34,7 @@ public class GuiStatTooltip extends AbstractGui {
         int level = DataHelper.getPlayerStatLevel(this.player, this.stat);
 
         messageColorMap.put(this.stat.getLocalizedName() + " L" + level, -13312); // Header
+
         messageColorMap.put(this.stat.getLocalizedDescription(this.player), -1); // Message
         if (level >= this.stat.getLimit())
             messageColorMap.put(I18n.format("ui.max"), -16724737);
@@ -77,24 +79,24 @@ public class GuiStatTooltip extends AbstractGui {
         if (right > rightEdge) {
             x += rightEdge - right - 1;
         }
-        fill(x, drawY, x + width, drawY - height, -872415232);
+        fill(stack, x, drawY, x + width, drawY - height, -872415232);
 
         for (int i = messageColorMap.size(); i >= 1; i--) {
             Map.Entry<String, Integer> entry = messageColorMap.entrySet().toArray(new Map.Entry[0])[messageColorMap.size() - i];
-            drawString(this.mc.fontRenderer,
+            drawString(stack, this.mc.fontRenderer,
                     entry.getKey(),
                     x + this.padding / 2,
                     drawY - h * i + this.padding / 2,
                     entry.getValue());
         }
 
-        drawBorder(x, drawY, width, height, -1);
+        drawBorder(stack, x, drawY, width, height, -1);
     }
 
-    private void drawBorder(int x, int y, int width, int height, int borderColor) {
-        hLine(x - 1, x + width, y, borderColor);
-        hLine(x - 1, x + width, y - height, borderColor);
-        vLine(x - 1, y, y - height, borderColor);
-        vLine(x + width, y, y - height, borderColor);
+    private void drawBorder(MatrixStack stack, int x, int y, int width, int height, int borderColor) {
+        hLine(stack, x - 1, x + width, y, borderColor);
+        hLine(stack, x - 1, x + width, y - height, borderColor);
+        vLine(stack, x - 1, y, y - height, borderColor);
+        vLine(stack, x + width, y, y - height, borderColor);
     }
 }

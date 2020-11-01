@@ -6,7 +6,7 @@ import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.*;
 import net.infstudio.goki.common.stat.StatMaxHealth;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -40,7 +40,7 @@ public class PacketSyncHandler {
                 player.giveExperiencePoints((int) (stat.getCost(level + message.amount) * GokiConfig.SERVER.globalRevertFactor.get()));
                 // Deal with health limit
                 if (stat instanceof StatMaxHealth) {
-                    player.getAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                    player.getAttribute(Attributes.MAX_HEALTH)
                             .setBaseValue(20 + stat.getBonus(level) + message.amount);
                 }
                 DataHelper.setPlayerStatLevel(player, stat, level + message.amount);
@@ -48,7 +48,7 @@ public class PacketSyncHandler {
             } else if (currentXP >= cost) {
                 // Deal with health limit
                 if (stat instanceof StatMaxHealth) {
-                    player.getAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                    player.getAttribute(Attributes.MAX_HEALTH)
                             .setBaseValue(20 + stat.getBonus(level) + message.amount);
                 }
 

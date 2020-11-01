@@ -6,7 +6,7 @@ import net.infstudio.goki.common.network.message.S2CStatSync;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,7 +39,7 @@ public class PacketSyncClientHandler {
             return;
         StatBase stat = StatBase.stats.get(message.stat);
         if (stat == Stats.MAX_HEALTH)
-            player.getAttribute(SharedMonsterAttributes.MAX_HEALTH)
+            player.getAttribute(Attributes.MAX_HEALTH)
                     .setBaseValue(20 + message.amount);
         DataHelper.setPlayerRevertStatLevel(player, stat, message.reverted);
         DataHelper.setPlayerStatLevel(player, stat, message.amount);
@@ -58,7 +58,7 @@ public class PacketSyncClientHandler {
         for (int i = 0; i < message.revertedStatLevels.length; i++) {
             DataHelper.setPlayerRevertStatLevel(player, StatBase.stats.get(i), message.revertedStatLevels[i]);
         }
-        player.getAttribute(SharedMonsterAttributes.MAX_HEALTH)
+        player.getAttribute(Attributes.MAX_HEALTH)
                 .setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
     }
 }
