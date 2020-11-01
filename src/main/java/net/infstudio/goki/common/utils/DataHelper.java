@@ -7,8 +7,8 @@ import net.infstudio.goki.common.config.GokiConfig;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -31,7 +31,7 @@ public class DataHelper {
         if (player.getCapability(CapabilityStat.STAT).isPresent()) {
             return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel;
         } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayNameAndUUID().getFormattedText() + " is missing stat capability!"));
+            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
         }
     }
 
@@ -39,7 +39,7 @@ public class DataHelper {
         if (player.getCapability(CapabilityStat.STAT).isPresent()) {
             player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel = level;
         } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayNameAndUUID().getFormattedText() + " is missing stat capability!"));
+            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
         }
     }
 
@@ -47,7 +47,7 @@ public class DataHelper {
         if (player.getCapability(CapabilityStat.STAT).isPresent()) {
             return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level;
         } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayNameAndUUID().getFormattedText() + " is missing stat capability!"));
+            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
         }
     }
 
@@ -55,7 +55,7 @@ public class DataHelper {
         if (player.getCapability(CapabilityStat.STAT).isPresent()) {
             player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level = level;
         } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayNameAndUUID().getFormattedText() + " is missing stat capability!"));
+            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
         }
     }
 
@@ -85,7 +85,7 @@ public class DataHelper {
     }
 
     public static boolean hasDamageModifier(ItemStack stack) {
-        Collection<AttributeModifier> modifiers = stack.getItem().getAttributeModifiers(EquipmentSlotType.MAINHAND, stack).get(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
+        Collection<AttributeModifier> modifiers = stack.getItem().getAttributeModifiers(EquipmentSlotType.MAINHAND, stack).get(Attributes.ATTACK_DAMAGE);
         return modifiers != null && !modifiers.isEmpty();
     }
 
@@ -115,7 +115,7 @@ public class DataHelper {
     }
 
     public static float getDamageDealt(PlayerEntity player, Entity target, DamageSource source) {
-        float damage = (float) player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
+        float damage = (float) player.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
         float bonusDamage = 0.0F;
         boolean targetIsLiving = target instanceof LivingEntity;
         boolean critical;
@@ -124,7 +124,7 @@ public class DataHelper {
             bonusDamage = EnchantmentHelper.getModifierForCreature(stack, ((LivingEntity) target).getCreatureAttribute());
         }
         if ((damage > 0.0F) || (bonusDamage > 0.0F)) {
-            critical = (player.fallDistance > 0.0F) && (!player.onGround) && (!player.isOnLadder()) && (!player.isInWater()) && (!player.isPotionActive(Effects.BLINDNESS)) && (player.getRidingEntity() == null) && (targetIsLiving);
+            critical = (player.fallDistance > 0.0F) && (!player.isOnGround()) && (!player.isOnLadder()) && (!player.isInWater()) && (!player.isPotionActive(Effects.BLINDNESS)) && (player.getRidingEntity() == null) && (targetIsLiving);
             if ((critical) && (damage > 0.0F)) {
                 damage *= 1.5F;
             }

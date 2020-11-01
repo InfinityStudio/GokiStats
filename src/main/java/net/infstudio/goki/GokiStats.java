@@ -8,6 +8,7 @@ import net.infstudio.goki.common.handlers.TickHandler;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -34,7 +35,6 @@ public class GokiStats {
         instance = this;
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::construct);
-        eventBus.addListener(this::registerCommands);
         GokiPacketHandler.registerMessages();
     }
 
@@ -50,15 +50,6 @@ public class GokiStats {
         MinecraftForge.EVENT_BUS.register(instance);
         MinecraftForge.EVENT_BUS.register(new TickHandler());
         initConfig();
-
-        if (ModList.get().isLoaded("additionalevents")) {
-            Stats.TREASURE_FINDER.setEnabled(true);
-            Stats.MINING_MAGICIAN.setEnabled(true);
-        }
-    }
-
-    public void registerCommands(FMLServerStartingEvent event) {
-        StatsCommand.register(event.getCommandDispatcher());
     }
 
     public void initConfig() {

@@ -146,7 +146,11 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     @OnlyIn(Dist.CLIENT)
     public String getLocalizedDescription(PlayerEntity player) {
-        return I18n.format("skill.gokistats." + this.key + ".text",
+        if (isEnabled())
+            return I18n.format("skill.gokistats." + this.key + ".text",
+                this.getDescriptionFormatArguments(player)[0]);
+        else
+            return I18n.format("skill.gokistats." + this.key + ".disabled",
                 this.getDescriptionFormatArguments(player)[0]);
     }
 

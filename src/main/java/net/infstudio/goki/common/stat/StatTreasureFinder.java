@@ -55,29 +55,28 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
                     new TreasureFinderEntry(Blocks.DIRT, Item.getItemFromBlock(Blocks.WHITE_WOOL), 2, 10),
                     new TreasureFinderEntry(Blocks.SAND, Items.REDSTONE, 2, 50),
                     new TreasureFinderEntry(Blocks.DIRT, Items.BUCKET, 3, 20),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_11, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_13, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_BLOCKS, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_CAT, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_CHIRP, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_FAR, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_MALL, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_MELLOHI, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_STAL, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_STRAD, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_WAIT, 3, 2),
-                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_WARD, 3, 2)};
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_11, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_13, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_BLOCKS, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_CAT, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_CHIRP, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_FAR, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_MALL, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_MELLOHI, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_STAL, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_STRAD, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_WAIT, 3, 1),
+                    new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_WARD, 3, 1)};
 
     public StatTreasureFinder(int id, String key, int limit) {
         super(id, key, limit);
         Collections.addAll(entries, defaultEntries);
-        setEnabled(false);
     }
 
     @Override
     public String getLocalizedDescription(PlayerEntity player) {
         if (getPlayerStatLevel(player) == 0) {
-            return I18n.format("skill.gokistats." + this.key + ".text");
+            return super.getLocalizedDescription(player);
         }
         return I18n.format("skill.gokistats." + this.key + ".upgrade");
     }
@@ -107,7 +106,7 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
         List<ItemStack> items = new ArrayList<>();
         for (TreasureFinderEntry tfe : entries) {
             if (tfe.minimumLevel <= level) {
-                if (tfe.getBlock() == null && (block == Blocks.DIRT || block == Blocks.GRASS) || tfe.getBlock() == block) {
+                if ((tfe.getBlock() == null && (block == Blocks.DIRT || block == Blocks.GRASS)) || tfe.getBlock() == block) {
                     items.add(new ItemStack(tfe.getItem()));
                 }
             }

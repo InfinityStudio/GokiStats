@@ -1,5 +1,6 @@
 package net.infstudio.goki.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.C2SRequestStatSync;
@@ -11,7 +12,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.text.StringTextComponent;
 
 /**
@@ -52,12 +53,12 @@ public class GuiStats extends Screen {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float par3) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float par3) {
         int toolTipX = 0;
         int toolTipY = 0;
         this.toolTip = null;
-        renderBackground();
-        super.render(mouseX, mouseY, par3);
+        renderBackground(matrixStack);
+        super.render(matrixStack, mouseX, mouseY, par3);
         for (int i = 0; i < this.buttons.size(); i++) {
             if ((this.buttons.get(i) instanceof GuiStatButton)) {
                 GuiStatButton button = (GuiStatButton) this.buttons.get(i);
@@ -69,14 +70,14 @@ public class GuiStats extends Screen {
                 }
             }
         }
-        drawCenteredString(fontRenderer,
+        drawCenteredString(matrixStack, fontRenderer,
                 I18n.format("ui.currentxp", DataHelper.getXPTotal(player)),
                 width / 2,
                 this.height - 16,
                 0xFFFFFFFF);
 
         if (this.toolTip != null)
-            this.toolTip.draw(toolTipX, toolTipY, 0);
+            this.toolTip.draw(matrixStack, toolTipX, toolTipY, 0);
     }
 
     @SuppressWarnings("unchecked")
@@ -85,7 +86,7 @@ public class GuiStats extends Screen {
         // Sync the stat
         GokiPacketHandler.CHANNEL.sendToServer(new C2SRequestStatSync());
         for (int stat = 0; stat < StatBase.totalStats.orElse(0); stat++) {
-            Vec2f pos = getButton(stat);
+            Vector2f pos = getButton(stat);
             this.buttons.add(new GuiStatButton(stat, (int) pos.x, (int) pos.y, 24, 24, StatBase.stats.get(stat), this.player, this::actionPerformed));
             this.currentColumn += 1;
             if (this.currentColumn >= COLUMNS[this.currentRow]) {
@@ -99,14 +100,14 @@ public class GuiStats extends Screen {
         children.addAll(buttons);
     }
 
-    private Vec2f getButton(int n) {
+    private Vector2f getButton(int n) {
         int columns = COLUMNS[this.currentRow];
         int x = n % columns;
         int y = this.currentRow;
         int rows = COLUMNS.length;
         float width = columns * 32 * SCALE;
         float height = rows * 36 * SCALE;
-        return new Vec2f((width / columns * x + (this.width - width + 8.0F) / 2.0F),
+        return new Vector2f((width / columns * x + (this.width - width + 8.0F) / 2.0F),
                 (height / rows * y + (this.height - height + 12.0F) / 2.0F));
     }
 

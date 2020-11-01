@@ -25,7 +25,6 @@ public class StatMiningMagician extends StatBase<MiningMagicianConfig> {
         super(id, key, limit);
         blockEntries.addAll(defaultBlockEntries);
         itemEntries.addAll(defaultItemEntries);
-        setEnabled(false);
     }
 /*
     @Override

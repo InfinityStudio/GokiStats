@@ -5,12 +5,12 @@ import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
@@ -39,21 +39,21 @@ public class TickHandler {
 
             handleTaskPlayerAPI(player);
 
-            IAttributeInstance atinst = player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+            ModifiableAttributeInstance atinst = player.getAttribute(Attributes.MOVEMENT_SPEED);
             AttributeModifier mod = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, AttributeModifier.Operation.byId(1));
             if (player.isSneaking()) {
                 if (atinst.getModifier(stealthSpeedID) == null) {
-                    atinst.applyModifier(mod);
+                    atinst.applyPersistentModifier(mod);
                 }
             } else if (atinst.getModifier(stealthSpeedID) != null) {
                 atinst.removeModifier(mod);
             }
 
-            atinst = player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
+            atinst = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
             mod = new AttributeModifier(knockbackResistanceID, "KnockbackResistance", Stats.STEADY_GUARD.getBonus(player), AttributeModifier.Operation.byId(0));
             if (player.isActiveItemStackBlocking()) {
                 if (atinst.getModifier(knockbackResistanceID) == null) {
-                    atinst.applyModifier(mod);
+                    atinst.applyPersistentModifier(mod);
                 }
             } else if (atinst.getModifier(knockbackResistanceID) != null) {
                 atinst.removeModifier(mod);
@@ -104,7 +104,7 @@ public class TickHandler {
                         f2 += (player.getAIMoveSpeed() - f2) * multiplier;
                     }
 
-                    player.moveRelative(f2, new Vec3d(player.moveStrafing, player.moveVertical, player.moveForward));
+                    player.moveRelative(f2, new Vector3d(player.moveStrafing, player.moveVertical, player.moveForward));
                     player.move(MoverType.SELF, player.getMotion());
                     player.setMotion(player.getMotion().mul(f1, 0.800000011920929D, f1));
 
@@ -112,13 +112,13 @@ public class TickHandler {
                         player.setMotion(player.getMotion().add(0, 0.02, 0));
                     }
 
-                    Vec3d offset = player.getMotion().add(0, 0.6000000238418579D - player.getPosY() + d0, 0);
+                    Vector3d offset = player.getMotion().add(0, 0.6000000238418579D - player.getPosY() + d0, 0);
                     if (player.collidedHorizontally && player.isOffsetPositionInLiquid(offset.x, offset.y, offset.z)) {
-                        player.setMotion(new Vec3d(player.getMotion().x, 0.30000001192092896D, player.getMotion().z));
+                        player.setMotion(new Vector3d(player.getMotion().x, 0.30000001192092896D, player.getMotion().z));
                     }
 
 
-                    player.move(MoverType.SELF, new Vec3d(player.moveStrafing * multiplier, player.moveVertical * multiplier, 0.02f));
+                    player.move(MoverType.SELF, new Vector3d(player.moveStrafing * multiplier, player.moveVertical * multiplier, 0.02f));
                 }
             }
 

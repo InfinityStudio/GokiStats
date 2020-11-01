@@ -16,8 +16,6 @@ public class GokiConfig {
     }
 
     public static class Server {
-        public static boolean initiativeSync = false;
-
         public final ForgeConfigSpec.IntValue syncTicks;
         public final ForgeConfigSpec.DoubleValue globalCostMultiplier;
         public final ForgeConfigSpec.DoubleValue globalLimitMultiplier;

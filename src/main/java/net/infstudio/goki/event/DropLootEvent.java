@@ -1,11 +1,11 @@
-package com.tfar.additionalevents.event;
+package net.infstudio.goki.event;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 

@@ -5,6 +5,7 @@ import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.StatSpecial;
 import net.infstudio.goki.api.stat.StatStorage;
 import net.infstudio.goki.api.stat.Stats;
+import net.infstudio.goki.common.StatsCommand;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.GokiSounds;
 import net.infstudio.goki.common.network.GokiPacketHandler;
@@ -21,21 +22,32 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nonnull;
+import java.util.UUID;
+
 @ObjectHolder(Reference.MODID)
 @Mod.EventBusSubscriber(modid = Reference.MODID)
 public class CommonHandler {
+    @SubscribeEvent
+    public static void registerCommands(RegisterCommandsEvent event) {
+        StatsCommand.register(event.getDispatcher());
+    }
+
     @SubscribeEvent
     public static void injectCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity)
@@ -118,17 +130,6 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public static void entityKnockback(LivingKnockBackEvent event) {
-        if (event.getOriginalAttacker() == null && event.getAttacker() == null) return;
-        Entity attacker = event.getOriginalAttacker() != null ? event.getOriginalAttacker() : event.getAttacker();
-        if (attacker.getTags().contains("knockback")) {
-            attacker.removeTag("knockback");
-            event.setStrength(event.getStrength() * 2f);
-            attacker.sendMessage(new TranslationTextComponent("skill.gokistats.roll.knockback"));
-        }
-    }
-
-    @SubscribeEvent
     public static void entityHurt(LivingHurtEvent event) {
         DamageSource source = event.getSource();
 
@@ -147,7 +148,7 @@ public class CommonHandler {
                     );
 
                     victim.addTag("knockback");
-                    player.sendMessage(new TranslationTextComponent("skill.gokistats.roll.message"));
+                    player.sendMessage(new TranslationTextComponent("skill.gokistats.roll.message"), UUID.randomUUID());
 
                     return;
                 }
@@ -165,6 +166,13 @@ public class CommonHandler {
         Entity src = source.getTrueSource();
 
         if (src instanceof PlayerEntity) {
+            if (src.getTags().contains("knockback")) {
+                src.removeTag("knockback");
+                event.setAmount(event.getAmount() * 2f);
+                src.sendMessage(new TranslationTextComponent("skill.gokistats.roll.knockback"), UUID.randomUUID());
+                return;
+            }
+
             PlayerEntity player = (PlayerEntity) src;
             ItemStack heldItem = player.getHeldItemMainhand();
             float damage = event.getAmount();
@@ -194,7 +202,7 @@ public class CommonHandler {
                 float reapChance = reap + reapBonus;
                 if (player.getRNG().nextFloat() <= reapChance) {
                     player.onEnchantmentCritical(victim);
-                    player.world.playSound(player, event.getEntity().getPosition(), GokiSounds.REAPER, SoundCategory.MASTER, 1.0f, 1.0f);
+                    player.world.playSound(player, new BlockPos(event.getEntity().getPositionVec()), GokiSounds.REAPER, SoundCategory.MASTER, 1.0f, 1.0f);
                     event.setAmount(100000.0F);
                 }
             }
