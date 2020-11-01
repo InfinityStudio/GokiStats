@@ -9,6 +9,6 @@ public class StatPugilism extends StatBase {
 
     @Override
     public float getBonus(int level) {
-        return getFinalBonus((float) Math.pow(level, 1.03D) * 0.1816F);
+        return level == 0 ? 0 : getFinalBonus((float) Math.pow(level, 1.03D) * 0.1816F);
     }
 }

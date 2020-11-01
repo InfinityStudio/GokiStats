@@ -42,7 +42,7 @@ public class StatFeatherFall extends DamageSourceProtectionStat {
 
     @Override
     public float getBonus(int level) {
-        return 0;
+        return getFinalBonus(level * 0.026F);
     }
 
 
