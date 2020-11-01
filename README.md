@@ -28,4 +28,4 @@ Source code are under GPL-3.0 License, and resources are under CC-BY-NC-SA 4.0 L
 
 ## Donation
 
-[![Become a Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=10845019)
+[![Become a Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=10845019) [![Join the chat at https://gitter.im/InfinityStudio/GokiStats](https://badges.gitter.im/InfinityStudio/GokiStats.svg)](https://gitter.im/InfinityStudio/GokiStats?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
