@@ -5,6 +5,8 @@
 [![CurseForge](http://cf.way2muchnoise.eu/298141.svg)](https://minecraft.curseforge.com/projects/gokistats)
 [![Gitter](https://badges.gitter.im/InfinityStudio/GokiStats.svg)](https://gitter.im/InfinityStudio/GokiStats?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
+[![JProfiler](https://www.ej-technologies.com/images/product_banners/jprofiler_large.png)](https://www.ej-technologies.com/products/jprofiler/overview.html)
+
 GokiStats is a skill improvement mod for Minecraft, it has been well-known before 1.7.10 but it has stopped developing for years.
 
 Feel free to solve any issue with crash-report in GitHub Issues.
