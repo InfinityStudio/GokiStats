@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,28 +81,12 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
         }
         return I18n.format("skill.gokistats." + this.key + ".upgrade");
     }
-/*
-    @Override
-    public void save() {
-        super.save();
-        getConfig().entries.clear();
-        getConfig().entries.addAll(entries);
-    }
 
     @Override
-    public TreasureFinderConfig createConfig() {
-        TreasureFinderConfig config = new TreasureFinderConfig();
-        Collections.addAll(config.entries, defaultEntries);
-        return config;
+    public TreasureFinderConfig createConfig(ForgeConfigSpec.Builder builder) {
+        return new TreasureFinderConfig(builder);
     }
 
-    @Override
-    public void reload() {
-        super.reload();
-        entries.clear();
-        entries.addAll(getConfig().entries);
-    }
-*/
     public List<ItemStack> getApplicableItemStackList(Block block, int level) {
         List<ItemStack> items = new ArrayList<>();
         for (TreasureFinderEntry tfe : entries) {
@@ -138,7 +123,11 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
     }
 
     public int getLimit() {
-        return 3;
+        if (config.maxLevel.get() > 3 || config.maxLevel.get() < 0) {
+            return 3;
+        } else {
+            return config.maxLevel.get();
+        }
     }
 
     @Override

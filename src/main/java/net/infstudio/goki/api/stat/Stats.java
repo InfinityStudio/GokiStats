@@ -35,7 +35,7 @@ public interface Stats {
     StatBase STEALTH = new StatStealth(19, "stealth", 10);
     StatBase STEADY_GUARD = new StatSteadyGuard(18, "steady_guard", 10);
     StatMiningMagician MINING_MAGICIAN = new StatMiningMagician(20, "mining_magician", 10);
-    StatMaxHealth MAX_HEALTH = new StatMaxHealth(21, "health", 10);
+    StatMaxHealth MAX_HEALTH = new StatMaxHealth(21, "health", 16);
     StatBase ROLL = new StatRoll(22, "roll", 10);
 
 }

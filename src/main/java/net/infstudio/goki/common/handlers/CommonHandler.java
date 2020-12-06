@@ -21,7 +21,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -124,7 +123,7 @@ public class CommonHandler {
         if (attacker.getTags().contains("knockback")) {
             attacker.removeTag("knockback");
             event.setStrength(event.getStrength() * 2f);
-            attacker.sendMessage(new TranslationTextComponent("skill.gokistats.roll.knockback"));
+//            attacker.sendMessage(new TranslationTextComponent("skill.gokistats.roll.knockback"));
         }
     }
 
@@ -147,7 +146,7 @@ public class CommonHandler {
                     );
 
                     victim.addTag("knockback");
-                    player.sendMessage(new TranslationTextComponent("skill.gokistats.roll.message"));
+//                    player.sendMessage(new TranslationTextComponent("skill.gokistats.roll.message"));
 
                     return;
                 }

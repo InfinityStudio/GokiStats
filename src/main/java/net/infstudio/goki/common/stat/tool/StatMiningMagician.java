@@ -8,6 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,33 +27,12 @@ public class StatMiningMagician extends StatBase<MiningMagicianConfig> {
         blockEntries.addAll(defaultBlockEntries);
         itemEntries.addAll(defaultItemEntries);
     }
-/*
-    @Override
-    public void save() {
-        super.save();
-        getConfig().blockEntries.clear();
-        getConfig().blockEntries.addAll(blockEntries);
-        getConfig().itemEntries.clear();
-        getConfig().itemEntries.addAll(itemEntries);
-    }
 
     @Override
-    public MiningMagicianConfig createConfig() {
-        MiningMagicianConfig config = new MiningMagicianConfig();
-        Collections.addAll(config.blockEntries, defaultBlockEntries);
-        Collections.addAll(config.itemEntries, defaultItemEntries);
-        return config;
+    public MiningMagicianConfig createConfig(ForgeConfigSpec.Builder builder) {
+        return new MiningMagicianConfig(builder);
     }
 
-    @Override
-    public void reload() {
-        super.reload();
-        blockEntries.clear();
-        itemEntries.clear();
-        blockEntries.addAll(getConfig().blockEntries);
-        itemEntries.addAll(getConfig().itemEntries);
-    }
-*/
     @Override
     public float getBonus(int level) {
         return getFinalBonus(level * 0.3F);

@@ -1,6 +1,8 @@
 package net.infstudio.goki;
 
 import net.infstudio.goki.api.capability.CapabilityStat;
+import net.infstudio.goki.api.stat.Stat;
+import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.StatsCommand;
 import net.infstudio.goki.common.config.GokiConfig;
@@ -57,6 +59,9 @@ public class GokiStats {
 
     public void initConfig() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, GokiConfig.serverSpec);
+        for (Stat stat : StatBase.REGISTRY) {
+            ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ((StatBase) stat).configSpec, "stat_" + stat.getRegistryName().getPath() + ".toml");
+        }
     }
 /*
     @Mod.EventHandler
