@@ -26,9 +26,7 @@ public abstract class ToolSpecificStat extends StatBase<ToolSpecificConfig> {
 
     @Override
     public ToolSpecificConfig createConfig(ForgeConfigSpec.Builder builder) {
-        ToolSpecificConfig config = new ToolSpecificConfig(builder);
-//        Arrays.stream(getDefaultSupportedItems()).map(ItemIdMetadataTuple::new).forEach(config.supports::add);
-        return config;
+        return new ToolSpecificConfig(builder);
     }
 
     public void addSupportForItem(ItemStack item) {

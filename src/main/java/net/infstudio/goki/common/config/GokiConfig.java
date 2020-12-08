@@ -16,6 +16,8 @@ public class GokiConfig {
     }
 
     public static class Server {
+        public static boolean initiativeSync = false;
+
         public final ForgeConfigSpec.IntValue syncTicks;
         public final ForgeConfigSpec.DoubleValue globalCostMultiplier;
         public final ForgeConfigSpec.DoubleValue globalLimitMultiplier;
@@ -46,6 +48,7 @@ public class GokiConfig {
                     .defineInRange("globalMaxRevertLevel", -1, -1, Integer.MAX_VALUE);
             globalRevertFactor = builder.comment("How much percentage of exp will be given back to player if a player revert a skill, between 0-1.")
                     .defineInRange("globalRevertFactor", 0.8, 0d, 1d);
+
             reaperLimit = builder.comment("When using reaper skill, the maximum health of target hostile. -1 for no limit.")
                     .defineInRange("reaperLimit", 20, -1, Integer.MAX_VALUE);
         }
