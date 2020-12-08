@@ -59,8 +59,8 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
         REGISTRY.register(this);
     }
 
-    protected static float getFinalBonus(float currentBonus) {
-        return (float) (currentBonus * GokiConfig.SERVER.globalBonusMultiplier.get());
+    protected float getFinalBonus(float currentBonus) {
+        return (float) (currentBonus * config.bonusMultiplier.get() * GokiConfig.SERVER.globalBonusMultiplier.get());
     }
 
     @Override
@@ -69,22 +69,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
                 .push("stats." + key);
         return (T) new StatConfig(builder);
     }
-/*
-    @Override
-    public String getKey() {
-        return key;
-    }
 
-    @Override
-    public void save() {
-        getConfig().bonusMultiplier = bonusMultiplier;
-    }
-
-    @Override
-    public void reload() {
-        bonusMultiplier = getConfig().bonusMultiplier;
-    }
- */
     @Override
     public float getBonus(PlayerEntity player) {
         return getBonus(DataHelper.getPlayerStatLevel(player, this)) * bonusMultiplier;
@@ -98,7 +83,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     @Override
     public int getCost(int level) {
-        return (int) ((Math.pow(level, 1.6D) + 6.0D + level) * GokiConfig.SERVER.globalCostMultiplier.get());
+        return (int) ((Math.pow(level, 1.6D) + 6.0D + level) * config.costMultiplier.get() * GokiConfig.SERVER.globalCostMultiplier.get());
     }
 
     @Override
@@ -115,10 +100,12 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     @Override
     public int getLimit() {
+        int limit = this.limit;
+        if (config.maxLevel.get() > 0) return config.maxLevel.get();
         if (GokiConfig.SERVER.globalLimitMultiplier.get() <= 0) {
-            return 127;
+            return limit;
         }
-        return (int) (this.limit * GokiConfig.SERVER.globalLimitMultiplier.get());
+        return (int) (limit * GokiConfig.SERVER.globalLimitMultiplier.get());
     }
 
     @Override
@@ -146,11 +133,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     @OnlyIn(Dist.CLIENT)
     public String getLocalizedDescription(PlayerEntity player) {
-        if (isEnabled())
-            return I18n.format("skill.gokistats." + this.key + ".text",
-                this.getDescriptionFormatArguments(player)[0]);
-        else
-            return I18n.format("skill.gokistats." + this.key + ".disabled",
+        return I18n.format("skill.gokistats." + this.key + ".text",
                 this.getDescriptionFormatArguments(player)[0]);
     }
 
@@ -174,7 +157,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return getLimit() != 0 && enabled;
     }
 
     public void setEnabled(boolean enabled) {

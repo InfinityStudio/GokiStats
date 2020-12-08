@@ -3,6 +3,7 @@ package net.infstudio.goki.common.stat.damage;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.stats.DamageSourceProtectionConfig;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +14,12 @@ public abstract class DamageSourceProtectionStat extends StatBase<DamageSourcePr
     public DamageSourceProtectionStat(int id, String key, int limit) {
         super(id, key, limit);
     }
-/*
-    @Override
-    public DamageSourceProtectionConfig createConfig() {
-        DamageSourceProtectionConfig config = new DamageSourceProtectionConfig();
-        Collections.addAll(config.damageSources, getDefaultDamageSources());
-        return config;
-    }
 
+    @Override
+    public DamageSourceProtectionConfig createConfig(ForgeConfigSpec.Builder builder) {
+        return new DamageSourceProtectionConfig(builder);
+    }
+/*
     @Override
     public void save() {
         super.save();

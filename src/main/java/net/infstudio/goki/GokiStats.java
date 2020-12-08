@@ -1,21 +1,19 @@
 package net.infstudio.goki;
 
 import net.infstudio.goki.api.capability.CapabilityStat;
+import net.infstudio.goki.api.stat.Stat;
+import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.Stats;
-import net.infstudio.goki.common.StatsCommand;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.handlers.TickHandler;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,6 +52,9 @@ public class GokiStats {
 
     public void initConfig() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, GokiConfig.serverSpec);
+        for (Stat stat : StatBase.REGISTRY) {
+            ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ((StatBase) stat).configSpec, "stat_" + stat.getRegistryName().getPath() + ".toml");
+        }
     }
 /*
     @Mod.EventHandler
