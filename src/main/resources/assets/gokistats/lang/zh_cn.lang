@@ -54,7 +54,7 @@ grpg_Roll.knockback=*翻滚*
 
 ui.cost.name=消耗  
 ui.return.name=归还  
-ui.max.name=已达到最高级!
+ui.max.name=已满级!
 ui.currentxp.name=当前经验: 
 ui.opmenu.name=打开菜单
 ui.openhelper.name=打开兼容性助手
