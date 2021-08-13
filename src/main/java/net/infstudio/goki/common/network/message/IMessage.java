@@ -1,8 +1,8 @@
 package net.infstudio.goki.common.network.message;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 public interface IMessage {
-    void fromBytes(PacketBuffer buf);
-    void toBytes(PacketBuffer buf);
+    void fromBytes(FriendlyByteBuf buf);
+    void toBytes(FriendlyByteBuf buf);
 }

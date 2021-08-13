@@ -1,6 +1,6 @@
 package net.infstudio.goki.common.network.message;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class S2CStatSync implements IMessage {
     public int stat, amount, reverted;
@@ -15,14 +15,14 @@ public class S2CStatSync implements IMessage {
     }
 
     @Override
-    public void fromBytes(PacketBuffer buf) {
+    public void fromBytes(FriendlyByteBuf buf) {
         stat = buf.readInt();
         amount = buf.readInt();
         reverted = buf.readInt();
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(stat);
         buf.writeInt(amount);
         buf.writeInt(reverted);

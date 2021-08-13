@@ -6,12 +6,12 @@ import net.infstudio.goki.common.network.message.S2CStatSync;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -34,7 +34,7 @@ public class PacketSyncClientHandler {
 
     @OnlyIn(Dist.CLIENT)
     public static void acceptSyncInternal(S2CStatSync message) {
-        PlayerEntity player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
         if (player == null)
             return;
         StatBase stat = StatBase.stats.get(message.stat);
@@ -47,7 +47,7 @@ public class PacketSyncClientHandler {
 
     @OnlyIn(Dist.CLIENT)
     public static void acceptSyncAllInternal(S2CSyncAll message) {
-        PlayerEntity player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
         if (player == null)
             return;
         for (int i = 0; i < message.statLevels.length; i++) {

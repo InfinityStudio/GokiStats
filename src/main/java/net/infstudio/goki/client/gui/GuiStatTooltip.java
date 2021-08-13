@@ -1,32 +1,39 @@
 package net.infstudio.goki.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GuiStatTooltip extends AbstractGui {
+public class GuiStatTooltip extends AbstractWidget {
     private StatBase stat;
-    private PlayerEntity player;
+    private Player player;
     private int padding = 4;
 
     private final Minecraft mc = Minecraft.getInstance();
 
-    public GuiStatTooltip(StatBase stat, PlayerEntity player) {
+    public GuiStatTooltip(int x, int y, int width, int height, StatBase stat, Player player) {
+        super();
         this.stat = stat;
         this.player = player;
     }
 
-    public void draw(MatrixStack stack, int drawX, int drawY, int mouseButton) {
+    public void draw(PoseStack stack, int drawX, int drawY, int mouseButton) {
         Map<String, Integer> messageColorMap = new LinkedHashMap<>();
 
         AtomicInteger widthAtomic = new AtomicInteger(), heightAtomic = new AtomicInteger();
@@ -37,12 +44,12 @@ public class GuiStatTooltip extends AbstractGui {
 
         messageColorMap.put(this.stat.getLocalizedDescription(this.player), -1); // Message
         if (level >= this.stat.getLimit())
-            messageColorMap.put(I18n.format("ui.max"), -16724737);
+            messageColorMap.put(I18n.get("ui.max"), -16724737);
         else
-            messageColorMap.put(I18n.format("ui.cost", this.stat.getCost(level)), -16724737); // Cost
+            messageColorMap.put(I18n.get("ui.cost", this.stat.getCost(level)), -16724737); // Cost
 
         if (Screen.hasControlDown())
-            messageColorMap.put(I18n.format("ui.return", this.stat.getCost(level) * GokiConfig.SERVER.globalRevertFactor.get()), -16724737); // Cost
+            messageColorMap.put(I18n.get("ui.return", this.stat.getCost(level) * GokiConfig.SERVER.globalRevertFactor.get()), -16724737); // Cost
 
         int revertLevel = DataHelper.getPlayerRevertStatLevel(player, stat);
         if (revertLevel > 0) {
@@ -98,5 +105,10 @@ public class GuiStatTooltip extends AbstractGui {
         hLine(stack, x - 1, x + width, y - height, borderColor);
         vLine(stack, x - 1, y, y - height, borderColor);
         vLine(stack, x + width, y, y - height, borderColor);
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+
     }
 }

@@ -1,19 +1,16 @@
 package net.infstudio.goki.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.C2SRequestStatSync;
 import net.infstudio.goki.common.network.message.C2SStatSync;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Stats ui, where player upgrade/downgrade their skills
@@ -28,8 +25,8 @@ public class GuiStats extends Screen {
             {4, 4, 5, 4, 5, 4};
     public static float SCALE = 1.0F;
 
-    private final PlayerEntity player = Minecraft.getInstance().player;
-    private final FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+    private final Player player = Minecraft.getInstance().player;
+    private final Font fontRenderer = Minecraft.getInstance().font;
 
     private int currentColumn = 0;
     private int currentRow = 0;
@@ -41,7 +38,7 @@ public class GuiStats extends Screen {
 
 
     public GuiStats() {
-        super(new StringTextComponent(""));
+        super(new TextComponent(""));
     }
 
     /**
@@ -53,15 +50,15 @@ public class GuiStats extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float par3) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float par3) {
         int toolTipX = 0;
         int toolTipY = 0;
         this.toolTip = null;
-        renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, par3);
-        for (int i = 0; i < this.buttons.size(); i++) {
-            if ((this.buttons.get(i) instanceof GuiStatButton)) {
-                GuiStatButton button = (GuiStatButton) this.buttons.get(i);
+        renderBackground(stack);
+        super.render(stack, mouseX, mouseY, par3);
+        for (int i = 0; i < this.children().size(); i++) {
+            if ((this.children().get(i) instanceof GuiStatButton)) {
+                GuiStatButton button = (GuiStatButton) this.children().get(i);
                 if (button.isUnderMouse(mouseX, mouseY)) {
                     this.toolTip = new GuiStatTooltip(StatBase.stats.get(i), this.player);
                     toolTipX = button.x + 12;
@@ -70,14 +67,14 @@ public class GuiStats extends Screen {
                 }
             }
         }
-        drawCenteredString(matrixStack, fontRenderer,
+        drawCenteredString(stack, fontRenderer,
                 I18n.format("ui.currentxp", DataHelper.getXPTotal(player)),
                 width / 2,
                 this.height - 16,
                 0xFFFFFFFF);
 
         if (this.toolTip != null)
-            this.toolTip.draw(matrixStack, toolTipX, toolTipY, 0);
+            this.toolTip.draw(stack, toolTipX, toolTipY, 0);
     }
 
     @SuppressWarnings("unchecked")
