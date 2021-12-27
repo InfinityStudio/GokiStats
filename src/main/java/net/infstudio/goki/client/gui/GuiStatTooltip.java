@@ -37,32 +37,32 @@ public class GuiStatTooltip extends AbstractGui {
 
         messageColorMap.put(this.stat.getLocalizedDescription(this.player), -1); // Message
         if (level >= this.stat.getLimit())
-            messageColorMap.put(I18n.format("ui.max"), -16724737);
+            messageColorMap.put(I18n.get("ui.max"), -16724737);
         else
-            messageColorMap.put(I18n.format("ui.cost", this.stat.getCost(level)), -16724737); // Cost
+            messageColorMap.put(I18n.get("ui.cost", this.stat.getCost(level)), -16724737); // Cost
 
         if (Screen.hasControlDown())
-            messageColorMap.put(I18n.format("ui.return", this.stat.getCost(level) * GokiConfig.SERVER.globalRevertFactor.get()), -16724737); // Cost
+            messageColorMap.put(I18n.get("ui.return", this.stat.getCost(level) * GokiConfig.SERVER.globalRevertFactor.get()), -16724737); // Cost
 
         int revertLevel = DataHelper.getPlayerRevertStatLevel(player, stat);
         if (revertLevel > 0) {
             if (GokiConfig.SERVER.globalMaxRevertLevel.get() != -1)
-                messageColorMap.put(I18n.format("ui.reverted", revertLevel, String.valueOf(GokiConfig.SERVER.globalMaxRevertLevel.get())), -16724737); // Reverted
+                messageColorMap.put(I18n.get("ui.reverted", revertLevel, String.valueOf(GokiConfig.SERVER.globalMaxRevertLevel.get())), -16724737); // Reverted
             else
-                messageColorMap.put(I18n.format("ui.reverted", revertLevel, I18n.format("ui.infinite")), -16724737); // Reverted
+                messageColorMap.put(I18n.get("ui.reverted", revertLevel, I18n.get("ui.infinite")), -16724737); // Reverted
         }
 
         if (Screen.hasControlDown()) { // Is player reverting?
             if (DataHelper.canPlayerRevertStat(player, stat))
-                messageColorMap.put(I18n.format("ui.revert"), 0xff0467ff);
+                messageColorMap.put(I18n.get("ui.revert"), 0xff0467ff);
             else
-                messageColorMap.put(I18n.format("ui.norevert"), 0xfffb1a00);
+                messageColorMap.put(I18n.get("ui.norevert"), 0xfffb1a00);
         } else
-            messageColorMap.put(I18n.format("ui.hover"), 0xff0467ff);
+            messageColorMap.put(I18n.get("ui.hover"), 0xff0467ff);
 
         messageColorMap.forEach((text, color) -> {
-            widthAtomic.set(Math.max(widthAtomic.get(), this.mc.fontRenderer.getStringWidth(text)));
-            heightAtomic.addAndGet(this.mc.fontRenderer.FONT_HEIGHT);
+            widthAtomic.set(Math.max(widthAtomic.get(), this.mc.font.width(text)));
+            heightAtomic.addAndGet(this.mc.font.lineHeight);
         });
 
         int width = widthAtomic.get() + this.padding * 2;
@@ -74,7 +74,7 @@ public class GuiStatTooltip extends AbstractGui {
         if (left < leftEdge) {
             x -= leftEdge - left + 1;
         }
-        int rightEdge = this.mc.currentScreen.width;
+        int rightEdge = this.mc.screen.width;
         int right = x + width;
         if (right > rightEdge) {
             x += rightEdge - right - 1;
@@ -83,7 +83,7 @@ public class GuiStatTooltip extends AbstractGui {
 
         for (int i = messageColorMap.size(); i >= 1; i--) {
             Map.Entry<String, Integer> entry = messageColorMap.entrySet().toArray(new Map.Entry[0])[messageColorMap.size() - i];
-            drawString(stack, this.mc.fontRenderer,
+            drawString(stack, this.mc.font,
                     entry.getKey(),
                     x + this.padding / 2,
                     drawY - h * i + this.padding / 2,

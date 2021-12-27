@@ -39,7 +39,7 @@ public class GuiStatButton extends Button {
             int cost = this.stat.getCost(level);
             int playerXP = DataHelper.getXPTotal(this.player);
 
-            FontRenderer fontrenderer = mc.fontRenderer;
+            FontRenderer fontrenderer = mc.font;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.isHovered = isUnderMouse(mouseX, mouseY);
 
@@ -77,9 +77,9 @@ public class GuiStatButton extends Button {
             iconX += this.stat.imageID % 20 / 10 * 24 * 4;
 
             if (this.stat.imageID >= 20) {
-                mc.getTextureManager().bindTexture(Reference.RPG_ICON_2_TEXTURE_LOCATION);
+                mc.getTextureManager().bind(Reference.RPG_ICON_2_TEXTURE_LOCATION);
             } else {
-                mc.getTextureManager().bindTexture(Reference.RPG_ICON_TEXTURE_LOCATION);
+                mc.getTextureManager().bind(Reference.RPG_ICON_TEXTURE_LOCATION);
             }
             GL11.glPushMatrix();
             GL11.glTranslatef(this.x, this.y, 0.0F);

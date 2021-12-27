@@ -34,7 +34,7 @@ public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
     @Override
     public String getLocalizedDescription(PlayerEntity player) {
         if (isEnabled())
-            return I18n.format("skill.gokistats." + this.key + ".text",
+            return I18n.get("skill.gokistats." + this.key + ".text",
                 this.getDescriptionFormatArguments(player)[0],
                 this.getDescriptionFormatArguments(player)[1]);
         else return super.getLocalizedDescription(player);

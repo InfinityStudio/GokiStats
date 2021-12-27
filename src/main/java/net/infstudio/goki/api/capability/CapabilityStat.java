@@ -35,7 +35,7 @@ public class CapabilityStat {
     private static void deserializeNBT(@Nonnull StatStorage statStorage, INBT nbt) {
         if (nbt instanceof CompoundNBT) {
             CompoundNBT compound = (CompoundNBT) nbt;
-            for (String stat : compound.keySet()) {
+            for (String stat : compound.getAllKeys()) {
                 ResourceLocation statLocation = new ResourceLocation(stat);
                 if (!StatBase.REGISTRY.containsKey(statLocation)) continue;
                 CompoundNBT stateTag = compound.getCompound(stat);

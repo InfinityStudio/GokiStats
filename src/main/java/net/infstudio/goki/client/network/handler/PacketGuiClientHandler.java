@@ -18,6 +18,6 @@ public class PacketGuiClientHandler {
 
     @OnlyIn(Dist.CLIENT)
     public static void openGuiInternal(NetworkEvent.Context context) {
-        Minecraft.getInstance().displayGuiScreen(new GuiStats());
+        Minecraft.getInstance().setScreen(new GuiStats());
     }
 }

@@ -38,10 +38,10 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
                     new TreasureFinderEntry(Blocks.DIRT, Items.APPLE,1, 10),
                     new TreasureFinderEntry(Blocks.OAK_LEAVES, Items.APPLE, 1, 10),
                     new TreasureFinderEntry(Blocks.DARK_OAK_LEAVES, Items.APPLE, 1, 10),
-                    new TreasureFinderEntry(Blocks.DIRT, Item.getItemFromBlock(Blocks.RED_MUSHROOM), 1, 10),
-                    new TreasureFinderEntry(Blocks.DIRT, Item.getItemFromBlock(Blocks.BROWN_MUSHROOM), 1, 10),
-                    new TreasureFinderEntry(Blocks.DIRT, Item.getItemFromBlock(Blocks.POPPY), 1, 10),
-                    new TreasureFinderEntry(Blocks.DIRT, Item.getItemFromBlock(Blocks.DANDELION), 1, 10),
+                    new TreasureFinderEntry(Blocks.DIRT, Blocks.RED_MUSHROOM.asItem(), 1, 10),
+                    new TreasureFinderEntry(Blocks.DIRT, Blocks.BROWN_MUSHROOM.asItem(), 1, 10),
+                    new TreasureFinderEntry(Blocks.DIRT, Blocks.POPPY.asItem(), 1, 10),
+                    new TreasureFinderEntry(Blocks.DIRT, Blocks.DANDELION.asItem(), 1, 10),
                     new TreasureFinderEntry(Blocks.DIRT, Items.STICK, 1, 100),
                     new TreasureFinderEntry(Blocks.TALL_GRASS, Items.PUMPKIN_SEEDS, 1, 30),
                     new TreasureFinderEntry(Blocks.TALL_GRASS, Items.MELON_SEEDS, 1, 30),
@@ -53,7 +53,7 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
                     new TreasureFinderEntry(Blocks.SAND, Items.GOLD_INGOT, 2, 10),
                     new TreasureFinderEntry(Blocks.DIRT, Items.LEATHER, 2, 10),
                     new TreasureFinderEntry(Blocks.DIRT, Items.FEATHER, 2, 10),
-                    new TreasureFinderEntry(Blocks.DIRT, Item.getItemFromBlock(Blocks.WHITE_WOOL), 2, 10),
+                    new TreasureFinderEntry(Blocks.DIRT, Blocks.WHITE_WOOL.asItem(), 2, 10),
                     new TreasureFinderEntry(Blocks.SAND, Items.REDSTONE, 2, 50),
                     new TreasureFinderEntry(Blocks.DIRT, Items.BUCKET, 3, 20),
                     new TreasureFinderEntry(Blocks.DIRT, Items.MUSIC_DISC_11, 3, 2),
@@ -77,9 +77,9 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
     @Override
     public String getLocalizedDescription(PlayerEntity player) {
         if (getPlayerStatLevel(player) == 0) {
-            return I18n.format("skill.gokistats." + this.key + ".text");
+            return I18n.get("skill.gokistats." + this.key + ".text");
         }
-        return I18n.format("skill.gokistats." + this.key + ".upgrade");
+        return I18n.get("skill.gokistats." + this.key + ".upgrade");
     }
 
     @Override

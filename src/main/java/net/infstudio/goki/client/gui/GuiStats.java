@@ -29,7 +29,7 @@ public class GuiStats extends Screen {
     public static float SCALE = 1.0F;
 
     private final PlayerEntity player = Minecraft.getInstance().player;
-    private final FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+    private final FontRenderer fontRenderer = Minecraft.getInstance().font;
 
     private int currentColumn = 0;
     private int currentRow = 0;
@@ -71,7 +71,7 @@ public class GuiStats extends Screen {
             }
         }
         drawCenteredString(matrixStack, fontRenderer,
-                I18n.format("ui.currentxp", DataHelper.getXPTotal(player)),
+                I18n.get("ui.currentxp", DataHelper.getXPTotal(player)),
                 width / 2,
                 this.height - 16,
                 0xFFFFFFFF);

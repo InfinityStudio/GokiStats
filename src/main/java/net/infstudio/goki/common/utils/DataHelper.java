@@ -69,19 +69,8 @@ public class DataHelper {
         return i / (float) Math.pow(10.0D, decimals);
     }
 
-    public static void setPlayersExpTo(PlayerEntity player, int total) {
-        player.experience = 0;
-        player.experienceLevel = 0;
-        player.experienceTotal = 0;
-        player.giveExperiencePoints(total);
-    }
-
-    public static int getXPTotal(int xpLevel, float current) {
-        return (int) (getXPValueFromLevel(xpLevel) + getXPValueToNextLevel(xpLevel) * current);
-    }
-
     public static int getXPTotal(PlayerEntity player) {
-        return player.experienceTotal;
+        return player.totalExperience;
     }
 
     public static boolean hasDamageModifier(ItemStack stack) {
@@ -89,42 +78,17 @@ public class DataHelper {
         return modifiers != null && !modifiers.isEmpty();
     }
 
-    public static int getXPValueFromLevel(int xpLevel) {
-        int val;
-        if (xpLevel > 31) {
-            val = (int) (4.5d * Math.pow(xpLevel, 2d) - 162.5d * xpLevel + 2220d);
-        } else if (xpLevel > 16) {
-            val = (int) (2.5d * Math.pow(xpLevel, 2d) - 40.5d * xpLevel + 360d);
-        } else {
-            val = (int) (Math.pow(xpLevel, 2d) + 6d * xpLevel);
-        }
-        return val;
-    }
-
-    public static int getXPValueToNextLevel(int xpLevel) {
-        int val;
-        if (xpLevel > 30) {
-            val = 9 * xpLevel - 158;
-        } else if (xpLevel > 15) {
-            val = 5 * xpLevel - 38;
-        } else {
-            val = 2 * xpLevel + 7;
-        }
-
-        return val;
-    }
-
     public static float getDamageDealt(PlayerEntity player, Entity target, DamageSource source) {
         float damage = (float) player.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
         float bonusDamage = 0.0F;
         boolean targetIsLiving = target instanceof LivingEntity;
         boolean critical;
-        ItemStack stack = player.getHeldItemMainhand();
+        ItemStack stack = player.getMainHandItem();
         if (targetIsLiving) {
-            bonusDamage = EnchantmentHelper.getModifierForCreature(stack, ((LivingEntity) target).getCreatureAttribute());
+            bonusDamage += EnchantmentHelper.getDamageBonus(stack, ((LivingEntity) target).getMobType());
         }
         if ((damage > 0.0F) || (bonusDamage > 0.0F)) {
-            critical = (player.fallDistance > 0.0F) && (!player.isOnGround()) && (!player.isOnLadder()) && (!player.isInWater()) && (!player.isPotionActive(Effects.BLINDNESS)) && (player.getRidingEntity() == null) && (targetIsLiving);
+            critical = (player.fallDistance > 0.0F) && (!player.isOnGround()) && (!player.onClimbable()) && (!player.isInWater()) && (!player.hasEffect(Effects.BLINDNESS)) && (player.getVehicle() == null) && (targetIsLiving);
             if ((critical) && (damage > 0.0F)) {
                 damage *= 1.5F;
             }
@@ -135,7 +99,7 @@ public class DataHelper {
 
     public static float getFallResistance(LivingEntity entity) {
         float resistance = 3.0F;
-        EffectInstance potionEffect = entity.getActivePotionEffect(Effects.JUMP_BOOST);
+        EffectInstance potionEffect = entity.getEffect(Effects.JUMP);
         float bonus = potionEffect != null ? potionEffect.getAmplifier() + 1 : 0.0F;
         // TODO check if this work as float...
 

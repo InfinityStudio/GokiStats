@@ -14,11 +14,17 @@ import javax.annotation.Nonnull;
 
 import static net.infstudio.goki.common.utils.Reference.MODID;
 
+@SuppressWarnings("ConstantConditions")
 @ObjectHolder(MODID)
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class GokiSounds {
+    @Nonnull
     public static final SoundEvent TREASURE = null;
+
+    @Nonnull
     public static final SoundEvent MAGICIAN = null;
+
+    @Nonnull
     public static final SoundEvent REAPER = null;
 
     @SubscribeEvent

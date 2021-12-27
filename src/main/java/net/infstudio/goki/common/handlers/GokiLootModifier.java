@@ -38,16 +38,16 @@ public class GokiLootModifier extends LootModifier {
     @Nonnull
     @Override
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
-        if (!context.has(LootParameters.BLOCK_STATE) || !context.has(LootParameters.THIS_ENTITY) || !context.has(LootParameters.field_237457_g_)) return generatedLoot;
-        Entity entity = context.get(LootParameters.THIS_ENTITY);
+        if (!context.hasParam(LootParameters.BLOCK_STATE) || !context.hasParam(LootParameters.THIS_ENTITY) || !context.hasParam(LootParameters.ORIGIN)) return generatedLoot;
+        Entity entity = context.getParamOrNull(LootParameters.THIS_ENTITY);
         if (!(entity instanceof PlayerEntity)) {
             return generatedLoot;
         }
-        Block block = context.get(LootParameters.BLOCK_STATE).getBlock();
+        Block block = context.getParamOrNull(LootParameters.BLOCK_STATE).getBlock();
         PlayerEntity player = (PlayerEntity) entity;
         if (DataHelper.getPlayerStatLevel(player, Stats.TREASURE_FINDER) > 0) { // Player has treasure finder
             boolean treasureFound = false; // Make a temp variable here to play sound
-            Random random = player.getRNG();
+            Random random = player.getRandom();
             // Note: Items and chances are in pairs
             List<ItemStack> items = Stats.TREASURE_FINDER.getApplicableItemStackList(block,
                     DataHelper.getPlayerStatLevel(player,
@@ -68,7 +68,7 @@ public class GokiLootModifier extends LootModifier {
                 }
             }
             if (treasureFound) {
-                player.world.playSound(player, new BlockPos(context.get(LootParameters.field_237457_g_)), GokiSounds.TREASURE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                player.level.playSound(player, new BlockPos(context.getParamOrNull(LootParameters.ORIGIN)), GokiSounds.TREASURE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
         }
 
@@ -80,11 +80,11 @@ public class GokiLootModifier extends LootModifier {
 
             if (Stats.MINING_MAGICIAN.isEffectiveOn(block)) { // This block can be affected by magic
                 for (int i = 0; i < generatedLoot.size(); i++) {
-                    if (player.getRNG().nextDouble() * 100.0D <= Stats.MINING_MAGICIAN.getBonus(player)) {
+                    if (player.getRandom().nextDouble() * 100.0D <= Stats.MINING_MAGICIAN.getBonus(player)) {
                         ItemStack item = generatedLoot.get(i);
                         // If this block drops itself, give player additional block drops
                         if (item.getItem() instanceof BlockItem && item.getItem().getRegistryName().equals(block.getRegistryName())) {
-                            int randomEntry = player.getRNG().nextInt(StatMiningMagician.blockEntries.size());
+                            int randomEntry = player.getRandom().nextInt(StatMiningMagician.blockEntries.size());
                             ItemStack stack = new ItemStack(StatMiningMagician.blockEntries.get(randomEntry), 1);
                             stack.setCount(generatedLoot.get(i).getCount());
                             generatedLoot.add(stack);
@@ -92,7 +92,7 @@ public class GokiLootModifier extends LootModifier {
                         } else { // Give additional item drops
                             for (int j = 0; j < StatMiningMagician.itemEntries.size(); j++) {
                                 if (item.getItem() == StatMiningMagician.itemEntries.get(j)) {
-                                    int randomEntry = player.getRNG().nextInt(StatMiningMagician.itemEntries.size());
+                                    int randomEntry = player.getRandom().nextInt(StatMiningMagician.itemEntries.size());
                                     ItemStack stack = new ItemStack(StatMiningMagician.itemEntries.get(randomEntry), 1);
                                     stack.setCount(generatedLoot.get(i).getCount());
                                     generatedLoot.add(stack);
@@ -104,7 +104,7 @@ public class GokiLootModifier extends LootModifier {
                     }
                 }
                 if (magicHappened) {
-                    player.world.playSound(player, new BlockPos(context.get(LootParameters.field_237457_g_)), GokiSounds.MAGICIAN, SoundCategory.BLOCKS, 0.3f, 1.0f);
+                    player.level.playSound(player, new BlockPos(context.getParamOrNull(LootParameters.ORIGIN)), GokiSounds.MAGICIAN, SoundCategory.BLOCKS, 0.3f, 1.0f);
                 }
             }
         }

@@ -17,8 +17,8 @@ public class GokiKeyHandler {
     public static KeyBinding compatibilityMenu;
 
     public GokiKeyHandler() {
-        statsMenu = new KeyBinding(I18n.format("ui.openmenu"), 89, "Goki Stats");
-        compatibilityMenu = new KeyBinding(I18n.format("ui.openhelper"), -1, "Goki Stats");
+        statsMenu = new KeyBinding(I18n.get("ui.openmenu"), 89, "Goki Stats");
+        compatibilityMenu = new KeyBinding(I18n.get("ui.openhelper"), -1, "Goki Stats");
         ClientRegistry.registerKeyBinding(statsMenu);
         ClientRegistry.registerKeyBinding(compatibilityMenu);
     }
@@ -26,11 +26,11 @@ public class GokiKeyHandler {
     @SubscribeEvent
     public void keyDown(InputEvent.KeyInputEvent event) {
         Minecraft mc = Minecraft.getInstance();
-        if (statsMenu.isPressed()) {
-            mc.displayGuiScreen(new GuiStats());
+        if (statsMenu.isDown()) {
+            mc.setScreen(new GuiStats());
 
-        } else if (compatibilityMenu.isPressed()) {
-            mc.displayGuiScreen(new GuiCompatibilityHelper());
+        } else if (compatibilityMenu.isDown()) {
+            mc.setScreen(new GuiCompatibilityHelper());
         }
     }
 }

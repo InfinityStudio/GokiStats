@@ -26,7 +26,7 @@ public class GokiStats {
     public static final Logger log = LogManager.getLogger(Reference.MODID);
 
     private static final Class<?>[] loadClasses = {
-            Stats.class
+            Stats.class, GokiConfig.class
     };
 
     public GokiStats() {

@@ -62,7 +62,7 @@ public class CommonHandler {
     @SubscribeEvent
     public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         PlayerEntity player = event.getPlayer();
-        if (!player.world.isRemote) {
+        if (!player.level.isClientSide()) {
             if (GokiConfig.SERVER.loseStatsOnDeath.get()) {
                 for (int stat = 0; stat < StatBase.totalStats.orElse(0); stat++) {
                     DataHelper.multiplyPlayerStatLevel(player,
@@ -76,29 +76,29 @@ public class CommonHandler {
 
     @SubscribeEvent
     public static void playerBreakSpeed(PlayerEvent.BreakSpeed event) {
-        ItemStack heldItem = event.getPlayer().getHeldItemMainhand();
+        ItemStack heldItem = event.getPlayer().getMainHandItem();
         PlayerEntity player = event.getPlayer();
 
         float multiplier = 1.0F;
 
         if (Stats.MINING.isEffectiveOn(heldItem,
                 event.getPos(),
-                player.world)) {
+                player.level)) {
             multiplier += Stats.MINING.getBonus(player);
         }
         if (Stats.DIGGING.isEffectiveOn(heldItem,
                 event.getPos(),
-                player.world)) {
+                player.level)) {
             multiplier += Stats.DIGGING.getBonus(player);
         }
         if (Stats.CHOPPING.isEffectiveOn(heldItem,
                 event.getPos(),
-                player.world)) {
+                player.level)) {
             multiplier += Stats.CHOPPING.getBonus(player);
         }
         if (Stats.TRIMMING.isEffectiveOn(heldItem,
                 event.getPos(),
-                player.world)) {
+                player.level)) {
             multiplier += Stats.TRIMMING.getBonus(player);
         }
 
@@ -110,7 +110,7 @@ public class CommonHandler {
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             if (player.isSprinting()) {
-                player.setMotion(player.getMotion().mul(1.0 + Stats.LEAPER_V.getBonus(player), 1.0 + Stats.LEAPER_H.getBonus(player), 1.0 + Stats.LEAPER_H.getBonus(player)));
+                player.setDeltaMovement(player.getDeltaMovement().multiply(1.0 + Stats.LEAPER_V.getBonus(player), 1.0 + Stats.LEAPER_H.getBonus(player), 1.0 + Stats.LEAPER_H.getBonus(player)));
             }
         }
     }
@@ -124,13 +124,13 @@ public class CommonHandler {
         if (victim instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) victim;
 
-            if (!source.isFireDamage() && !source.isDamageAbsolute()) {
-                if (player.getEntityWorld().rand.nextFloat() >= 1.0f - Stats.ROLL.getBonus(player)) {
+            if (!source.isFire() && !source.isBypassMagic()) {
+                if (player.level.random.nextFloat() >= 1.0f - Stats.ROLL.getBonus(player)) {
                     // Avoid damage
                     event.setCanceled(true);
 
-                    player.addPotionEffect(
-                            new EffectInstance(Effects.STRENGTH, 20, 2)
+                    player.addEffect(
+                            new EffectInstance(Effects.DAMAGE_BOOST, 20, 2)
                     );
 
                     victim.addTag("knockback");
@@ -149,11 +149,11 @@ public class CommonHandler {
             event.setAmount(event.getAmount() * damageMultiplier);
         }
 
-        Entity src = source.getTrueSource();
+        Entity src = source.getDirectEntity();
 
         if (src instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) src;
-            ItemStack heldItem = player.getHeldItemMainhand();
+            ItemStack heldItem = player.getMainHandItem();
             float damage = event.getAmount();
             float bonus = 0f;
 
@@ -179,9 +179,9 @@ public class CommonHandler {
                 if (Stats.STEALTH.isEffectiveOn(player))
                     reapBonus = reap * ((StatSpecial) Stats.STEALTH).getSecondaryBonus(player) / 100.0F;
                 float reapChance = reap + reapBonus;
-                if (player.getRNG().nextFloat() <= reapChance) {
-                    player.onEnchantmentCritical(victim);
-                    player.world.playSound(player, event.getEntity().getPosition(), GokiSounds.REAPER, SoundCategory.MASTER, 1.0f, 1.0f);
+                if (player.getRandom().nextFloat() <= reapChance) {
+                    player.crit(victim);
+                    player.level.playSound(player, event.getEntity().blockPosition(), GokiSounds.REAPER, SoundCategory.MASTER, 1.0f, 1.0f);
                     event.setAmount(100000.0F);
                 }
             }

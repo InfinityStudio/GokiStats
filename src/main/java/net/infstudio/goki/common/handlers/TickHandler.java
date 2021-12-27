@@ -39,24 +39,26 @@ public class TickHandler {
 
             handleTaskPlayerAPI(player);
 
-            ModifiableAttributeInstance atinst = player.getAttribute(Attributes.MOVEMENT_SPEED);
-            AttributeModifier mod = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, AttributeModifier.Operation.byId(1));
-            if (player.isSneaking()) {
-                if (atinst.getModifier(stealthSpeedID) == null) {
-                    atinst.applyPersistentModifier(mod);
+            ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (attributeInstance == null) return;
+            AttributeModifier modifier = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, AttributeModifier.Operation.fromValue(1));
+            if (player.isCrouching()) {
+                if (attributeInstance.getModifier(stealthSpeedID) == null) {
+                    attributeInstance.addTransientModifier(modifier);
                 }
-            } else if (atinst.getModifier(stealthSpeedID) != null) {
-                atinst.removeModifier(mod);
+            } else if (attributeInstance.getModifier(stealthSpeedID) != null) {
+                attributeInstance.removeModifier(modifier);
             }
 
-            atinst = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
-            mod = new AttributeModifier(knockbackResistanceID, "KnockbackResistance", Stats.STEADY_GUARD.getBonus(player), AttributeModifier.Operation.byId(0));
-            if (player.isActiveItemStackBlocking()) {
-                if (atinst.getModifier(knockbackResistanceID) == null) {
-                    atinst.applyPersistentModifier(mod);
+            attributeInstance = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+            if (attributeInstance == null) return;
+            modifier = new AttributeModifier(knockbackResistanceID, "KnockbackResistance", Stats.STEADY_GUARD.getBonus(player), AttributeModifier.Operation.fromValue(0));
+            if (player.isBlocking()) {
+                if (attributeInstance.getModifier(knockbackResistanceID) == null) {
+                    attributeInstance.addTransientModifier(modifier);
                 }
-            } else if (atinst.getModifier(knockbackResistanceID) != null) {
-                atinst.removeModifier(mod);
+            } else if (attributeInstance.getModifier(knockbackResistanceID) != null) {
+                attributeInstance.removeModifier(modifier);
             }
 
             handleFurnace(player);
@@ -83,48 +85,48 @@ public class TickHandler {
     }
 
     private static void handleTaskPlayerAPI(PlayerEntity player) {
-        if (player.isServerWorld() || player.canPassengerSteer())
+        if (!player.isLocalPlayer() || player.canRiderInteract())
             if (player.isSwimming()) {
                 float multiplier = Math.max(0.0F,
                         Stats.SWIMMING.getBonus(player));
                 if (isJumping(player)) {
-                    player.jumpMovementFactor += multiplier;
+//                    player += multiplier;
                 } else if (multiplier > 0) {
                     //			player.moveEntity(	player.motionX * multiplier,
                     //								player.motionY * multiplier,
                     //								player.motionZ * multiplier);
 
                     // Copied from LivingEntity
-                    double d0 = player.getPosY();
+                    double d0 = player.getY();
                     float f1 = 0.8f;
                     float f2 = 0.02F;
 
                     if (multiplier > 0.0F) {
                         f1 += (0.54600006F - f1) * multiplier;
-                        f2 += (player.getAIMoveSpeed() - f2) * multiplier;
+                        f2 += (player.getSpeed() - f2) * multiplier;
                     }
 
-                    player.moveRelative(f2, new Vector3d(player.moveStrafing, player.moveVertical, player.moveForward));
-                    player.move(MoverType.SELF, player.getMotion());
-                    player.setMotion(player.getMotion().mul(f1, 0.800000011920929D, f1));
+                    player.moveRelative(f2, player.getDeltaMovement());
+                    player.move(MoverType.SELF, player.getDeltaMovement());
+                    player.setDeltaMovement(player.getDeltaMovement().multiply(f1, 0.800000011920929D, f1));
 
-                    if (!player.hasNoGravity()) {
-                        player.setMotion(player.getMotion().add(0, 0.02, 0));
+                    if (!player.isNoGravity()) {
+                        player.setDeltaMovement(player.getDeltaMovement().add(0, 0.02, 0));
                     }
 
-                    Vector3d offset = player.getMotion().add(0, 0.6000000238418579D - player.getPosY() + d0, 0);
-                    if (player.collidedHorizontally && player.isOffsetPositionInLiquid(offset.x, offset.y, offset.z)) {
-                        player.setMotion(new Vector3d(player.getMotion().x, 0.30000001192092896D, player.getMotion().z));
-                    }
+                    Vector3d offset = player.getDeltaMovement().add(0, 0.6000000238418579D - player.getY() + d0, 0);
+//                    if (player.horizontalCollision && player.isOffsetPositionInLiquid(offset.x, offset.y, offset.z)) {
+//                        player.setMotion(new Vector3d(player.getMotion().x, 0.30000001192092896D, player.getMotion().z));
+//                    }
 
 
-                    player.move(MoverType.SELF, new Vector3d(player.moveStrafing * multiplier, player.moveVertical * multiplier, 0.02f));
+//                    player.move(MoverType.SELF, new Vector3d(player.moveStrafing * multiplier, player.moveVertical * multiplier, 0.02f));
                 }
             }
 
-        if (player.isOnLadder() && !player.isSneaking()) {
+        if (player.onClimbable() && !player.isShiftKeyDown()) {
             float multiplier = Stats.CLIMBING.getBonus(player);
-            player.move(MoverType.SELF, player.getMotion().mul(1, multiplier, 1));
+            player.move(MoverType.SELF, player.getDeltaMovement().multiply(1, multiplier, 1));
         }
     }
 

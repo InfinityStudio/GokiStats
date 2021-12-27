@@ -20,13 +20,13 @@ public class StatsCommand {
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
-        dispatcher.register(Commands.literal("gokistats").requires(source -> source.hasPermissionLevel(2))
+        dispatcher.register(Commands.literal("gokistats").requires(source -> source.hasPermission(2))
                 .then(Commands.literal("reload").executes(source -> {
-                    source.getSource().sendFeedback(new StringTextComponent("Not Implemented"), false);
+                    source.getSource().sendFailure(new StringTextComponent("Not Implemented"));
                     return 0;
                 }))
                 .then(Commands.literal("gui").then(Commands.argument("target", EntityArgument.player())).executes(source -> {
-                    PlayerEntity player = source.getSource().asPlayer();
+                    PlayerEntity player = source.getSource().getPlayerOrException();
                     GokiPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new S2COpenGui());
                     return 0;
                 }))

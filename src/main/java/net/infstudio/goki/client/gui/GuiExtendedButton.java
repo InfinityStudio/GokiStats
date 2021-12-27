@@ -50,10 +50,10 @@ public class GuiExtendedButton extends Button {
         GL11.glPushMatrix();
         GL11.glTranslatef(this.x, this.y, 0.0F);
         fill(stack, 0, 0, this.width, this.height, -2011028958);
-        drawCenteredString(stack, mc.fontRenderer,
+        drawCenteredString(stack, mc.font,
                 this.getMessage(),
                 this.width / 2,
-                this.height / 2 - mc.fontRenderer.FONT_HEIGHT / 2 + 1,
+                this.height / 2 - mc.font.lineHeight / 2 + 1,
                 3355443);
         drawBorder(stack);
         GL11.glPopMatrix();
@@ -67,10 +67,10 @@ public class GuiExtendedButton extends Button {
                 this.width,
                 this.height,
                 this.backgroundColor + -2013265920);
-        drawCenteredString(stack, mc.fontRenderer,
+        drawCenteredString(stack, mc.font,
                 this.getMessage(),
                 this.width / 2,
-                this.height / 2 - mc.fontRenderer.FONT_HEIGHT / 2 + 1,
+                this.height / 2 - mc.font.lineHeight / 2 + 1,
                 16777215);
         drawBorder(stack);
         GL11.glPopMatrix();
@@ -84,10 +84,10 @@ public class GuiExtendedButton extends Button {
                 this.width,
                 this.height,
                 this.backgroundColor + -16777216);
-        drawCenteredString(stack, mc.fontRenderer,
+        drawCenteredString(stack, mc.font,
                 this.getMessage(),
                 this.width / 2,
-                this.height / 2 - mc.fontRenderer.FONT_HEIGHT / 2 + 1,
+                this.height / 2 - mc.font.lineHeight / 2 + 1,
                 16763904);
         drawBorder(stack);
         GL11.glPopMatrix();
@@ -97,10 +97,10 @@ public class GuiExtendedButton extends Button {
         GL11.glPushMatrix();
         GL11.glTranslatef(this.x, this.y, 0.0F);
         fill(stack, 0, 0, this.width, this.height, -16777216);
-        drawCenteredString(stack, mc.fontRenderer,
+        drawCenteredString(stack, mc.font,
                 this.getMessage(),
                 this.width / 2,
-                this.height / 2 - mc.fontRenderer.FONT_HEIGHT / 2 + 1,
+                this.height / 2 - mc.font.lineHeight / 2 + 1,
                 16763904);
         drawBorder(stack);
         GL11.glPopMatrix();

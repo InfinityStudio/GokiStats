@@ -40,7 +40,7 @@ public abstract class DamageSourceProtectionStat extends StatBase<DamageSourcePr
             if ((obj[0] instanceof DamageSource)) {
                 DamageSource source = (DamageSource) obj[0];
                 for (String damageSource : this.damageSources) {
-                    if (source.damageType.equals(damageSource)) {
+                    if (source.msgId.equals(damageSource)) {
                         return true;
                     }
                 }

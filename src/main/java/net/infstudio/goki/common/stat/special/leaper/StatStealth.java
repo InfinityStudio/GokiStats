@@ -17,7 +17,7 @@ public class StatStealth extends StatLeaper {
 
     @Override
     public boolean isEffectiveOn(Object... obj) {
-        return ((obj[0] instanceof PlayerEntity)) && (((PlayerEntity) obj[0]).isSneaking());
+        return ((obj[0] instanceof PlayerEntity)) && (((PlayerEntity) obj[0]).isShiftKeyDown());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class StatStealth extends StatLeaper {
 
     @Override
     public String getLocalizedDescription(PlayerEntity player) {
-        return I18n.format("skill.gokistats." + this.key + ".text",
+        return I18n.get("skill.gokistats." + this.key + ".text",
                 this.getDescriptionFormatArguments(player)[0],
                 this.getDescriptionFormatArguments(player)[1],
                 this.getDescriptionFormatArguments(player)[2]);
