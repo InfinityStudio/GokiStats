@@ -30,7 +30,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
             .setName(new ResourceLocation(Reference.MODID, "stats"))
             .setType(Stat.class)
             .create();
-    public static final ObjectList<StatBase> stats = new ObjectArrayList<>(16);
+    public static final ObjectList<StatBase<?>> stats = new ObjectArrayList<>(16);
     public static LazyOptional<Integer> totalStats = LazyOptional.of(() -> REGISTRY.getValues().size());
     public int imageID;
     public String key;
@@ -64,6 +64,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T createConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Server configuration settings")
                 .push("stats." + key);

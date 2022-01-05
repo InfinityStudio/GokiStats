@@ -2,10 +2,11 @@ package net.infstudio.goki.common.stat;
 
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.GokiConfig;
+import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class StatMaxHealth extends StatBase {
+public class StatMaxHealth extends StatBase<StatConfig> {
 
     public StatMaxHealth(int id, String key, int limit) {
         super(id, key, limit);

@@ -6,6 +6,8 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
+
 public class GuiExtendedButton extends Button {
     public static final int BORDER_COLOR = -16777216;
 
@@ -22,7 +24,7 @@ public class GuiExtendedButton extends Button {
 
 
     @Override
-    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(@Nonnull MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         if (!this.disabled) {
             if (!isUnderMouse(mouseX, mouseY)) {
                 drawIdle(stack, Minecraft.getInstance(), mouseX, mouseY);
