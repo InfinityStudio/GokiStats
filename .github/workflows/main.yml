@@ -21,9 +21,6 @@ jobs:
         run: ./gradlew clean build
       - uses: Kir-Antipov/mc-publish@v2.0
         with:
-          modrinth-id: gokistats
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-
           curseforge-id: 298141
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           files-primary: build/libs/!(*-@(dev|sources)).jar
