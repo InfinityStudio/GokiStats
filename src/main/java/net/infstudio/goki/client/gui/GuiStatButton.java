@@ -1,20 +1,19 @@
 package net.infstudio.goki.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Player;
 
 public class GuiStatButton extends Button {
     public StatBase stat;
-    public PlayerEntity player;
+    public Player player;
 
     public static final int INACTIVE_X = 0;
     public static final int ACTIVATED_X = 24;
@@ -24,27 +23,27 @@ public class GuiStatButton extends Button {
     public final int id;
     private final Minecraft mc = Minecraft.getInstance();
 
-    public GuiStatButton(int id, int x, int y, int width, int height, StatBase stat, PlayerEntity player, IPressable onPress) {
-        super(x, y, width, height, StringTextComponent.EMPTY, onPress);
+
+    public GuiStatButton(int id, int x, int y, int width, int height, StatBase stat, Player player, OnPress onPress) {
+        super(x, y, width, height, TextComponent.EMPTY, onPress);
         this.id = id;
         this.stat = stat;
         this.player = player;
     }
 
     @Override
-    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
             int iconY = 24 * (this.stat.imageID % 10);
             int level = DataHelper.getPlayerStatLevel(this.player, this.stat);
             int cost = this.stat.getCost(level);
             int playerXP = DataHelper.getXPTotal(this.player);
 
-            FontRenderer fontrenderer = mc.font;
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            var fontrenderer = mc.font;
             this.isHovered = isUnderMouse(mouseX, mouseY);
 
             int iconX = INACTIVE_X;
-            if (isHovered()) { // Hovering
+            if (isHovered) { // Hovering
                 iconX = ACTIVATED_X;
             }
             if (playerXP < cost) {
@@ -76,25 +75,30 @@ public class GuiStatButton extends Button {
 
             iconX += this.stat.imageID % 20 / 10 * 24 * 4;
 
-            if (this.stat.imageID >= 20) {
-                mc.getTextureManager().bind(Reference.RPG_ICON_2_TEXTURE_LOCATION);
-            } else {
-                mc.getTextureManager().bind(Reference.RPG_ICON_TEXTURE_LOCATION);
-            }
-            GL11.glPushMatrix();
-            GL11.glTranslatef(this.x, this.y, 0.0F);
-            GL11.glScalef(GuiStats.SCALE, GuiStats.SCALE, 0.0F);
+
+            stack.pushPose();
+            stack.translate(this.x, this.y, 0);
+            stack.scale(GuiStats.SCALE, GuiStats.SCALE, 0);
+            bindTexture();
             blit(stack, 0, 0, iconX, iconY, this.width, this.height);
 
-            GL11.glPopMatrix();
-            GL11.glPushMatrix();
-            GL11.glTranslatef(this.x, this.y, 0.0F);
+            stack.popPose();
+            stack.pushPose();
+            stack.translate(this.x, this.y, 0);
             drawCenteredString(stack, fontrenderer,
                     message,
                     (int) (this.width / 2 * GuiStats.SCALE),
                     (int) (this.height * GuiStats.SCALE) + 2,
                     messageColor);
-            GL11.glPopMatrix();
+            stack.popPose();
+        }
+    }
+
+    public void bindTexture() {
+        if (this.stat.imageID >= 20) {
+            RenderSystem.setShaderTexture(0, Reference.RPG_ICON_2_TEXTURE_LOCATION);
+        } else {
+            RenderSystem.setShaderTexture(0, Reference.RPG_ICON_TEXTURE_LOCATION);
         }
     }
 

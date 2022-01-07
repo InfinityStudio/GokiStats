@@ -1,13 +1,15 @@
 package net.infstudio.goki.common.stat.tool;
 
-import net.infstudio.goki.common.config.stats.ToolSpecificConfig;
 import net.infstudio.goki.api.stat.StatBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.infstudio.goki.common.config.stats.ToolSpecificConfig;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class ToolSpecificStat extends StatBase<ToolSpecificConfig> {
     public List<Item> supports = new ArrayList<>();
@@ -51,7 +53,7 @@ public abstract class ToolSpecificStat extends StatBase<ToolSpecificConfig> {
     }
 
     @Override
-    public float getAppliedBonus(PlayerEntity player, Object object) {
+    public float getAppliedBonus(Player player, Object object) {
         if (isEffectiveOn(object))
             return getBonus(player);
         else

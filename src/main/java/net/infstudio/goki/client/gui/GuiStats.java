@@ -1,19 +1,21 @@
 package net.infstudio.goki.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.C2SRequestStatSync;
 import net.infstudio.goki.common.network.message.C2SStatSync;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec2;
+
+import javax.annotation.Nonnull;
 
 /**
  * Stats ui, where player upgrade/downgrade their skills
@@ -28,8 +30,8 @@ public class GuiStats extends Screen {
             {4, 4, 5, 4, 5, 4};
     public static float SCALE = 1.0F;
 
-    private final PlayerEntity player = Minecraft.getInstance().player;
-    private final FontRenderer fontRenderer = Minecraft.getInstance().font;
+    private final Player player = Minecraft.getInstance().player;
+    private final Font fontRenderer = Minecraft.getInstance().font;
 
     private int currentColumn = 0;
     private int currentRow = 0;
@@ -41,7 +43,7 @@ public class GuiStats extends Screen {
 
 
     public GuiStats() {
-        super(new StringTextComponent(""));
+        super(new TextComponent(""));
     }
 
     /**
@@ -53,15 +55,15 @@ public class GuiStats extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float par3) {
-        int toolTipX = 0;
-        int toolTipY = 0;
+    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float par3) {
+        var toolTipX = 0;
+        var toolTipY = 0;
         this.toolTip = null;
-        renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, par3);
-        for (int i = 0; i < this.buttons.size(); i++) {
-            if ((this.buttons.get(i) instanceof GuiStatButton)) {
-                GuiStatButton button = (GuiStatButton) this.buttons.get(i);
+        renderBackground(stack);
+        super.render(stack, mouseX, mouseY, par3);
+        for (var i = 0; i < this.renderables.size(); i++) {
+            if ((this.renderables.get(i) instanceof GuiStatButton)) {
+                var button = (GuiStatButton) this.renderables.get(i);
                 if (button.isUnderMouse(mouseX, mouseY)) {
                     this.toolTip = new GuiStatTooltip(StatBase.stats.get(i), this.player);
                     toolTipX = button.x + 12;
@@ -70,14 +72,14 @@ public class GuiStats extends Screen {
                 }
             }
         }
-        drawCenteredString(matrixStack, fontRenderer,
+        drawCenteredString(stack, fontRenderer,
                 I18n.get("ui.currentxp", DataHelper.getXPTotal(player)),
                 width / 2,
                 this.height - 16,
                 0xFFFFFFFF);
 
         if (this.toolTip != null)
-            this.toolTip.draw(matrixStack, toolTipX, toolTipY, 0);
+            this.toolTip.render(stack, toolTipX, toolTipY, 0);
     }
 
     @SuppressWarnings("unchecked")
@@ -85,9 +87,9 @@ public class GuiStats extends Screen {
     public void init() {
         // Sync the stat
         GokiPacketHandler.CHANNEL.sendToServer(new C2SRequestStatSync());
-        for (int stat = 0; stat < StatBase.totalStats.orElse(0); stat++) {
-            Vector2f pos = getButton(stat);
-            this.buttons.add(new GuiStatButton(stat, (int) pos.x, (int) pos.y, 24, 24, StatBase.stats.get(stat), this.player, this::actionPerformed));
+        for (var stat = 0; stat < StatBase.totalStats.orElse(0); stat++) {
+            var pos = getButton(stat);
+            addRenderableWidget(new GuiStatButton(stat, (int) pos.x, (int) pos.y, 24, 24, StatBase.stats.get(stat), this.player, this::actionPerformed));
             this.currentColumn += 1;
             if (this.currentColumn >= COLUMNS[this.currentRow]) {
                 this.currentRow += 1;
@@ -97,17 +99,16 @@ public class GuiStats extends Screen {
                 this.currentRow = (COLUMNS.length - 1);
             }
         }
-        children.addAll(buttons);
     }
 
-    private Vector2f getButton(int n) {
-        int columns = COLUMNS[this.currentRow];
-        int x = n % columns;
-        int y = this.currentRow;
-        int rows = COLUMNS.length;
-        float width = columns * 32 * SCALE;
-        float height = rows * 36 * SCALE;
-        return new Vector2f((width / columns * x + (this.width - width + 8.0F) / 2.0F),
+    private Vec2 getButton(int n) {
+        var columns = COLUMNS[this.currentRow];
+        var x = n % columns;
+        var y = this.currentRow;
+        var rows = COLUMNS.length;
+        var width = columns * 32 * SCALE;
+        var height = rows * 36 * SCALE;
+        return new Vec2((width / columns * x + (this.width - width + 8.0F) / 2.0F),
                 (height / rows * y + (this.height - height + 12.0F) / 2.0F));
     }
 
@@ -115,9 +116,9 @@ public class GuiStats extends Screen {
         if (!(btn instanceof GuiStatButton))
             return;
 
-        GuiStatButton button = (GuiStatButton) btn;
+        var button = (GuiStatButton) btn;
         if ((button.id >= 0) && (button.id <= StatBase.totalStats.orElse(0))) {
-            GuiStatButton statButton = (GuiStatButton) button;
+            var statButton = (GuiStatButton) button;
             if (!hasControlDown())
                 GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), 1));
             else // Downgrade

@@ -2,7 +2,7 @@ package net.infstudio.goki.common.stat.damage;
 
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.stats.DamageSourceProtectionConfig;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;

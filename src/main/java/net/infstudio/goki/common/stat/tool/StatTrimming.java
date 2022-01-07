@@ -1,9 +1,9 @@
 package net.infstudio.goki.common.stat.tool;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ShearsItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ShearsItem;
 
 public class StatTrimming extends ToolSpecificStat {
     public StatTrimming(int id, String key, int limit) {

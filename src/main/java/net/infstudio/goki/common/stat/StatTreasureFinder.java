@@ -5,13 +5,12 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.stats.TreasureFinderConfig;
 import net.infstudio.goki.common.stat.tool.TreasureFinderEntry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
     }
 
     @Override
-    public String getLocalizedDescription(PlayerEntity player) {
+    public String getLocalizedDescription(Player player) {
         if (getPlayerStatLevel(player) == 0) {
             return I18n.get("skill.gokistats." + this.key + ".text");
         }

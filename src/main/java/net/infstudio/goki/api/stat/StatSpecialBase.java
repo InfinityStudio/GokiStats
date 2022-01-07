@@ -2,7 +2,7 @@ package net.infstudio.goki.api.stat;
 
 import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public abstract class StatSpecialBase extends StatBase<StatConfig> implements StatSpecial {
     public StatSpecialBase(int id, String key, int limit) {
@@ -10,7 +10,7 @@ public abstract class StatSpecialBase extends StatBase<StatConfig> implements St
     }
 
     @Override
-    public final float getSecondaryBonus(PlayerEntity player) {
+    public final float getSecondaryBonus(Player player) {
         return getSecondaryBonus(DataHelper.getPlayerStatLevel(player, this));
     }
 }

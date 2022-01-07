@@ -1,10 +1,10 @@
 package net.infstudio.goki.common.stat.movement;
 
+import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.Reference;
-import net.infstudio.goki.api.stat.StatBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Player;
 
 public class StatClimbing extends StatBase<StatConfig> {
     public StatClimbing(int id, String key, int limit) {
@@ -16,7 +16,7 @@ public class StatClimbing extends StatBase<StatConfig> {
     }
 
     @Override
-    public String getLocalizedDescription(PlayerEntity player) {
+    public String getLocalizedDescription(Player player) {
         if (Reference.isPlayerAPILoaded) {
             return I18n.get("skill.gokistats." + this.key + ".disabled");
         }

@@ -7,12 +7,12 @@ import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.utils.Reference;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -50,7 +50,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
         this.key = key;
         stats.add(this);
 
-        final Pair<T, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
+        final var specPair = new ForgeConfigSpec.Builder()
                 .configure(this::createConfig);
         configSpec = specPair.getRight();
         config = specPair.getLeft();
@@ -72,12 +72,12 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     }
 
     @Override
-    public float getBonus(PlayerEntity player) {
+    public float getBonus(Player player) {
         return getBonus(DataHelper.getPlayerStatLevel(player, this)) * bonusMultiplier;
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(PlayerEntity player) {
+    public float[] getDescriptionFormatArguments(Player player) {
         return new float[]
                 {DataHelper.trimDecimals(getBonus(player) * 100, 1)};
     }
@@ -89,19 +89,16 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     @Override
     public boolean isEffectiveOn(Object... obj) {
-        if (((obj[1] instanceof ItemStack)) && ((obj[2] instanceof BlockPos)) && ((obj[3] instanceof World))) {
-            ItemStack stack = (ItemStack) obj[1];
-            BlockPos pos = (BlockPos) obj[2];
-            World world = (World) obj[3];
+        if (obj[0] instanceof ItemStack stack && obj[1] instanceof BlockPos pos && obj[2] instanceof Level world) {
 
-            return ForgeHooks.isToolEffective(world, pos, stack);
+            return stack.isCorrectToolForDrops(world.getBlockState(pos));
         }
         return false;
     }
 
     @Override
     public int getLimit() {
-        int limit = this.limit;
+        var limit = this.limit;
         if (config.maxLevel.get() > 0) return config.maxLevel.get();
         if (GokiConfig.SERVER.globalLimitMultiplier.get() <= 0) {
             return limit;
@@ -110,19 +107,19 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     }
 
     @Override
-    public float getAppliedBonus(PlayerEntity player, Object object) {
+    public float getAppliedBonus(Player player, Object object) {
         if (isEffectiveOn(object))
             return getBonus(player);
         else
             return 0;
     }
 
-    protected final int getPlayerStatLevel(PlayerEntity player) {
+    protected final int getPlayerStatLevel(Player player) {
         return DataHelper.getPlayerStatLevel(player, this);
     }
 
-    public final boolean isEffectiveOn(ItemStack stack, BlockPos pos, World world) {
-        if (ForgeHooks.isToolEffective(world, pos, stack))
+    public final boolean isEffectiveOn(ItemStack stack, BlockPos pos, Level world) {
+        if (stack.isCorrectToolForDrops(world.getBlockState(pos)))
             return true;
         else return isEffectiveOn(stack);
     }
@@ -133,7 +130,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     }
 
     @OnlyIn(Dist.CLIENT)
-    public String getLocalizedDescription(PlayerEntity player) {
+    public String getLocalizedDescription(Player player) {
         return I18n.get("skill.gokistats." + this.key + ".text",
                 this.getDescriptionFormatArguments(player)[0]);
     }
@@ -142,7 +139,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof StatBase)) return false;
-        StatBase<?> statBase = (StatBase<?>) o;
+        var statBase = (StatBase<?>) o;
         return Objects.equals(getRegistryName(), statBase.getRegistryName());
     }
 

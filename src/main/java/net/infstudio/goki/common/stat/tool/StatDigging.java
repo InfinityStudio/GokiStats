@@ -1,9 +1,6 @@
 package net.infstudio.goki.common.stat.tool;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.item.*;
 
 public class StatDigging extends ToolSpecificStat {
     public StatDigging(int id, String key, int limit) {
@@ -17,7 +14,7 @@ public class StatDigging extends ToolSpecificStat {
 
     @Override
     public boolean isItemSupported(ItemStack item) {
-        return super.isItemSupported(item) || item.getItem().getToolTypes(item).contains(ToolType.SHOVEL);
+        return super.isItemSupported(item) || item.getItem() instanceof ShovelItem;
     }
 
     @Override

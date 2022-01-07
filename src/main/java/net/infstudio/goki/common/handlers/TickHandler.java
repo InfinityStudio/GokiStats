@@ -2,22 +2,18 @@ package net.infstudio.goki.common.handlers;
 
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
-import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,13 +31,13 @@ public class TickHandler {
     @SubscribeEvent
     public static void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START) { // Due to issue #32
-            PlayerEntity player = event.player;
+            var player = event.player;
 
             handleTaskPlayerAPI(player);
 
-            ModifiableAttributeInstance attributeInstance = player.getAttribute(Attributes.MOVEMENT_SPEED);
+           var attributeInstance = player.getAttribute(Attributes.MOVEMENT_SPEED);
             if (attributeInstance == null) return;
-            AttributeModifier modifier = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, AttributeModifier.Operation.fromValue(1));
+            var modifier = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, AttributeModifier.Operation.fromValue(1));
             if (player.isCrouching()) {
                 if (attributeInstance.getModifier(stealthSpeedID) == null) {
                     attributeInstance.addTransientModifier(modifier);
@@ -60,8 +56,6 @@ public class TickHandler {
             } else if (attributeInstance.getModifier(knockbackResistanceID) != null) {
                 attributeInstance.removeModifier(modifier);
             }
-
-            handleFurnace(player);
         }
     }
 
@@ -71,7 +65,7 @@ public class TickHandler {
         if (event.phase == TickEvent.Phase.END && GokiConfig.SERVER.syncTicks.get() > 0) {
             if (tickTimer.get() == GokiConfig.SERVER.syncTicks.get()) {
                 tickTimer.lazySet(0);
-                for (ServerPlayerEntity player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+                for (var player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
                     SyncEventHandler.syncPlayerData(player);
                 }
             } else {
@@ -81,10 +75,10 @@ public class TickHandler {
     }
 
     public static boolean isJumping(LivingEntity livingBase) {
-        return ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, livingBase, "field_70703_bu");
+        return Boolean.TRUE.equals(ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, livingBase, "field_70703_bu"));
     }
 
-    private static void handleTaskPlayerAPI(PlayerEntity player) {
+    private static void handleTaskPlayerAPI(Player player) {
         if (!player.isLocalPlayer() || player.canRiderInteract())
             if (player.isSwimming()) {
                 float multiplier = Math.max(0.0F,
@@ -114,7 +108,7 @@ public class TickHandler {
                         player.setDeltaMovement(player.getDeltaMovement().add(0, 0.02, 0));
                     }
 
-                    Vector3d offset = player.getDeltaMovement().add(0, 0.6000000238418579D - player.getY() + d0, 0);
+                    var offset = player.getDeltaMovement().add(0, 0.6000000238418579D - player.getY() + d0, 0);
 //                    if (player.horizontalCollision && player.isOffsetPositionInLiquid(offset.x, offset.y, offset.z)) {
 //                        player.setMotion(new Vector3d(player.getMotion().x, 0.30000001192092896D, player.getMotion().z));
 //                    }
@@ -128,32 +122,6 @@ public class TickHandler {
             float multiplier = Stats.CLIMBING.getBonus(player);
             player.move(MoverType.SELF, player.getDeltaMovement().multiply(1, multiplier, 1));
         }
-    }
-
-    private static void handleFurnace(PlayerEntity player) {
-        if (DataHelper.getPlayerStatLevel(player, Stats.FURNACE_FINESSE) > 0) {
-            /*
-            ArrayList<FurnaceTileEntity> furnacesAroundPlayer = new ArrayList<>();
-
-            for (TileEntity listEntity : player.world.loadedTileEntityList) {
-                if (listEntity != null) {
-                    TileEntity tileEntity = listEntity;
-                    BlockPos pos = tileEntity.getPos();
-                    if (tileEntity instanceof FurnaceTileEntity && MathHelper.sqrt(player.getDistanceSq(pos)) < 4.0D) {
-                        // TODO work out alter way to do tileEntity
-                        furnacesAroundPlayer.add((FurnaceTileEntity) tileEntity);
-                    }
-                }
-            }
-
-            // FIXME Laggy
-
-            for (FurnaceTileEntity furnace : furnacesAroundPlayer)
-                if (furnace.isBurning())
-                    for (int i = 0; i < Stats.FURNACE_FINESSE.getBonus(player); i++) // Intend to "mount" ticks, same as Torcherino.
-                        furnace.update();*/
-        }
-
     }
 
 }

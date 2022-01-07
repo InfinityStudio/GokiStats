@@ -1,9 +1,9 @@
 package net.infstudio.goki.api.stat;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public interface Stat extends IForgeRegistryEntry<Stat> {
@@ -14,14 +14,14 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      */
     boolean isEffectiveOn(Object... obj);
 
-    boolean isEffectiveOn(ItemStack stack, BlockPos pos, World world);
+    boolean isEffectiveOn(ItemStack stack, BlockPos pos, Level world);
 
     /**
      * Get arguments to format the description
      * @param player player instance
      * @return format arguments, most commonly the bonus and the limit of the stat
      */
-    float[] getDescriptionFormatArguments(PlayerEntity player);
+    float[] getDescriptionFormatArguments(Player player);
 
     /**
      * Bonus to be used for this stat
@@ -36,7 +36,7 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      * @param player player instance
      * @return final bonus
      */
-    float getBonus(PlayerEntity player);
+    float getBonus(Player player);
 
 //	abstract float getBonus(int paramInt);
 
@@ -46,7 +46,7 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      * @param paramObject game object such as ItemStack or Entity
      * @return final bonus
      */
-    float getAppliedBonus(PlayerEntity player, Object paramObject);
+    float getAppliedBonus(Player player, Object paramObject);
 
     /**
      * XP Cost for each level

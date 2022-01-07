@@ -6,13 +6,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketGuiClientHandler {
     public static void acceptOpenGui(S2COpenGui message, Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> openGuiInternal(context.get())));
+        context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openGuiInternal(context.get())));
         context.get().setPacketHandled(true);
     }
 

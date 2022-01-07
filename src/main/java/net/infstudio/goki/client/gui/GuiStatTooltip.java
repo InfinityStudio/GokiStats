@@ -1,32 +1,32 @@
 package net.infstudio.goki.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GuiStatTooltip extends AbstractGui {
+public class GuiStatTooltip extends GuiComponent {
     private StatBase stat;
-    private PlayerEntity player;
+    private Player player;
     private int padding = 4;
 
     private final Minecraft mc = Minecraft.getInstance();
 
-    public GuiStatTooltip(StatBase stat, PlayerEntity player) {
+    public GuiStatTooltip(StatBase stat, Player player) {
         this.stat = stat;
         this.player = player;
     }
 
-    public void draw(MatrixStack stack, int drawX, int drawY, int mouseButton) {
+    public void render(PoseStack stack, int drawX, int drawY, float partialTicks) {
         Map<String, Integer> messageColorMap = new LinkedHashMap<>();
 
         AtomicInteger widthAtomic = new AtomicInteger(), heightAtomic = new AtomicInteger();
@@ -93,7 +93,7 @@ public class GuiStatTooltip extends AbstractGui {
         drawBorder(stack, x, drawY, width, height, -1);
     }
 
-    private void drawBorder(MatrixStack stack, int x, int y, int width, int height, int borderColor) {
+    private void drawBorder(PoseStack stack, int x, int y, int width, int height, int borderColor) {
         hLine(stack, x - 1, x + width, y, borderColor);
         hLine(stack, x - 1, x + width, y - height, borderColor);
         vLine(stack, x - 1, y, y - height, borderColor);

@@ -1,6 +1,5 @@
 package net.infstudio.goki;
 
-import net.infstudio.goki.api.capability.CapabilityStat;
 import net.infstudio.goki.api.stat.Stat;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.Stats;
@@ -44,7 +43,6 @@ public class GokiStats {
             log.warn("Cannot load classes, this may cause some issues", e);
         }
 
-        CapabilityStat.register();
         MinecraftForge.EVENT_BUS.register(instance);
         MinecraftForge.EVENT_BUS.register(new TickHandler());
         initConfig();

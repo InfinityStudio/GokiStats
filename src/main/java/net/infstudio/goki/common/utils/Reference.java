@@ -1,6 +1,6 @@
 package net.infstudio.goki.common.utils;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class Reference {
     public static final String MODID = "gokistats";

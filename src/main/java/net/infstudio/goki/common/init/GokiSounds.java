@@ -2,8 +2,8 @@ package net.infstudio.goki.common.init;
 
 import net.infstudio.goki.common.handlers.GokiLootModifier;
 import net.infstudio.goki.common.utils.Reference;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

@@ -3,21 +3,23 @@ package net.infstudio.goki.common.network.handler;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.network.GokiPacketHandler;
-import net.infstudio.goki.common.network.message.*;
+import net.infstudio.goki.common.network.message.C2SRequestStatSync;
+import net.infstudio.goki.common.network.message.C2SStatSync;
+import net.infstudio.goki.common.network.message.S2CStatSync;
+import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.stat.StatMaxHealth;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
 public class PacketSyncHandler {
 
     public static void acceptC2S(C2SStatSync message, Supplier<NetworkEvent.Context> context) {
-        NetworkEvent.Context ctx = context.get();
-        ServerPlayerEntity player = ctx.getSender();
+        var ctx = context.get();
+        var player = ctx.getSender();
         StatBase stat = StatBase.stats.get(message.stat);
         if (!stat.isEnabled())
             return;

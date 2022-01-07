@@ -1,6 +1,6 @@
 package net.infstudio.goki.common.network.message;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class S2COpenGui implements IMessage {
     public int ID;
@@ -13,12 +13,12 @@ public class S2COpenGui implements IMessage {
     }
 
     @Override
-    public void fromBytes(PacketBuffer buf) {
+    public void fromBytes(FriendlyByteBuf buf) {
         ID = buf.readInt();
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(ID);
     }
 }

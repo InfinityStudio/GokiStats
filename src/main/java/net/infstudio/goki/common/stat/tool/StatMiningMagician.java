@@ -3,11 +3,11 @@ package net.infstudio.goki.common.stat.tool;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.stats.MiningMagicianConfig;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class StatMiningMagician extends StatBase<MiningMagicianConfig> {
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(PlayerEntity player) {
+    public float[] getDescriptionFormatArguments(Player player) {
         return new float[]
                 {DataHelper.trimDecimals(getBonus(player), 1)};
     }

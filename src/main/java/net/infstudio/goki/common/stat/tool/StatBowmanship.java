@@ -1,9 +1,10 @@
 package net.infstudio.goki.common.stat.tool;
 
-import net.minecraft.item.BowItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class StatBowmanship extends ToolSpecificStat {
     public StatBowmanship(int id, String key, int limit) {

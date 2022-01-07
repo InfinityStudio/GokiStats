@@ -22,20 +22,20 @@ public interface Stats {
     DamageSourceProtectionStat TEMPERING = new StatTempering(5, "tempering", 10);
     DamageSourceProtectionStat TOUGH_SKIN = new StatToughSkin(6, "tough_skin", 10);
     DamageSourceProtectionStat STAT_FEATHER_FALL = new StatFeatherFall(7, "feather_fall", 10);
-    StatBase LEAPER_H = new StatLeaperH(8, "leaper_h", 10);
-    StatBase LEAPER_V = new StatLeaperV(9, "leaper_v", 10);
-    StatBase SWIMMING = new StatSwimming(10, "swimming", 10);
-    StatBase CLIMBING = new StatClimbing(11, "climbing", 10);
-    StatBase PUGILISM = new StatPugilism(12, "pugilism", 10);
+    StatLeaperH LEAPER_H = new StatLeaperH(8, "leaper_h", 10);
+    StatBase<?> LEAPER_V = new StatLeaperV(9, "leaper_v", 10);
+    StatBase<?> SWIMMING = new StatSwimming(10, "swimming", 10);
+    StatBase<?> CLIMBING = new StatClimbing(11, "climbing", 10);
+    StatBase<?> PUGILISM = new StatPugilism(12, "pugilism", 10);
     ToolSpecificStat SWORDSMANSHIP = new StatSwordsmanship(13, "swordsmanship", 10);
     ToolSpecificStat BOWMANSHIP = new StatBowmanship(14, "bowmanship", 10);
-    StatBase REAPER = new StatReaper(15, "reaper", 10);
-    StatBase FURNACE_FINESSE = new StatFurnaceFinesse(17, "furnace_finesse", 10);
+    StatBase<?> REAPER = new StatReaper(15, "reaper", 10);
+    StatBase<?> FURNACE_FINESSE = new StatFurnaceFinesse(17, "furnace_finesse", 10);
     StatTreasureFinder TREASURE_FINDER = new StatTreasureFinder(16, "treasure_finder", 3);
-    StatBase STEALTH = new StatStealth(19, "stealth", 10);
-    StatBase STEADY_GUARD = new StatSteadyGuard(18, "steady_guard", 10);
+    StatBase<?> STEALTH = new StatStealth(19, "stealth", 10);
+    StatBase<?> STEADY_GUARD = new StatSteadyGuard(18, "steady_guard", 10);
     StatMiningMagician MINING_MAGICIAN = new StatMiningMagician(20, "mining_magician", 10);
     StatMaxHealth MAX_HEALTH = new StatMaxHealth(21, "health", 16);
-    StatBase ROLL = new StatRoll(22, "roll", 10);
+    StatBase<?> ROLL = new StatRoll(22, "roll", 10);
 
 }

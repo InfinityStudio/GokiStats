@@ -1,30 +1,28 @@
 package net.infstudio.goki.api.capability;
 
-import net.infstudio.goki.api.stat.Stat;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.StatState;
 import net.infstudio.goki.api.stat.StatStorage;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.infstudio.goki.common.utils.Reference;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Mod.EventBusSubscriber(modid = Reference.MODID)
 public class CapabilityStat {
-    @CapabilityInject(StatStorage.class)
-    public static Capability<StatStorage> STAT;
+    public static Capability<StatStorage> STAT = CapabilityManager.get(new CapabilityToken<>(){});
 
-    private static CompoundNBT serializeNBT(StatStorage statStorage) {
-        CompoundNBT compound = new CompoundNBT();
+    private static CompoundTag serializeNBT(StatStorage statStorage) {
+        var compound = new CompoundTag();
         statStorage.stateMap.forEach((stat, state) -> {
-            CompoundNBT stateTag = new CompoundNBT();
+            var stateTag = new CompoundTag();
             stateTag.putInt("level", state.level);
             stateTag.putInt("revertedLevel", state.revertedLevel);
             compound.put(stat.getRegistryName().toString(), stateTag);
@@ -32,20 +30,20 @@ public class CapabilityStat {
         return compound;
     }
 
-    private static void deserializeNBT(@Nonnull StatStorage statStorage, INBT nbt) {
-        if (nbt instanceof CompoundNBT) {
-            CompoundNBT compound = (CompoundNBT) nbt;
-            for (String stat : compound.getAllKeys()) {
-                ResourceLocation statLocation = new ResourceLocation(stat);
+    private static void deserializeNBT(@Nonnull StatStorage statStorage, Tag nbt) {
+        if (nbt instanceof CompoundTag) {
+            var compound = (CompoundTag) nbt;
+            for (var stat : compound.getAllKeys()) {
+                var statLocation = new ResourceLocation(stat);
                 if (!StatBase.REGISTRY.containsKey(statLocation)) continue;
-                CompoundNBT stateTag = compound.getCompound(stat);
-                Stat statObject = StatBase.REGISTRY.getValue(statLocation);
+                var stateTag = compound.getCompound(stat);
+                var statObject = StatBase.REGISTRY.getValue(statLocation);
                 statStorage.stateMap.put(statObject, new StatState(statObject, stateTag.getInt("level"), stateTag.getInt("revertedLevel")));
             }
         }
     }
 
-    public static class Provider implements ICapabilitySerializable<CompoundNBT> {
+    public static class Provider implements ICapabilitySerializable<CompoundTag> {
         public StatStorage statStorage = new StatStorage();
         public final LazyOptional<StatStorage> storageProperty = LazyOptional.of(() -> statStorage);
 
@@ -57,28 +55,18 @@ public class CapabilityStat {
         }
 
         @Override
-        public CompoundNBT serializeNBT() {
+        public CompoundTag serializeNBT() {
             return CapabilityStat.serializeNBT(statStorage);
         }
 
 
         @Override
-        public void deserializeNBT(CompoundNBT nbt) {
+        public void deserializeNBT(CompoundTag nbt) {
             CapabilityStat.deserializeNBT(statStorage, nbt);
         }
     }
 
-    public static void register() {
-        CapabilityManager.INSTANCE.register(StatStorage.class, new Capability.IStorage<StatStorage>() {
-            @Override
-            public INBT writeNBT(Capability<StatStorage> capability, StatStorage instance, Direction side) {
-                return serializeNBT(instance);
-            }
-
-            @Override
-            public void readNBT(Capability<StatStorage> capability, StatStorage instance, Direction side, INBT nbt) {
-                CapabilityStat.deserializeNBT(instance, nbt);
-            }
-        }, StatStorage::new);
+    public static void register(RegisterCapabilitiesEvent event) {
+        event.register(StatStorage.class);
     }
 }

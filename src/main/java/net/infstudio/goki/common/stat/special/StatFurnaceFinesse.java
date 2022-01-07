@@ -2,8 +2,8 @@ package net.infstudio.goki.common.stat.special;
 
 import net.infstudio.goki.api.stat.StatSpecial;
 import net.infstudio.goki.api.stat.StatSpecialBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Player;
 
 public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
     public StatFurnaceFinesse(int id, String key, int limit) {
@@ -22,7 +22,7 @@ public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(PlayerEntity player) {
+    public float[] getDescriptionFormatArguments(Player player) {
         // TODO special
         int level = getPlayerStatLevel(player);
         return new float[]
@@ -32,7 +32,7 @@ public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
     }
 
     @Override
-    public String getLocalizedDescription(PlayerEntity player) {
+    public String getLocalizedDescription(Player player) {
         if (isEnabled())
             return I18n.get("skill.gokistats." + this.key + ".text",
                 this.getDescriptionFormatArguments(player)[0],

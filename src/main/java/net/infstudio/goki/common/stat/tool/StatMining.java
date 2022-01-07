@@ -1,9 +1,9 @@
 package net.infstudio.goki.common.stat.tool;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PickaxeItem;
 
 public class StatMining extends ToolSpecificStat {
     public StatMining(int id, String key, int limit) {
@@ -17,7 +17,7 @@ public class StatMining extends ToolSpecificStat {
 
     @Override
     public boolean isItemSupported(ItemStack item) {
-        return super.isItemSupported(item) || item.getItem().getToolTypes(item).contains(ToolType.PICKAXE);
+        return super.isItemSupported(item) || item.getItem() instanceof PickaxeItem;
     }
 
     @Override

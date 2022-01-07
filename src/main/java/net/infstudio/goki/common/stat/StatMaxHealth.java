@@ -4,7 +4,7 @@ import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.config.stats.StatConfig;
 import net.infstudio.goki.common.utils.DataHelper;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class StatMaxHealth extends StatBase<StatConfig> {
 
@@ -33,7 +33,7 @@ public class StatMaxHealth extends StatBase<StatConfig> {
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(PlayerEntity player) {
+    public float[] getDescriptionFormatArguments(Player player) {
         return new float[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)), 0)};
     }
