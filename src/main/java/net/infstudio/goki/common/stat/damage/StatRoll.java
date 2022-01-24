@@ -8,7 +8,7 @@ public class StatRoll extends StatBase {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus(level * 0.025f);
     }
 }

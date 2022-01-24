@@ -30,7 +30,7 @@ public interface Stats {
     ToolSpecificStat SWORDSMANSHIP = new StatSwordsmanship(13, "swordsmanship", 10);
     ToolSpecificStat BOWMANSHIP = new StatBowmanship(14, "bowmanship", 10);
     StatBase<?> REAPER = new StatReaper(15, "reaper", 10);
-    StatBase<?> FURNACE_FINESSE = new StatFurnaceFinesse(17, "furnace_finesse", 10);
+//    StatBase<?> FURNACE_FINESSE = new StatFurnaceFinesse(17, "furnace_finesse", 10);
     StatTreasureFinder TREASURE_FINDER = new StatTreasureFinder(16, "treasure_finder", 3);
     StatBase<?> STEALTH = new StatStealth(19, "stealth", 10);
     StatBase<?> STEADY_GUARD = new StatSteadyGuard(18, "steady_guard", 10);

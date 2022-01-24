@@ -21,7 +21,7 @@ public class StatMining extends ToolSpecificStat {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus((float) Math.pow(level, 1.3D) * 0.01523F);
     }
 

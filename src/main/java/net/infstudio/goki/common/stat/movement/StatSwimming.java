@@ -11,7 +11,7 @@ public class StatSwimming extends StatBase<StatConfig> {
         super(id, key, limit);
     }
 
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus((float) Math.pow(level, 1.1D) * 0.029F);
     }
 

@@ -6,7 +6,7 @@ public class StatProtection extends DamageSourceProtectionStat {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus(level * 0.008F);
     }
 

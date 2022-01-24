@@ -10,7 +10,7 @@ public abstract class StatSpecialBase extends StatBase<StatConfig> implements St
     }
 
     @Override
-    public final float getSecondaryBonus(Player player) {
+    public final double getSecondaryBonus(Player player) {
         return getSecondaryBonus(DataHelper.getPlayerStatLevel(player, this));
     }
 }

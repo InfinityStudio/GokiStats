@@ -3,12 +3,14 @@ package net.infstudio.goki.common.utils;
 import net.infstudio.goki.api.capability.CapabilityStat;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.StatStorage;
+import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,49 +27,54 @@ public class DataHelper {
     }
 
     public static int getPlayerRevertStatLevel(Player player, StatBase stat) {
-        if (player.getCapability(CapabilityStat.STAT).isPresent()) {
-            return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel;
-        } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
-        }
+        return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel;
     }
 
     public static void setPlayerRevertStatLevel(Player player, StatBase stat, int level) {
-        if (player.getCapability(CapabilityStat.STAT).isPresent()) {
-            player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel = level;
-        } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
-        }
+        player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel = level;
     }
 
     public static int getPlayerStatLevel(Player player, StatBase stat) {
-        if (player.getCapability(CapabilityStat.STAT).isPresent()) {
-            return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level;
-        } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
-        }
+        return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level;
     }
 
     public static void setPlayerStatLevel(Player player, StatBase stat, int level) {
-        if (player.getCapability(CapabilityStat.STAT).isPresent()) {
-            player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level = level;
-        } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
-        }
+        player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level = level;
     }
 
     public static void multiplyPlayerStatLevel(Player player, StatBase stat, IntFunction<Integer> multiplier) {
         setPlayerStatLevel(player, stat, multiplier.apply(getPlayerStatLevel(player, stat)));
     }
 
-    public static float trimDecimals(float in, int decimals) {
+    public static void addMaxHealth(Player player, int amount) {
+        var attribute = player.getAttribute(Attributes.MAX_HEALTH);
+        attribute.setBaseValue(20 + amount);
+        attribute.removeModifiers();
+        attribute.addPermanentModifier(new AttributeModifier("MaxHealth", DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH), AttributeModifier.Operation.ADDITION));
+    }
+
+    public static void resetMaxHealth(Player player) {
+        addMaxHealth(player, DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
+    }
+
+    public static double trimDecimals(double in, int decimals) {
         var f = (float) (in * Math.pow(10.0D, decimals));
         var i = (int) f;
         return i / (float) Math.pow(10.0D, decimals);
     }
 
     public static int getXPTotal(Player player) {
-        return player.totalExperience;
+        var level = player.experienceLevel;
+        var xp = player.totalExperience;
+
+        if (level >= 0 && level <= 15) {
+            xp = (int) Math.round(Math.pow(level, 2) + 6 * level);
+        } else if (level > 15 && level <= 30) {
+            xp = (int) Math.round((2.5 * Math.pow(level, 2) - 40.5 * level + 360));
+        } else if (level > 30) {
+            xp = (int) Math.round(((4.5 * Math.pow(level, 2) - 162.5 * level + 2220)));
+        }
+        return xp;
     }
 
     public static boolean hasDamageModifier(ItemStack stack) {

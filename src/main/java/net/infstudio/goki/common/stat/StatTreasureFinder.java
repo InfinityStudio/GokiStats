@@ -130,7 +130,7 @@ public class StatTreasureFinder extends StatBase<TreasureFinderConfig> {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return 0;
     }
 }

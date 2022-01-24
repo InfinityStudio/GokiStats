@@ -11,14 +11,14 @@ public class StatSteadyGuard extends StatBase<StatConfig> {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return Math.min(getFinalBonus((float) Math.pow(level, 1.3615D)), 100.0F);
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(Player player) {
+    public double[] getDescriptionFormatArguments(Player player) {
         // TODO special
-        return new float[]
+        return new double[]
                 {DataHelper.trimDecimals(getBonus(player), 1)};
     }
 }

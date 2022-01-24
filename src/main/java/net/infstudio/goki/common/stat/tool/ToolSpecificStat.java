@@ -53,7 +53,7 @@ public abstract class ToolSpecificStat extends StatBase<ToolSpecificConfig> {
     }
 
     @Override
-    public float getAppliedBonus(Player player, Object object) {
+    public double getAppliedBonus(Player player, Object object) {
         if (isEffectiveOn(object))
             return getBonus(player);
         else

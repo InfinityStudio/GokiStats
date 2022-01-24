@@ -16,12 +16,10 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Objects;
 
@@ -35,9 +33,6 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     public int imageID;
     public String key;
 
-    public float costMultiplier = 1.0F;
-    public float limitMultiplier = 1.0F;
-    public float bonusMultiplier = 1.0F;
     private boolean enabled = true;
     private final int limit;
 
@@ -72,13 +67,13 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     }
 
     @Override
-    public float getBonus(Player player) {
-        return getBonus(DataHelper.getPlayerStatLevel(player, this)) * bonusMultiplier;
+    public double getBonus(Player player) {
+        return getBonus(DataHelper.getPlayerStatLevel(player, this)) * getBonusMultiplier();
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(Player player) {
-        return new float[]
+    public double[] getDescriptionFormatArguments(Player player) {
+        return new double[]
                 {DataHelper.trimDecimals(getBonus(player) * 100, 1)};
     }
 
@@ -107,7 +102,7 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
     }
 
     @Override
-    public float getAppliedBonus(Player player, Object object) {
+    public double getAppliedBonus(Player player, Object object) {
         if (isEffectiveOn(object))
             return getBonus(player);
         else
@@ -160,5 +155,21 @@ public abstract class StatBase<T extends StatConfig> extends ForgeRegistryEntry<
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public double getCostMultiplier() {
+        return config.costMultiplier.get();
+    }
+
+    public void setCostMultiplier(double costMultiplier) {
+        this.config.costMultiplier.set(costMultiplier);
+    }
+
+    public double getBonusMultiplier() {
+        return config.bonusMultiplier.get();
+    }
+
+    public void setBonusMultiplier(double bonusMultiplier) {
+        this.config.bonusMultiplier.set(bonusMultiplier);
     }
 }

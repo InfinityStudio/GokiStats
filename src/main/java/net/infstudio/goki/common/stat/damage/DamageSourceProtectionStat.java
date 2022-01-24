@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DamageSourceProtectionStat extends StatBase<DamageSourceProtectionConfig> {
-    public List<String> damageSources = new ArrayList<>();
-
     public DamageSourceProtectionStat(int id, String key, int limit) {
         super(id, key, limit);
     }
@@ -39,7 +37,7 @@ public abstract class DamageSourceProtectionStat extends StatBase<DamageSourcePr
         if (obj != null) {
             if ((obj[0] instanceof DamageSource)) {
                 DamageSource source = (DamageSource) obj[0];
-                for (String damageSource : this.damageSources) {
+                for (String damageSource : config.damageSources) {
                     if (source.msgId.equals(damageSource)) {
                         return true;
                     }

@@ -13,13 +13,13 @@ public class StatReaper extends StatBase {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus((float) Math.pow(level, 1.0768D) * 0.0025F);
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(Player player) {// TODO special
-        return new float[]
+    public double[] getDescriptionFormatArguments(Player player) {// TODO special
+        return new double[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), GokiConfig.SERVER.reaperLimit.get()};
         // return Helper.trimDecimals(getBonus(getPlayerStatLevel(player)) *
         // 100, 1) + "% chance to instantly kill enemies with less than " +

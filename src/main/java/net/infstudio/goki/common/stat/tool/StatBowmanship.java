@@ -20,7 +20,7 @@ public class StatBowmanship extends ToolSpecificStat {
         return super.isItemSupported(item) || item.getItem() instanceof BowItem;
     }
 
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus((float) Math.pow(level, 1.0895D) * 0.03F);
     }
 

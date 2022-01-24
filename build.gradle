@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.3.0"
+version = "1.3.1"
 group= "net.infstudio.gokistats" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "GokiStats-1.18.1"
 
