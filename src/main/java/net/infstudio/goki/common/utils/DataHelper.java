@@ -1,6 +1,7 @@
 package net.infstudio.goki.common.utils;
 
 import net.infstudio.goki.api.stat.StatBase;
+import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -47,6 +48,10 @@ public class DataHelper {
             ((NBTTagCompound) nbt.getTag("gokistats_Stats")).setInteger(stat.getKey() + ".revert",
                     (byte) level);
         }
+        if (stat == Stats.MAX_HEALTH) {
+            player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                    .setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
+        }
         return 0;
     }
 
@@ -63,6 +68,10 @@ public class DataHelper {
         if (nbt.hasKey("gokistats_Stats")) {
             ((NBTTagCompound) nbt.getTag("gokistats_Stats")).setInteger(stat.getKey(),
                     (byte) level);
+        }
+        if (stat == Stats.MAX_HEALTH) {
+            player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                    .setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
         }
     }
 

@@ -1,5 +1,6 @@
 package net.infstudio.goki.common.handlers;
 
+import io.netty.channel.epoll.Epoll;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.StatSpecial;
@@ -16,6 +17,8 @@ import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
@@ -38,6 +41,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -142,6 +146,14 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
+    public void playerJoinWorld(PlayerChangedDimensionEvent event) {
+        EntityPlayer player = event.player;
+        player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
+        player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+                .applyModifier(new AttributeModifier("MaxHealth", DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH), 0));
+    }
+
+    @SubscribeEvent
     public void playerRespawn(PlayerRespawnEvent event) {
         EntityPlayer player = event.player;
         if (!player.world.isRemote) {
@@ -153,6 +165,7 @@ public class CommonHandler {
                 }
             }
             GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
+            player.heal(player.getMaxHealth());
         }
     }
 

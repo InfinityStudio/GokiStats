@@ -1,46 +1,28 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            name = "gradle"
-            url = "https://plugins.gradle.org/m2/"
+            url = "https://maven.minecraftforge.net"
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath 'co.riiid:gradle-github-plugin:0.4.2'
-        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
-		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0"
+        classpath("com.anatawa12.forge:ForgeGradle:2.3-1.0.+") {
+            changing = true
+        }
     }
 }
 
 apply plugin: "net.minecraftforge.gradle.forge"
-apply plugin: 'co.riiid.gradle'
-apply plugin: "com.matthewprenger.cursegradle"
-apply plugin: "org.sonarqube"
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-sonarqube {
-    properties {
-        property "sonar.sourceEncoding", "UTF-8"
-    }
-}
-
-version = "1.2.8.4"
+version = "1.2.9"
 group= "net.infstudio.gokistats" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "gokiStats"
+archivesBaseName = "GokiStats"
 
 minecraft {
     version = "1.12.2-14.23.5.2768"
@@ -70,30 +52,6 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-}
-
-github {
-    owner = 'InfinityStudio'
-    repo = 'GokiStats'
-    token = project.hasProperty('githubToken') ? githubToken : "haha+1s"
-    tagName = version
-    targetCommitish = 'master'
-    name = 'gokiStats ' + version
-    assets = [
-        'build/libs/' + archivesBaseName + '-' + version + '.jar',
-        'build/libs/' + archivesBaseName + '-' + version + '-sources.jar'
-    ]
-}
-
-curseforge {
-    apiKey = project.hasProperty('curseForgeApiKey') ? curseForgeApiKey : "test123123"
-    project {
-        id = '298141'
-        releaseType = 'release'
-        mainArtifact(jar) {
-            displayName = "gokiStats $project.version"
-        }
-    }
 }
 
 processResources
