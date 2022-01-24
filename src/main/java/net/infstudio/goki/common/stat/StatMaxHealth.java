@@ -29,7 +29,7 @@ public class StatMaxHealth extends StatBase<StatConfig> {
 
     @Override
     public int getCost(int level) {
-        return (int) getFinalBonus((float) ((Math.pow(level, 2D) + 12.0D + level) * GokiConfig.SERVER.globalCostMultiplier.get()));
+        return (int) getFinalBonus((float) ((Math.pow(level, 2D) + 48.0D + level) * GokiConfig.SERVER.globalCostMultiplier.get()));
     }
 
     @Override
