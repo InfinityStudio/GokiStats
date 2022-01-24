@@ -26,8 +26,7 @@ public class PacketSyncClientHandler {
             StatBase stat = StatBase.stats.get(message.stat);
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 if (stat == Stats.MAX_HEALTH)
-                    player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-                            .setBaseValue(20 + message.amount);
+                    DataHelper.addMaxHealth(player, message.amount);
                 DataHelper.setPlayerRevertStatLevel(player, stat, message.reverted);
                 DataHelper.setPlayerStatLevel(player, stat, message.amount);
                 GokiStats.log.debug("Loaded stat from server.");
@@ -52,8 +51,7 @@ public class PacketSyncClientHandler {
                 for (int i = 0; i < message.revertedStatLevels.length; i++) {
                     DataHelper.setPlayerRevertStatLevel(player, StatBase.stats.get(i), message.revertedStatLevels[i]);
                 }
-                player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-                        .setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
+                DataHelper.resetMaxHealth(player);
                 GokiStats.log.debug("Loaded stats from server.");
             });
             return null;

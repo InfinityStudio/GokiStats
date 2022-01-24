@@ -43,8 +43,7 @@ public class PacketSyncHandler {
 
                     // Deal with health limit
                     if (stat instanceof StatMaxHealth) {
-                        player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-                                .setBaseValue(20 + stat.getBonus(level) + message.amount);
+                        DataHelper.addMaxHealth(player, (int) stat.getBonus(level) + message.amount);
                     }
 
                     if (message.amount <= 0) {
@@ -55,8 +54,7 @@ public class PacketSyncHandler {
                     if (message.amount <= 0) {
                         // Deal with health limit
                         if (stat instanceof StatMaxHealth) {
-                            player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-                                    .setBaseValue(20 + stat.getBonus(level) + message.amount);
+                            DataHelper.addMaxHealth(player, (int) stat.getBonus(level) + message.amount);
                         }
                         DataHelper.setPlayersExpTo(player, currentXP + (int) (stat.getCost(level + message.amount + 1) * GokiConfig.globalModifiers.globalRevertFactor));
                     }

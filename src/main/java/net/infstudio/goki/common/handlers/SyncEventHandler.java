@@ -2,6 +2,7 @@ package net.infstudio.goki.common.handlers;
 
 import net.infstudio.goki.common.network.GokiPacketHandler;
 import net.infstudio.goki.common.network.message.S2CSyncAll;
+import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Mod.EventBusSubscriber(value = Side.SERVER, modid = Reference.MODID)
 public class SyncEventHandler {
     private static void syncPlayerData(EntityPlayer player) {
+        DataHelper.resetMaxHealth(player);
         GokiPacketHandler.CHANNEL.sendTo(new S2CSyncAll(player), (EntityPlayerMP) player);
     }
 

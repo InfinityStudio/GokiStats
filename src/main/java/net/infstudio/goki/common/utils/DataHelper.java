@@ -7,6 +7,8 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
@@ -49,8 +51,7 @@ public class DataHelper {
                     (byte) level);
         }
         if (stat == Stats.MAX_HEALTH) {
-            player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-                    .setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
+            DataHelper.resetMaxHealth(player);
         }
         return 0;
     }
@@ -70,8 +71,7 @@ public class DataHelper {
                     (byte) level);
         }
         if (stat == Stats.MAX_HEALTH) {
-            player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-                    .setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
+            DataHelper.resetMaxHealth(player);
         }
     }
 
@@ -83,6 +83,17 @@ public class DataHelper {
         float f = (float) (in * Math.pow(10.0D, decimals));
         int i = (int) f;
         return i / (float) Math.pow(10.0D, decimals);
+    }
+
+    public static void addMaxHealth(EntityPlayer player, int amount) {
+        IAttributeInstance attribute = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
+        attribute.removeAllModifiers();
+        attribute.setBaseValue(20 + amount);
+        attribute.applyModifier(new AttributeModifier("MaxHealth", DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH), 0));
+    }
+
+    public static void resetMaxHealth(EntityPlayer player) {
+        addMaxHealth(player, DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
     }
 
     public static void setPlayersExpTo(EntityPlayer player, int total) {

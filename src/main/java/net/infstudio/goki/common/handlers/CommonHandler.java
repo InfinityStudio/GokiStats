@@ -147,10 +147,7 @@ public class CommonHandler {
 
     @SubscribeEvent
     public void playerJoinWorld(PlayerChangedDimensionEvent event) {
-        EntityPlayer player = event.player;
-        player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH));
-        player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-                .applyModifier(new AttributeModifier("MaxHealth", DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH), 0));
+        DataHelper.resetMaxHealth(event.player);
     }
 
     @SubscribeEvent
