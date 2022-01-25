@@ -1,5 +1,6 @@
 package net.infstudio.goki.common.utils;
 
+import com.google.common.collect.Lists;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
@@ -17,6 +18,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 
+import java.util.Collection;
 import java.util.function.IntFunction;
 
 public class DataHelper {
@@ -87,7 +89,15 @@ public class DataHelper {
 
     public static void addMaxHealth(EntityPlayer player, int amount) {
         IAttributeInstance attribute = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
-        attribute.removeAllModifiers();
+        Collection<AttributeModifier> collection = attribute.getModifiers();
+
+        if (collection != null)
+        {
+            for (AttributeModifier attributemodifier : Lists.newArrayList(collection))
+            {
+                attribute.removeModifier(attributemodifier);
+            }
+        }
         attribute.setBaseValue(20 + amount);
         attribute.applyModifier(new AttributeModifier("MaxHealth", DataHelper.getPlayerStatLevel(player, Stats.MAX_HEALTH), 0));
     }
