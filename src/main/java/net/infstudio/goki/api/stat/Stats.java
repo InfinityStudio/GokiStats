@@ -6,8 +6,6 @@ import net.infstudio.goki.common.stat.StatTreasureFinder;
 import net.infstudio.goki.common.stat.damage.*;
 import net.infstudio.goki.common.stat.movement.StatClimbing;
 import net.infstudio.goki.common.stat.movement.StatSteadyGuard;
-import net.infstudio.goki.common.stat.movement.StatSwimming;
-import net.infstudio.goki.common.stat.special.StatFurnaceFinesse;
 import net.infstudio.goki.common.stat.special.leaper.StatLeaperH;
 import net.infstudio.goki.common.stat.special.leaper.StatLeaperV;
 import net.infstudio.goki.common.stat.special.leaper.StatStealth;
@@ -24,7 +22,7 @@ public interface Stats {
     DamageSourceProtectionStat STAT_FEATHER_FALL = new StatFeatherFall(7, "feather_fall", 10);
     StatLeaperH LEAPER_H = new StatLeaperH(8, "leaper_h", 10);
     StatBase<?> LEAPER_V = new StatLeaperV(9, "leaper_v", 10);
-    StatBase<?> SWIMMING = new StatSwimming(10, "swimming", 10);
+//    StatBase<?> SWIMMING = new StatSwimming(10, "swimming", 10);
     StatBase<?> CLIMBING = new StatClimbing(11, "climbing", 10);
     StatBase<?> PUGILISM = new StatPugilism(12, "pugilism", 10);
     ToolSpecificStat SWORDSMANSHIP = new StatSwordsmanship(13, "swordsmanship", 10);

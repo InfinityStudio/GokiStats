@@ -80,7 +80,7 @@ public class TickHandler {
 
     private static void handleTaskPlayerAPI(Player player) {
         if (!player.isLocalPlayer() || player.canRiderInteract())
-            if (player.isSwimming()) {
+            /*if (player.isSwimming()) {
                 var multiplier = Math.max(0.0F,
                         Stats.SWIMMING.getBonus(player));
                 if (isJumping(player)) {
@@ -114,7 +114,7 @@ public class TickHandler {
 
 //                    player.move(MoverType.SELF, new Vector3d(player.moveStrafing * multiplier, player.moveVertical * multiplier, 0.02f));
                 }
-            }
+            }*/
 
         if (player.onClimbable() && !player.isShiftKeyDown()) {
             var multiplier = Stats.CLIMBING.getBonus(player);
