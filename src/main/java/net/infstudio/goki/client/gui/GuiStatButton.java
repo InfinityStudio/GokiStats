@@ -13,7 +13,7 @@ import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.opengl.GL11;
 
 public class GuiStatButton extends Button {
-    public StatBase stat;
+    public StatBase<?> stat;
     public PlayerEntity player;
 
     public static final int INACTIVE_X = 0;
@@ -24,7 +24,7 @@ public class GuiStatButton extends Button {
     public final int id;
     private final Minecraft mc = Minecraft.getInstance();
 
-    public GuiStatButton(int id, int x, int y, int width, int height, StatBase stat, PlayerEntity player, IPressable onPress) {
+    public GuiStatButton(int id, int x, int y, int width, int height, StatBase<?> stat, PlayerEntity player, IPressable onPress) {
         super(x, y, width, height, StringTextComponent.EMPTY, onPress);
         this.id = id;
         this.stat = stat;

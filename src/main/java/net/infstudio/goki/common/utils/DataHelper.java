@@ -1,6 +1,7 @@
 package net.infstudio.goki.common.utils;
 
 import net.infstudio.goki.api.capability.CapabilityStat;
+import net.infstudio.goki.api.stat.Stat;
 import net.infstudio.goki.api.stat.StatBase;
 import net.infstudio.goki.api.stat.StatStorage;
 import net.infstudio.goki.common.config.GokiConfig;
@@ -20,46 +21,30 @@ import java.util.Collection;
 import java.util.function.IntFunction;
 
 public class DataHelper {
-    public static boolean canPlayerRevertStat(PlayerEntity player, StatBase stat) {
+    public static boolean canPlayerRevertStat(PlayerEntity player, Stat stat) {
         return GokiConfig.SERVER.globalMaxRevertLevel.get() == -1 ||
                 (GokiConfig.SERVER.globalMaxRevertLevel.get() >= 0
                         && getPlayerRevertStatLevel(player, stat) < GokiConfig.SERVER.globalMaxRevertLevel.get()
                         && getPlayerStatLevel(player, stat) > 0);
     }
 
-    public static int getPlayerRevertStatLevel(PlayerEntity player, StatBase stat) {
-        if (player.getCapability(CapabilityStat.STAT).isPresent()) {
-            return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel;
-        } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
-        }
+    public static int getPlayerRevertStatLevel(PlayerEntity player, Stat stat) {
+        return player.getCapability(CapabilityStat.STAT).map(storage -> storage.stateMap.get(stat).revertedLevel).orElse(0);
     }
 
-    public static void setPlayerRevertStatLevel(PlayerEntity player, StatBase stat, int level) {
-        if (player.getCapability(CapabilityStat.STAT).isPresent()) {
-            player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel = level;
-        } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
-        }
+    public static void setPlayerRevertStatLevel(PlayerEntity player, Stat stat, int level) {
+        player.getCapability(CapabilityStat.STAT).ifPresent(storage -> storage.stateMap.get(stat).revertedLevel = level);
     }
 
-    public static int getPlayerStatLevel(PlayerEntity player, StatBase stat) {
-        if (player.getCapability(CapabilityStat.STAT).isPresent()) {
-            return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level;
-        } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
-        }
+    public static int getPlayerStatLevel(PlayerEntity player, Stat stat) {
+        return player.getCapability(CapabilityStat.STAT).map(storage -> storage.stateMap.get(stat).level).orElse(0);
     }
 
-    public static void setPlayerStatLevel(PlayerEntity player, StatBase stat, int level) {
-        if (player.getCapability(CapabilityStat.STAT).isPresent()) {
-            player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level = level;
-        } else {
-            throw new RuntimeException(new IllegalAccessException("Player " + player.getDisplayName().getString() + " is missing stat capability!"));
-        }
+    public static void setPlayerStatLevel(PlayerEntity player, Stat stat, int level) {
+        player.getCapability(CapabilityStat.STAT).ifPresent(storage -> storage.stateMap.get(stat).level = level);
     }
 
-    public static void multiplyPlayerStatLevel(PlayerEntity player, StatBase stat, IntFunction<Integer> multiplier) {
+    public static void multiplyPlayerStatLevel(PlayerEntity player, Stat stat, IntFunction<Integer> multiplier) {
         setPlayerStatLevel(player, stat, multiplier.apply(getPlayerStatLevel(player, stat)));
     }
 
@@ -70,7 +55,14 @@ public class DataHelper {
     }
 
     public static int getXPTotal(PlayerEntity player) {
-        return player.totalExperience;
+        int level = player.experienceLevel;
+        int offset = player.totalExperience;
+        if (level <= 16)
+            return level * level + 6 * level + offset;
+        else if (level <= 31)
+            return (int) (2.5 * level * level - 40.5 * level) + 360 + offset;
+        else
+            return (int) (4.5 * level * level - 162.5 * level) + 2220 + offset;
     }
 
     public static boolean hasDamageModifier(ItemStack stack) {

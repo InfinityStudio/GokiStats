@@ -8,7 +8,6 @@ import net.minecraft.client.resources.I18n;
 public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
     public StatFurnaceFinesse(int id, String key, int limit) {
         super(id, key, limit);
-        this.setEnabled(false); // FIXME Find a better way to implement it
     }
 
     @Override

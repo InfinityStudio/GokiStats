@@ -10,6 +10,10 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.tileentity.FurnaceTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -19,6 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -131,27 +136,24 @@ public class TickHandler {
     }
 
     private static void handleFurnace(PlayerEntity player) {
-        if (DataHelper.getPlayerStatLevel(player, Stats.FURNACE_FINESSE) > 0) {
-            /*
-            ArrayList<FurnaceTileEntity> furnacesAroundPlayer = new ArrayList<>();
+        int level = DataHelper.getPlayerStatLevel(player, Stats.FURNACE_FINESSE);
+        if (level > 0 && !player.level.isClientSide()) {
 
-            for (TileEntity listEntity : player.world.loadedTileEntityList) {
+            ArrayList<FurnaceTileEntity> furnacesAroundPlayer = new ArrayList<>();
+            for (TileEntity listEntity : player.level.tickableBlockEntities) {
                 if (listEntity != null) {
-                    TileEntity tileEntity = listEntity;
-                    BlockPos pos = tileEntity.getPos();
-                    if (tileEntity instanceof FurnaceTileEntity && MathHelper.sqrt(player.getDistanceSq(pos)) < 4.0D) {
-                        // TODO work out alter way to do tileEntity
-                        furnacesAroundPlayer.add((FurnaceTileEntity) tileEntity);
+                    BlockPos pos = listEntity.getBlockPos();
+                    if (listEntity instanceof FurnaceTileEntity && player.distanceToSqr(Vector3d.atCenterOf(pos)) < 4.0D) {
+                        furnacesAroundPlayer.add((FurnaceTileEntity) listEntity);
                     }
                 }
             }
 
-            // FIXME Laggy
-
             for (FurnaceTileEntity furnace : furnacesAroundPlayer)
-                if (furnace.isBurning())
-                    for (int i = 0; i < Stats.FURNACE_FINESSE.getBonus(player); i++) // Intend to "mount" ticks, same as Torcherino.
-                        furnace.update();*/
+                for (int i = 0; i < Stats.FURNACE_FINESSE.getBonus(player); i++) // Intend to "mount" ticks, same as Torcherino.
+                    furnace.tick();
+
+            furnacesAroundPlayer.clear();
         }
 
     }
