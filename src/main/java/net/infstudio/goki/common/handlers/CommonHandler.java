@@ -46,9 +46,6 @@ public class CommonHandler {
     }
 
     /**
-     *（1.15+，Forge）如果你在尝试从 PlayerEvent.Clone 里拿到死去玩家的 Cap 数据但啥都拿不到，尝试先对旧玩家实体调用 Player[Entity].revive() 冥土追魂一下再试。Forge 在「原版动不动就改复活相关代码」这个问题上大概已经弃疗了。
-     *
-     * 参考：
      * https://github.com/TheIllusiveC4/Curios/blob/1.18.x/src/main/java/top/theillusivec4/curios/common/event/CuriosEventHandler.java#L251
      * https://github.com/gigaherz/ToolBelt/blob/master/src/main/java/dev/gigaherz/toolbelt/slot/BeltExtensionSlot.java#L220-L253
      */

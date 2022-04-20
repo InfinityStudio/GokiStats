@@ -1,7 +1,7 @@
 package net.infstudio.goki.common.utils;
 
 import net.infstudio.goki.api.capability.CapabilityStat;
-import net.infstudio.goki.api.stat.StatBase;
+import net.infstudio.goki.api.stat.Stat;
 import net.infstudio.goki.api.stat.StatStorage;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
@@ -19,30 +19,30 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import java.util.function.IntFunction;
 
 public class DataHelper {
-    public static boolean canPlayerRevertStat(Player player, StatBase stat) {
+    public static boolean canPlayerRevertStat(Player player, Stat stat) {
         return GokiConfig.SERVER.globalMaxRevertLevel.get() == -1 ||
                 (GokiConfig.SERVER.globalMaxRevertLevel.get() >= 0
                         && getPlayerRevertStatLevel(player, stat) < GokiConfig.SERVER.globalMaxRevertLevel.get()
                         && getPlayerStatLevel(player, stat) > 0);
     }
 
-    public static int getPlayerRevertStatLevel(Player player, StatBase stat) {
+    public static int getPlayerRevertStatLevel(Player player, Stat stat) {
         return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel;
     }
 
-    public static void setPlayerRevertStatLevel(Player player, StatBase stat, int level) {
+    public static void setPlayerRevertStatLevel(Player player, Stat stat, int level) {
         player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel = level;
     }
 
-    public static int getPlayerStatLevel(Player player, StatBase stat) {
+    public static int getPlayerStatLevel(Player player, Stat stat) {
         return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level;
     }
 
-    public static void setPlayerStatLevel(Player player, StatBase stat, int level) {
+    public static void setPlayerStatLevel(Player player, Stat stat, int level) {
         player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level = level;
     }
 
-    public static void multiplyPlayerStatLevel(Player player, StatBase stat, IntFunction<Integer> multiplier) {
+    public static void multiplyPlayerStatLevel(Player player, Stat stat, IntFunction<Integer> multiplier) {
         setPlayerStatLevel(player, stat, multiplier.apply(getPlayerStatLevel(player, stat)));
     }
 
