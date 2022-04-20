@@ -10,6 +10,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
@@ -66,6 +67,7 @@ public class CapabilityStat {
         }
     }
 
+    @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event) {
         event.register(StatStorage.class);
     }

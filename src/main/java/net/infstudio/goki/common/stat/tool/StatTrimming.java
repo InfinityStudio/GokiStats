@@ -17,7 +17,7 @@ public class StatTrimming extends ToolSpecificStat {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus(level * 0.1F);
     }
 }

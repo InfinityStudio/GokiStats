@@ -11,7 +11,7 @@ public class StatStealth extends StatLeaper {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus((float) Math.pow(level, 1.3416D));
     }
 
@@ -21,19 +21,19 @@ public class StatStealth extends StatLeaper {
     }
 
     @Override
-    public float getSecondaryBonus(int level) {
+    public double getSecondaryBonus(int level) {
         return getFinalBonus((float) Math.pow(level, 1.4307D));
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(Player player) {
+    public double[] getDescriptionFormatArguments(Player player) {
         // TODO special
-        float speed = DataHelper.trimDecimals(getBonus(player), 1);
-        float reapBonus = DataHelper.trimDecimals(getSecondaryBonus(player), 1);
-        float reap = Stats.REAPER.getBonus(player) * 100.0F;
-        float newReap = DataHelper.trimDecimals(reap + reap * reapBonus / 100.0F,
+        double speed = DataHelper.trimDecimals(getBonus(player), 1);
+        double reapBonus = DataHelper.trimDecimals(getSecondaryBonus(player), 1);
+        double reap = Stats.REAPER.getBonus(player) * 100.0F;
+        double newReap = DataHelper.trimDecimals(reap + reap * reapBonus / 100.0F,
                 1);
-        return new float[]
+        return new double[]
                 {speed, reapBonus, newReap};
         // return "Move " + speed + "% faster and reap " + reapBonus +
         // "% more often (" + newReap + "%) when sneaking.";

@@ -12,19 +12,19 @@ public abstract class StatLeaper extends StatSpecialBase implements StatSpecial 
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus((float) Math.pow(level, 1.065D) * 0.0195F);
     }
 
     @Override
-    public float getSecondaryBonus(int level) {
+    public double getSecondaryBonus(int level) {
         return getFinalBonus((float) Math.pow(level, 1.1D) * 0.0203F);
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(Player player) {
+    public double[] getDescriptionFormatArguments(Player player) {
         // TODO speical
-        return new float[]
+        return new double[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), DataHelper.trimDecimals(getSecondaryBonus(getPlayerStatLevel(player)) * 100,
                         1)};
         // return "Jump " +

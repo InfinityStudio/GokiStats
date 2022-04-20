@@ -21,13 +21,13 @@ public class StatMiningMagician extends StatBase<StatConfig> {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus(level * 0.3F);
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(Player player) {
-        return new float[]
+    public double[] getDescriptionFormatArguments(Player player) {
+        return new double[]
                 {DataHelper.trimDecimals(getBonus(player), 1)};
     }
 

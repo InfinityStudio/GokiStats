@@ -12,20 +12,20 @@ public class StatFurnaceFinesse extends StatSpecialBase implements StatSpecial {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return Math.min(getFinalBonus(level / 5.0F), 199.0F) + 1.0F;
     }
 
     @Override
-    public float getSecondaryBonus(int level) {
+    public double getSecondaryBonus(int level) {
         return Math.min(getFinalBonus(level), 100.0F);
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(Player player) {
+    public double[] getDescriptionFormatArguments(Player player) {
         // TODO special
         int level = getPlayerStatLevel(player);
-        return new float[]
+        return new double[]
                 {getBonus(level), getSecondaryBonus(level)};
         // return "Smelt " + getBonus(amount) + " ticks faster " +
         // getSecondaryBonus(amount) + "% of the time while using a furnace.";

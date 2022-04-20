@@ -6,7 +6,7 @@ public class StatToughSkin extends DamageSourceProtectionStat {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus(level * 0.026F);
     }
 

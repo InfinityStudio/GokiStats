@@ -15,11 +15,11 @@ public class StatFeatherFall extends DamageSourceProtectionStat {
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(Player player) {
+    public double[] getDescriptionFormatArguments(Player player) {
         // TODO special
-        float height = DataHelper.getFallResistance(player) + DataHelper.trimDecimals(getSecondaryBonus(getPlayerStatLevel(player)),
+        double height = DataHelper.getFallResistance(player) + DataHelper.trimDecimals(getSecondaryBonus(getPlayerStatLevel(player)),
                 1);
-        return new float[]
+        return new double[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1), height};
         // return "Take " +
         // Helper.trimDecimals(getBonus(getPlayerStatLevel(player)) * 100, 1) +
@@ -41,7 +41,7 @@ public class StatFeatherFall extends DamageSourceProtectionStat {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus(level * 0.026F);
     }
 

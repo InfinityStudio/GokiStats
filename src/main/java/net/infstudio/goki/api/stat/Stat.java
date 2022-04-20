@@ -21,14 +21,14 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      * @param player player instance
      * @return format arguments, most commonly the bonus and the limit of the stat
      */
-    float[] getDescriptionFormatArguments(Player player);
+    double[] getDescriptionFormatArguments(Player player);
 
     /**
      * Bonus to be used for this stat
      * @param level stat level
      * @return bonus
      */
-    float getBonus(int level);
+    double getBonus(int level);
 
     /**
      * Get final bonus for a player to process the stat modifier
@@ -36,7 +36,7 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      * @param player player instance
      * @return final bonus
      */
-    float getBonus(Player player);
+    double getBonus(Player player);
 
 //	abstract float getBonus(int paramInt);
 
@@ -46,7 +46,7 @@ public interface Stat extends IForgeRegistryEntry<Stat> {
      * @param paramObject game object such as ItemStack or Entity
      * @return final bonus
      */
-    float getAppliedBonus(Player player, Object paramObject);
+    double getAppliedBonus(Player player, Object paramObject);
 
     /**
      * XP Cost for each level

@@ -13,7 +13,7 @@ public class StatMaxHealth extends StatBase<StatConfig> {
     }
 
     @Override
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus(level);
     }
 
@@ -24,17 +24,17 @@ public class StatMaxHealth extends StatBase<StatConfig> {
         if (GokiConfig.SERVER.globalLimitMultiplier.get() <= 0) {
             return limit;
         }
-        return (int) (limit * this.limitMultiplier * GokiConfig.SERVER.globalLimitMultiplier.get());
+        return (int) (limit * GokiConfig.SERVER.globalLimitMultiplier.get());
     }
 
     @Override
     public int getCost(int level) {
-        return (int) getFinalBonus((float) ((Math.pow(level, 2D) + 12.0D + level) * GokiConfig.SERVER.globalCostMultiplier.get()));
+        return (int) getFinalBonus((float) ((Math.pow(level, 2D) + 48.0D + level) * GokiConfig.SERVER.globalCostMultiplier.get()));
     }
 
     @Override
-    public float[] getDescriptionFormatArguments(Player player) {
-        return new float[]
+    public double[] getDescriptionFormatArguments(Player player) {
+        return new double[]
                 {DataHelper.trimDecimals(getBonus(getPlayerStatLevel(player)), 0)};
     }
 

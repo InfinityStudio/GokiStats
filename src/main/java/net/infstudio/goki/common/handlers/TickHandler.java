@@ -30,12 +30,12 @@ public class TickHandler {
 
     @SubscribeEvent
     public static void playerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) { // Due to issue #32
+        if (event.phase == TickEvent.Phase.START && event.side.isServer()) { // Due to issue #32
             var player = event.player;
 
             handleTaskPlayerAPI(player);
-
-           var attributeInstance = player.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (!player.isAlive()) return;
+            var attributeInstance = player.getAttribute(Attributes.MOVEMENT_SPEED);
             if (attributeInstance == null) return;
             var modifier = new AttributeModifier(stealthSpeedID, "SneakSpeed", Stats.STEALTH.getBonus(player) / 100.0F, AttributeModifier.Operation.fromValue(1));
             if (player.isCrouching()) {
@@ -80,8 +80,8 @@ public class TickHandler {
 
     private static void handleTaskPlayerAPI(Player player) {
         if (!player.isLocalPlayer() || player.canRiderInteract())
-            if (player.isSwimming()) {
-                float multiplier = Math.max(0.0F,
+            /*if (player.isSwimming()) {
+                var multiplier = Math.max(0.0F,
                         Stats.SWIMMING.getBonus(player));
                 if (isJumping(player)) {
 //                    player += multiplier;
@@ -91,14 +91,12 @@ public class TickHandler {
                     //								player.motionZ * multiplier);
 
                     // Copied from LivingEntity
-                    double d0 = player.getY();
-                    float f1 = 0.8f;
-                    float f2 = 0.02F;
+                    var d0 = player.getY();
+                    var f1 = 0.8f;
+                    var f2 = 0.02F;
 
-                    if (multiplier > 0.0F) {
-                        f1 += (0.54600006F - f1) * multiplier;
-                        f2 += (player.getSpeed() - f2) * multiplier;
-                    }
+                    f1 += (0.54600006F - f1) * multiplier;
+                    f2 += (player.getSpeed() - f2) * multiplier;
 
                     player.moveRelative(f2, player.getDeltaMovement());
                     player.move(MoverType.SELF, player.getDeltaMovement());
@@ -116,10 +114,10 @@ public class TickHandler {
 
 //                    player.move(MoverType.SELF, new Vector3d(player.moveStrafing * multiplier, player.moveVertical * multiplier, 0.02f));
                 }
-            }
+            }*/
 
         if (player.onClimbable() && !player.isShiftKeyDown()) {
-            float multiplier = Stats.CLIMBING.getBonus(player);
+            var multiplier = Stats.CLIMBING.getBonus(player);
             player.move(MoverType.SELF, player.getDeltaMovement().multiply(1, multiplier, 1));
         }
     }

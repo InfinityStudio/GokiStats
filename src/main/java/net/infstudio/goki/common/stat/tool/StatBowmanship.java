@@ -18,7 +18,7 @@ public class StatBowmanship extends ToolSpecificStat {
         return TAG;
     }
 
-    public float getBonus(int level) {
+    public double getBonus(int level) {
         return getFinalBonus((float) Math.pow(level, 1.0895D) * 0.03F);
     }
 }

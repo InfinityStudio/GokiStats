@@ -7,12 +7,9 @@ import net.infstudio.goki.api.stat.StatStorage;
 import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.init.GokiSounds;
-import net.infstudio.goki.common.network.GokiPacketHandler;
-import net.infstudio.goki.common.network.message.S2CSyncAll;
 import net.infstudio.goki.common.utils.DataHelper;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -25,7 +22,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Reference.MODID)
@@ -49,16 +45,23 @@ public class CommonHandler {
         }
     }
 
+    /**
+     *（1.15+，Forge）如果你在尝试从 PlayerEvent.Clone 里拿到死去玩家的 Cap 数据但啥都拿不到，尝试先对旧玩家实体调用 Player[Entity].revive() 冥土追魂一下再试。Forge 在「原版动不动就改复活相关代码」这个问题上大概已经弃疗了。
+     *
+     * 参考：
+     * https://github.com/TheIllusiveC4/Curios/blob/1.18.x/src/main/java/top/theillusivec4/curios/common/event/CuriosEventHandler.java#L251
+     * https://github.com/gigaherz/ToolBelt/blob/master/src/main/java/dev/gigaherz/toolbelt/slot/BeltExtensionSlot.java#L220-L253
+     */
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        if (event.getOriginal().getCapability(CapabilityStat.STAT).isPresent() && event.getEntity().getCapability(CapabilityStat.STAT).isPresent()) {
-            event.getEntity().getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap = event.getOriginal().getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap;
-        }
+        event.getOriginal().revive();
+        event.getPlayer().getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap = event.getOriginal().getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap;
+        event.getOriginal().invalidateCaps();
     }
 
     @SubscribeEvent
     public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
+        var player = event.getPlayer();
         if (!player.level.isClientSide()) {
             if (GokiConfig.SERVER.loseStatsOnDeath.get()) {
                 for (var stat = 0; stat < StatBase.totalStats.orElse(0); stat++) {
@@ -67,7 +70,8 @@ public class CommonHandler {
                             level -> level - (int) (GokiConfig.SERVER.loseStatsMultiplier.get() * level));
                 }
             }
-            GokiPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new S2CSyncAll(player));
+            SyncEventHandler.syncPlayerData(player);
+            player.heal(player.getMaxHealth());
         }
     }
 
@@ -76,7 +80,7 @@ public class CommonHandler {
         var heldItem = event.getPlayer().getMainHandItem();
         var player = event.getPlayer();
 
-        var multiplier = 1.0F;
+        double multiplier = 1.0F;
 
         if (Stats.MINING.isEffectiveOn(heldItem,
                 event.getPos(),
@@ -99,7 +103,7 @@ public class CommonHandler {
             multiplier += Stats.TRIMMING.getBonus(player);
         }
 
-        event.setNewSpeed(event.getOriginalSpeed() * multiplier);
+        event.setNewSpeed((float) (event.getOriginalSpeed() * multiplier));
     }
 
     @SubscribeEvent
@@ -134,13 +138,13 @@ public class CommonHandler {
                 }
             }
 
-            var damageMultiplier = 1.0F - (Stats.PROTECTION.getAppliedBonus(player,
+            double damageMultiplier = 1.0F - (Stats.PROTECTION.getAppliedBonus(player,
                     source) + Stats.TOUGH_SKIN.getAppliedBonus(player,
                     source) + Stats.STAT_FEATHER_FALL.getAppliedBonus(player,
                     source) + Stats.TEMPERING.getAppliedBonus(player,
                     source));
 
-            event.setAmount(event.getAmount() * damageMultiplier);
+            event.setAmount((float) (event.getAmount() * damageMultiplier));
         }
 
         Entity src = source.getEntity();
@@ -167,11 +171,11 @@ public class CommonHandler {
             event.setAmount(bonus + damage);
 
             if (Stats.REAPER.isEffectiveOn(victim)) {
-                var reap = Stats.REAPER.getBonus(player);
-                float reapBonus = 0;
+                double reap = Stats.REAPER.getBonus(player);
+                double reapBonus = 0;
                 if (Stats.STEALTH.isEffectiveOn(player))
                     reapBonus = reap * ((StatSpecial) Stats.STEALTH).getSecondaryBonus(player) / 100.0F;
-                var reapChance = reap + reapBonus;
+                double reapChance = reap + reapBonus;
                 if (player.getRandom().nextFloat() <= reapChance) {
                     player.crit(victim);
                     player.level.playSound(player, event.getEntity().blockPosition(), GokiSounds.REAPER, SoundSource.MASTER, 1.0f, 1.0f);

@@ -62,8 +62,7 @@ public class GuiStats extends Screen {
         renderBackground(stack);
         super.render(stack, mouseX, mouseY, par3);
         for (var i = 0; i < this.renderables.size(); i++) {
-            if ((this.renderables.get(i) instanceof GuiStatButton)) {
-                var button = (GuiStatButton) this.renderables.get(i);
+            if ((this.renderables.get(i) instanceof GuiStatButton button)) {
                 if (button.isUnderMouse(mouseX, mouseY)) {
                     this.toolTip = new GuiStatTooltip(StatBase.stats.get(i), this.player);
                     toolTipX = button.x + 12;
@@ -113,16 +112,14 @@ public class GuiStats extends Screen {
     }
 
     protected void actionPerformed(Button btn) {
-        if (!(btn instanceof GuiStatButton))
+        if (!(btn instanceof GuiStatButton button))
             return;
 
-        var button = (GuiStatButton) btn;
         if ((button.id >= 0) && (button.id <= StatBase.totalStats.orElse(0))) {
-            var statButton = (GuiStatButton) button;
             if (!hasControlDown())
-                GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), 1));
+                GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(button.stat), 1));
             else // Downgrade
-                GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(statButton.stat), -1));
+                GokiPacketHandler.CHANNEL.sendToServer(new C2SStatSync(StatBase.stats.indexOf(button.stat), -1));
         }
     }
 
