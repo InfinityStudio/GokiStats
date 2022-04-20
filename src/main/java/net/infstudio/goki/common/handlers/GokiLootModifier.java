@@ -20,7 +20,6 @@ import net.minecraftforge.common.loot.LootModifier;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 public class GokiLootModifier extends LootModifier {
     /**
@@ -32,6 +31,8 @@ public class GokiLootModifier extends LootModifier {
         super(conditionsIn);
     }
 
+    private static ResourceLocation temp = new ResourceLocation("minecraft:null");
+
     @Nonnull
     @Override
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
@@ -42,37 +43,26 @@ public class GokiLootModifier extends LootModifier {
         }
         var block = context.getParamOrNull(LootContextParams.BLOCK_STATE).getBlock();
         if (DataHelper.getPlayerStatLevel(player, Stats.TREASURE_FINDER) > 0) { // Player has treasure finder
-            var treasureFound = false; // Make a temp variable here to play sound
-            Random random = player.getRandom();
-            // Note: Items and chances are in pairs
-            List<ItemStack> items = Stats.TREASURE_FINDER.getApplicableItemStackList(block,
-                    DataHelper.getPlayerStatLevel(player,
-                            Stats.TREASURE_FINDER));
-            var chances = Stats.TREASURE_FINDER.getApplicableChanceList(block,
-                    DataHelper.getPlayerStatLevel(player,
-                            Stats.TREASURE_FINDER));
+            var id = new ResourceLocation(block.getRegistryName().getNamespace(), "treasure_finder/" + block.getRegistryName().getPath());
 
-            for (var i = 0; i < items.size(); i++) {
-                var roll = random.nextInt(10000);
-                if (roll <= chances.getInt(i)) {
-                    if (items.get(i) != null) {
-                        generatedLoot.add(items.get(i)); // Add treasure to player
-                        treasureFound = true;
-                    } else {
-                        System.out.println("Tried to add an item from Treasure Finder, but it failed!");
-                    }
-                }
+            // Prevent StackOverflow
+            if (context.getQueriedLootTableId().equals(temp)) return generatedLoot;
+            else {
+                temp = context.getQueriedLootTableId();
             }
-            if (treasureFound) {
+
+            var table = context.getLootTable(id);
+
+            var items = table.getRandomItems(context);
+            temp = new ResourceLocation("minecraft:null");
+            generatedLoot.addAll(items);
+            if (!items.isEmpty()) {
                 player.level.playSound(player, new BlockPos(context.getParamOrNull(LootContextParams.ORIGIN)), GokiSounds.TREASURE, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
         }
 
         if (DataHelper.getPlayerStatLevel(player, Stats.MINING_MAGICIAN) > 0) { // Player has mining magician
             var magicHappened = false;
-            // TODO Rewrite to NBT in 1.13
-//            LootConfigDeserializer.MINING_MAGICIAN.getLocationForBlock(event.getState()).map(event.getWorld().getLootTableManager()::getLootTableFromLocation).ifPresent(lootTable ->
-//                    lootTable.generateLootForPools(event.getWorld().rand, new LootContext(1f, (WorldServer) event.getWorld(), event.getWorld().getLootTableManager(), null, null, null)));
 
             if (Stats.MINING_MAGICIAN.isEffectiveOn(block)) { // This block can be affected by magic
                 for (var i = 0; i < generatedLoot.size(); i++) {
@@ -80,22 +70,15 @@ public class GokiLootModifier extends LootModifier {
                         var item = generatedLoot.get(i);
                         // If this block drops itself, give player additional block drops
                         if (item.getItem() instanceof BlockItem && Objects.equals(item.getItem().getRegistryName(), block.getRegistryName())) {
-                            int randomEntry = player.getRandom().nextInt(StatMiningMagician.blockEntries.size());
-                            var stack = new ItemStack(StatMiningMagician.blockEntries.get(randomEntry), 1);
+                            var stack = new ItemStack(StatMiningMagician.MAGICIAN_ORE.getRandomElement(context.getRandom()), 1);
                             stack.setCount(generatedLoot.get(i).getCount());
                             generatedLoot.add(stack);
                             magicHappened = true;
                         } else { // Give additional item drops
-                            for (var j = 0; j < StatMiningMagician.itemEntries.size(); j++) {
-                                if (item.getItem() == StatMiningMagician.itemEntries.get(j)) {
-                                    int randomEntry = player.getRandom().nextInt(StatMiningMagician.itemEntries.size());
-                                    var stack = new ItemStack(StatMiningMagician.itemEntries.get(randomEntry), 1);
-                                    stack.setCount(generatedLoot.get(i).getCount());
-                                    generatedLoot.add(stack);
-                                    magicHappened = true;
-                                    break;
-                                }
-                            }
+                            generatedLoot.add(new ItemStack(StatMiningMagician.MAGICIAN_ITEM.getRandomElement(context.getRandom()), generatedLoot.get(i).getCount()));
+
+                            magicHappened = true;
+                            break;
                         }
                     }
                 }

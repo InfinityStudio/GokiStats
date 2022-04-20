@@ -6,6 +6,7 @@ import net.infstudio.goki.api.stat.Stats;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.infstudio.goki.common.handlers.TickHandler;
 import net.infstudio.goki.common.network.GokiPacketHandler;
+import net.infstudio.goki.common.stat.StatLootCondition;
 import net.infstudio.goki.common.utils.Reference;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -25,7 +26,8 @@ public class GokiStats {
     public static final Logger log = LogManager.getLogger(Reference.MODID);
 
     private static final Class<?>[] loadClasses = {
-            Stats.class, GokiConfig.class
+            Stats.class, GokiConfig.class,
+            StatLootCondition.class
     };
 
     public GokiStats() {

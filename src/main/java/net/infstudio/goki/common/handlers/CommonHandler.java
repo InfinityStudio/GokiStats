@@ -143,7 +143,7 @@ public class CommonHandler {
             event.setAmount(event.getAmount() * damageMultiplier);
         }
 
-        Entity src = source.getDirectEntity();
+        Entity src = source.getEntity();
 
         if (src instanceof Player player) {
             var heldItem = player.getMainHandItem();

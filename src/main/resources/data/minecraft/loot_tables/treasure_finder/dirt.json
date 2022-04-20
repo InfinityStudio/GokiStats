@@ -1,0 +1,221 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:rotten_flesh",
+          "weight": 40
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bone",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:spider_eye",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gunpowder",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:slime_ball",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bowl",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:potato",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:carrot",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:apple",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:red_mushroom",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:brown_mushroom",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:poppy",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:dandelion",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:stick",
+          "weight": 100
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "gokistats:stat_level",
+          "stat": "gokistats:treasure_finder",
+          "minLevel": 1
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.03
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:beef",
+          "weight": 50
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:porkchop",
+          "weight": 50
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:chicken",
+          "weight": 50
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:leather",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:feather",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:white_wool",
+          "weight": 10
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "gokistats:stat_level",
+          "stat": "gokistats:treasure_finder",
+          "minLevel": 2
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.02
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bucket",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_11",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_13",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_blocks",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_cat",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_chirp",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_far",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_mall",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_mellohi",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_stal",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_strad",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_wait",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_ward",
+          "weight": 2
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "gokistats:stat_level",
+          "stat": "gokistats:treasure_finder",
+          "minLevel": 3
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.01
+        }
+      ]
+    }
+  ]
+}

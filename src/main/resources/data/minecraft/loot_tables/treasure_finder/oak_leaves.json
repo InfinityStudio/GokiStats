@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:apple",
+          "weight": 10
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "gokistats:stat_level",
+          "stat": "gokistats:treasure_finder",
+          "minLevel": 1
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.05
+        }
+      ]
+    }
+  ]
+}

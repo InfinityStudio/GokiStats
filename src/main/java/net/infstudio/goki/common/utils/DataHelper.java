@@ -1,7 +1,7 @@
 package net.infstudio.goki.common.utils;
 
 import net.infstudio.goki.api.capability.CapabilityStat;
-import net.infstudio.goki.api.stat.StatBase;
+import net.infstudio.goki.api.stat.Stat;
 import net.infstudio.goki.api.stat.StatStorage;
 import net.infstudio.goki.common.config.GokiConfig;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,14 +17,14 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import java.util.function.IntFunction;
 
 public class DataHelper {
-    public static boolean canPlayerRevertStat(Player player, StatBase stat) {
+    public static boolean canPlayerRevertStat(Player player, Stat stat) {
         return GokiConfig.SERVER.globalMaxRevertLevel.get() == -1 ||
                 (GokiConfig.SERVER.globalMaxRevertLevel.get() >= 0
                         && getPlayerRevertStatLevel(player, stat) < GokiConfig.SERVER.globalMaxRevertLevel.get()
                         && getPlayerStatLevel(player, stat) > 0);
     }
 
-    public static int getPlayerRevertStatLevel(Player player, StatBase stat) {
+    public static int getPlayerRevertStatLevel(Player player, Stat stat) {
         if (player.getCapability(CapabilityStat.STAT).isPresent()) {
             return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel;
         } else {
@@ -32,7 +32,7 @@ public class DataHelper {
         }
     }
 
-    public static void setPlayerRevertStatLevel(Player player, StatBase stat, int level) {
+    public static void setPlayerRevertStatLevel(Player player, Stat stat, int level) {
         if (player.getCapability(CapabilityStat.STAT).isPresent()) {
             player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).revertedLevel = level;
         } else {
@@ -40,7 +40,7 @@ public class DataHelper {
         }
     }
 
-    public static int getPlayerStatLevel(Player player, StatBase stat) {
+    public static int getPlayerStatLevel(Player player, Stat stat) {
         if (player.getCapability(CapabilityStat.STAT).isPresent()) {
             return player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level;
         } else {
@@ -48,7 +48,7 @@ public class DataHelper {
         }
     }
 
-    public static void setPlayerStatLevel(Player player, StatBase stat, int level) {
+    public static void setPlayerStatLevel(Player player, Stat stat, int level) {
         if (player.getCapability(CapabilityStat.STAT).isPresent()) {
             player.getCapability(CapabilityStat.STAT).orElse(new StatStorage()).stateMap.get(stat).level = level;
         } else {
@@ -56,7 +56,7 @@ public class DataHelper {
         }
     }
 
-    public static void multiplyPlayerStatLevel(Player player, StatBase stat, IntFunction<Integer> multiplier) {
+    public static void multiplyPlayerStatLevel(Player player, Stat stat, IntFunction<Integer> multiplier) {
         setPlayerStatLevel(player, stat, multiplier.apply(getPlayerStatLevel(player, stat)));
     }
 
@@ -66,8 +66,37 @@ public class DataHelper {
         return i / (float) Math.pow(10.0D, decimals);
     }
 
+    public static int getXPValueFromLevel(int xpLevel) {
+        int val;
+        if (xpLevel > 31) {
+            val = (int) (4.5d * Math.pow(xpLevel, 2d) - 162.5d * xpLevel + 2220d);
+        } else if (xpLevel > 16) {
+            val = (int) (2.5d * Math.pow(xpLevel, 2d) - 40.5d * xpLevel + 360d);
+        } else {
+            val = (int) (Math.pow(xpLevel, 2d) + 6d * xpLevel);
+        }
+        return val;
+    }
+
+    public static int getXPValueToNextLevel(int xpLevel) {
+        int val;
+        if (xpLevel > 30) {
+            val = 9 * xpLevel - 158;
+        } else if (xpLevel > 15) {
+            val = 5 * xpLevel - 38;
+        } else {
+            val = 2 * xpLevel + 7;
+        }
+
+        return val;
+    }
+
+    public static int getXPTotal(int xpLevel, float current) {
+        return (int) (getXPValueFromLevel(xpLevel) + getXPValueToNextLevel(xpLevel) * current);
+    }
+
     public static int getXPTotal(Player player) {
-        return player.totalExperience;
+        return (int) (getXPValueFromLevel(player.experienceLevel) + player.totalExperience);
     }
 
     public static boolean hasDamageModifier(ItemStack stack) {

@@ -13,13 +13,33 @@ Feel free to solve any issue with crash-report in GitHub Issues.
 
 Forum thread on [Mcbbs](http://www.mcbbs.net/thread-805910-1-1.html)
 
-## 1.16.3 Version
+## Configuration
 
-Mining Magician and Treasure Finder skill are re-enabled and work as fine.
+Since GokiStats 1.4.0, GokiStats is highly configurable through Minecraft datapack system.
+
+Stats for tool speed and attack damage depends on specific tag. They are:
+
+Bowsmanship(Bows): `gokistats:bow`
+
+Chopping(Axes): `gokistats:chopping`
+
+Digging(Shovels): `gokistats:digging`
+
+Mining(Pickaxes): `gokistats:mining`
+
+Swordsmanship(Swords): `gokistats:sword`
+
+Trimming(Shears): `minecraft:shears`
+
+Mining Magician Ores can be added to `gokistats:magician_ore` block tag and its output can be modified through `gokistats:magician_item` item tag.
+
+Treasure Finder are totally rewritten to loot tables. Now you can modify or create loot tables with a name pattern `<mod>:treasure_finder/<block>`, like `minecraft:treasure_finder/dirt`, the mod will detect it and consider it as a treasure finder loot table.
+
+Other stat configuration can be easily altered per-world in `serverconfig`.
 
 ## Why Furnace Finesse is disabled?
 
-Because it drops TPS heavily. I will working on a better implementation.
+Because it drops TPS heavily.
 
 ## Screenshots
 
